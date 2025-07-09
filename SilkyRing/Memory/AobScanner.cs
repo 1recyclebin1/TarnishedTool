@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using static SilkyRing.Memory.Offsets;
 
 
 namespace SilkyRing.Memory
@@ -32,16 +33,16 @@ namespace SilkyRing.Memory
             }
 
 
-            Offsets.WorldChrMan.Base = FindAddressByPattern(Pattern.WorldChrMan);
-            Offsets.FieldArea.Base = FindAddressByPattern(Pattern.FieldArea);
-            Offsets.LuaEventMan.Base = FindAddressByPattern(Pattern.LuaEventMan);
-            Offsets.VirtualMemFlag.Base = FindAddressByPattern(Pattern.VirtualMemFlag);
-            Offsets.DamageManager.Base = FindAddressByPattern(Pattern.DamageManager);
+            WorldChrMan.Base = FindAddressByPattern(Pattern.WorldChrMan);
+            FieldArea.Base = FindAddressByPattern(Pattern.FieldArea);
+            LuaEventMan.Base = FindAddressByPattern(Pattern.LuaEventMan);
+            VirtualMemFlag.Base = FindAddressByPattern(Pattern.VirtualMemFlag);
+            DamageManager.Base = FindAddressByPattern(Pattern.DamageManager);
             
            
 
 
-            // TryPatternWithFallback("NoLogo", Patterns.NoLogo, addr => Offsets.Patches.NoLogo = addr, saved);
+            TryPatternWithFallback("DungeonWarp", Pattern.DungeonWarp, addr => Patches.DungeonWarp = addr, saved);
             // TryPatternWithFallback("AccessFullShop", Patterns.AccessFullShop, addr => Offsets.Patches.AccessFullShop = addr, saved);
             // TryPatternWithFallback("RepeatAct", Patterns.RepeatAct, addr => Offsets.Patches.RepeatAct = addr, saved);
             // TryPatternWithFallback("GameSpeed", Patterns.GameSpeed, addr => Offsets.Patches.GameSpeed = addr, saved);
@@ -56,15 +57,17 @@ namespace SilkyRing.Memory
             // TryPatternWithFallback("FreeCam", Patterns.FreeCamPatch, addr => Offsets.Patches.FreeCam = addr, saved);
             //
             TryPatternWithFallback("UpdateCoords", Pattern.UpdateCoords,
-                addr => Offsets.Hooks.UpdateCoords = addr.ToInt64(), saved);
+                addr => Hooks.UpdateCoords = addr.ToInt64(), saved);
             TryPatternWithFallback("InAirTimer", Pattern.InAirTimer,
-                addr => Offsets.Hooks.InAirTimer = addr.ToInt64(), saved);
+                addr => Hooks.InAirTimer = addr.ToInt64(), saved);
             TryPatternWithFallback("NoClipKb", Pattern.NoClipKb,
-                addr => Offsets.Hooks.NoClipKb = addr.ToInt64(), saved);
+                addr => Hooks.NoClipKb = addr.ToInt64(), saved);
             TryPatternWithFallback("NoClipTriggers", Pattern.NoClipTriggers,
-                addr => Offsets.Hooks.NoClipTriggers = addr.ToInt64(), saved);
-            // TryPatternWithFallback("WarpCoordWrite", Patterns.WarpCoordWrite,
-            //     addr => Offsets.Hooks.WarpCoordWrite = addr.ToInt64(), saved);
+                addr => Hooks.NoClipTriggers = addr.ToInt64(), saved);
+            TryPatternWithFallback("AddSubGoal", Pattern.AddSubGoal,
+                addr => Hooks.AddSubGoal = addr.ToInt64(), saved);
+            TryPatternWithFallback("HasSpEffect", Pattern.HasSpEffect,
+                addr => Hooks.HasSpEffect = addr.ToInt64(), saved);
             // TryPatternWithFallback("AddSubGoal", Patterns.AddSubGoal, addr => Offsets.Hooks.AddSubGoal = addr.ToInt64(),
             //     saved);
             // TryPatternWithFallback("InAirTimer", Patterns.NoClipInAirTimer,
@@ -100,9 +103,9 @@ namespace SilkyRing.Memory
                     writer.WriteLine($"{pair.Key}={pair.Value:X}");
             }
 
-            Offsets.Funcs.GraceWarp = FindAddressByPattern(Pattern.GraceWarp).ToInt64();
-            Offsets.Funcs.SetEvent = FindAddressByPattern(Pattern.SetEvent).ToInt64();
-            Offsets.Funcs.SetSpEffect = FindAddressByPattern(Pattern.SetSpEffect).ToInt64();
+            Funcs.GraceWarp = FindAddressByPattern(Pattern.GraceWarp).ToInt64();
+            Funcs.SetEvent = FindAddressByPattern(Pattern.SetEvent).ToInt64();
+            Funcs.SetSpEffect = FindAddressByPattern(Pattern.SetSpEffect).ToInt64();
             // Offsets.Funcs.ItemSpawn = FindAddressByPattern(Patterns.ItemSpawnFunc).ToInt64();
             // Offsets.Funcs.BreakAllObjects = FindAddressByPattern(Patterns.BreakAllObjects).ToInt64();
             // Offsets.Funcs.RestoreAllObjects = FindAddressByPattern(Patterns.RestoreAllObjects).ToInt64();
@@ -123,22 +126,24 @@ namespace SilkyRing.Memory
 
 
 #if DEBUG
-            Console.WriteLine($"WorldChrMan.Base: 0x{Offsets.WorldChrMan.Base.ToInt64():X}");
-            Console.WriteLine($"FieldArea.Base: 0x{Offsets.FieldArea.Base.ToInt64():X}");
-            Console.WriteLine($"LuaEventMan.Base: 0x{Offsets.LuaEventMan.Base.ToInt64():X}");
-            Console.WriteLine($"VirtualMemFlag.Base: 0x{Offsets.VirtualMemFlag.Base.ToInt64():X}");
-            Console.WriteLine($"DamageManager.Base: 0x{Offsets.DamageManager.Base.ToInt64():X}");
+            Console.WriteLine($"WorldChrMan.Base: 0x{WorldChrMan.Base.ToInt64():X}");
+            Console.WriteLine($"FieldArea.Base: 0x{FieldArea.Base.ToInt64():X}");
+            Console.WriteLine($"LuaEventMan.Base: 0x{LuaEventMan.Base.ToInt64():X}");
+            Console.WriteLine($"VirtualMemFlag.Base: 0x{VirtualMemFlag.Base.ToInt64():X}");
+            Console.WriteLine($"DamageManager.Base: 0x{DamageManager.Base.ToInt64():X}");
            
-//             Console.WriteLine($"Patches.NoLogo: 0x{Offsets.Patches.NoLogo.ToInt64():X}");
+             Console.WriteLine($"Patches.NoLogo: 0x{Patches.DungeonWarp.ToInt64():X}");
 //            
-             Console.WriteLine($"Hooks.UpdateCoords: 0x{Offsets.Hooks.UpdateCoords:X}");
-             Console.WriteLine($"Hooks.InAirTimer: 0x{Offsets.Hooks.InAirTimer:X}");
-             Console.WriteLine($"Hooks.NoClipKb: 0x{Offsets.Hooks.NoClipKb:X}");
-             Console.WriteLine($"Hooks.NoClipTriggers: 0x{Offsets.Hooks.NoClipTriggers:X}");
+             Console.WriteLine($"Hooks.UpdateCoords: 0x{Hooks.UpdateCoords:X}");
+             Console.WriteLine($"Hooks.InAirTimer: 0x{Hooks.InAirTimer:X}");
+             Console.WriteLine($"Hooks.NoClipKb: 0x{Hooks.NoClipKb:X}");
+             Console.WriteLine($"Hooks.NoClipTriggers: 0x{Hooks.NoClipTriggers:X}");
+             Console.WriteLine($"Hooks.AddSubGoal: 0x{Hooks.AddSubGoal:X}");
+             Console.WriteLine($"Hooks.HasSpEffect: 0x{Hooks.HasSpEffect:X}");
 //             
-             Console.WriteLine($"Funcs.GraceWarp: 0x{Offsets.Funcs.GraceWarp:X}");
-             Console.WriteLine($"Funcs.SetEvent: 0x{Offsets.Funcs.SetEvent:X}");
-             Console.WriteLine($"Funcs.SetSpEffect: 0x{Offsets.Funcs.SetSpEffect:X}");
+             Console.WriteLine($"Funcs.GraceWarp: 0x{Funcs.GraceWarp:X}");
+             Console.WriteLine($"Funcs.SetEvent: 0x{Funcs.SetEvent:X}");
+             Console.WriteLine($"Funcs.SetSpEffect: 0x{Funcs.SetSpEffect:X}");
 #endif
         }
 

@@ -179,20 +179,33 @@ namespace SilkyRing.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 48 83 ec 40             sub    rsp,0x40
+        ///   Looks up a localized string similar to 48 8b 49 08             mov    rcx,QWORD PTR [rcx+0x8]
+        ///81 fa a5 2e 00 00       cmp    edx,0x2ea5
+        ///75 03                   jne    f &lt;normal&gt;
+        ///48 31 c9                xor    rcx,rcx
+        ///00000000000f &lt;normal&gt;:
+        ///48 85 c9                test   rcx,rcx
+        ///e9 00 00 00 00          jmp    17 &lt;normal+0x8&gt;.
+        /// </summary>
+        internal static string RykardNoMega {
+            get {
+                return ResourceManager.GetString("RykardNoMega", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 48 83 ec 20             sub    rsp,0x20
         ///48 b9 00 00 00 00 00    movabs rcx,0x0
         ///00 00 00
+        ///48 ba 00 00 00 00 00    movabs rdx,0x0
+        ///00 00 00
+        ///49 b8 00 00 00 00 00    movabs r8,0x0
+        ///00 00 00
         ///48 b8 00 00 00 00 00    movabs rax,0x0
         ///00 00 00
-        ///48 89 44 24 30          mov    QWORD PTR [rsp+0x30],rax
-        ///48 8d 54 24 30          lea    rdx,[rsp+0x30]
-        ///41 b8 01 00 00 00       mov    r8d,0x1
-        ///41 b9 00 00 00 00       mov    r9d,0x0
-        ///c6 44 24 28 00          mov    BYTE PTR [rsp+0x28],0x0
-        ///c6 44 24 20 01          mov    BYTE PTR [rsp+0x20],0x1
-        ///48 b8 00 00 00 00 00    movabs rax,0x0
-        ///00 00 00
-        ///ff d0                   c [rest of string was truncated]&quot;;.
+        ///ff d0                   call   rax
+        ///48 83 c4 20             add    rsp,0x20
+        ///c3                      ret.
         /// </summary>
         internal static string SetEvent {
             get {

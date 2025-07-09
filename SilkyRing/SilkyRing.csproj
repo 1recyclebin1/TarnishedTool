@@ -78,6 +78,8 @@
         <Compile Include="Converters\StringToVisibilityConverter.cs" />
         <Compile Include="Memory\GameIds.cs" />
         <Compile Include="Models\Grace.cs" />
+        <Compile Include="Services\EnemyService.cs" />
+        <Compile Include="Services\EventService.cs" />
         <Compile Include="Services\PlayerService.cs" />
         <Compile Include="Services\TravelService.cs" />
         <Compile Include="Services\UtilityService.cs" />
@@ -85,9 +87,17 @@
         <Compile Include="Utilities\AsmLoader.cs" />
         <Compile Include="Utilities\DataLoader.cs" />
         <Compile Include="ViewModels\BaseViewModel.cs" />
+        <Compile Include="ViewModels\EnemyViewModel.cs" />
+        <Compile Include="ViewModels\EventViewModel.cs" />
         <Compile Include="ViewModels\PlayerViewModel.cs" />
         <Compile Include="ViewModels\TravelViewModel.cs" />
         <Compile Include="ViewModels\UtilityViewModel.cs" />
+        <Compile Include="Views\EnemyTab.xaml.cs">
+          <DependentUpon>EnemyTab.xaml</DependentUpon>
+        </Compile>
+        <Compile Include="Views\EventTab.xaml.cs">
+          <DependentUpon>EventTab.xaml</DependentUpon>
+        </Compile>
         <Compile Include="Views\PlayerTab.xaml.cs">
           <DependentUpon>PlayerTab.xaml</DependentUpon>
         </Compile>
@@ -109,6 +119,8 @@
             <DependentUpon>MainWindow.xaml</DependentUpon>
             <SubType>Code</SubType>
         </Compile>
+        <Page Include="Views\EnemyTab.xaml" />
+        <Page Include="Views\EventTab.xaml" />
         <Page Include="Views\PlayerTab.xaml" />
         <Page Include="Views\TravelTab.xaml" />
         <Page Include="Views\UtilityTab.xaml" />

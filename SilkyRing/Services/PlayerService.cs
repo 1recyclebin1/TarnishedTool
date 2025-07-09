@@ -612,5 +612,17 @@ namespace SilkyRing.Services
             });
             _memoryIo.AllocateAndExecute(bytes);
         }
+
+        public void ToggleChrDataFlag(int offset, byte bitmask, bool isEnabled)
+        {
+            var chrData = _memoryIo.FollowPointers(WorldChrMan.Base, new[]
+            {
+                (WorldChrMan.Offsets.PlayerInsPtr),
+                (WorldChrMan.Offsets.PlayerIns.ModulesPtr),
+                (WorldChrMan.Offsets.PlayerIns.Modules.ChrDataPtr)
+            }, true);
+            
+            _memoryIo.SetBitValue(chrData + offset, bitmask, isEnabled);
+        }
     }
 }

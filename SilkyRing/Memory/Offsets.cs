@@ -55,22 +55,37 @@ namespace SilkyRing.Memory
                     public static int PlayerCtrlPtr { get; private set; }
                     public static int CsSpecialEffectPtr { get; private set; }
                     public static int ModulesPtr { get; private set; }
-
                     
-                    //TODO Chrdata modules + 0x19B -->
-                    //No Death flag 1 << 0
-                    // No damage flag 1 << 1
                     
                     public static class Modules
                     {
                         public static void Initialize()
                         {
+                            ChrDataPtr = 0x0;
                             ChrPhysicsPtr = 0x68;
 
+                            ChrData.Initialize();
                             ChrPhysics.Initialize();
                         }
                         
+                        public static int ChrDataPtr { get; private set; }
                         public static int ChrPhysicsPtr { get; private set; }
+
+                        public static class ChrData
+                        {
+                            public static void Initialize()
+                            {
+                                Flags = 0x19B;
+                            }
+
+                            public enum Flag
+                            {
+                                NoDeath = 1 << 0,
+                                NoDamage = 1 << 1,
+                            }
+                            
+                            public static int Flags { get; private set; }
+                        }
 
                         public static class ChrPhysics
                         {
@@ -131,6 +146,8 @@ namespace SilkyRing.Memory
             public static long InAirTimer;
             public static long NoClipKb;
             public static long NoClipTriggers;
+            public static long AddSubGoal;
+            public static long HasSpEffect;
         }
         
         public static class Funcs
@@ -138,6 +155,11 @@ namespace SilkyRing.Memory
             public static long GraceWarp;
             public static long SetEvent;
             public static long SetSpEffect;
+        }
+
+        public static class Patches
+        {
+            public static IntPtr DungeonWarp;
         }
     }
 }

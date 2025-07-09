@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Windows.Threading;
 using SilkyRing.Memory;
 using SilkyRing.Services;
+using static SilkyRing.Memory.Offsets;
 
 namespace SilkyRing.ViewModels
 {
@@ -22,7 +23,7 @@ namespace SilkyRing.ViewModels
         // private CharacterState _saveState2 = new CharacterState();
         //
         // private bool _isNoDeathEnabled;
-        // private bool _isNoDamageEnabled;
+        private bool _isNoDamageEnabled;
         // private bool _isInfiniteStaminaEnabled;
         // private bool _isNoGoodsConsumeEnabled;
         // private bool _isInfiniteCastsEnabled;
@@ -73,7 +74,6 @@ namespace SilkyRing.ViewModels
         public PlayerViewModel(PlayerService playerService)
         {
             _playerService = playerService;
-
 
 
             RegisterHotkeys();
@@ -288,17 +288,22 @@ namespace SilkyRing.ViewModels
         //     set => SetProperty(ref _posZ, value);
         // }
         //
-        // public bool IsNoDamageEnabled
-        // {
-        //     get => _isNoDamageEnabled;
-        //     set
-        //     {
-        //         if (SetProperty(ref _isNoDamageEnabled, value))
-        //         {
-        //             _playerService.ToggleNoDamage(_isNoDamageEnabled);
-        //         }
-        //     }
-        // }
+        public bool IsNoDamageEnabled
+        {
+            get => _isNoDamageEnabled;
+            set
+            {
+                if (SetProperty(ref _isNoDamageEnabled, value))
+                {
+                    _playerService.ToggleChrDataFlag(
+                        WorldChrMan.Offsets.PlayerIns.Modules.ChrData.Flags,
+                        (byte)WorldChrMan.Offsets.PlayerIns.Modules.ChrData.Flag.NoDamage,
+                        _isNoDamageEnabled
+                    );
+                }
+            }
+        }
+
         //
         // public bool IsInfiniteStaminaEnabled
         // {

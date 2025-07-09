@@ -33,12 +33,13 @@ namespace SilkyRing.Services
 
         public void UnlockGrace(Grace grace)
         {
-            var bytes = AsmLoader.GetAsmBytes("GraceUnlock");
+            var bytes = AsmLoader.GetAsmBytes("SetEvent");
             AsmHelper.WriteAbsoluteAddresses(bytes, new []
             {
                 (_memoryIo.ReadInt64(VirtualMemFlag.Base), 0x4 + 2 ),
                 (grace.FlagId, 0xE + 2),
-                (GraceUnlock: Funcs.SetEvent, 0x38 + 2)
+                (1, 0x18 + 2),
+                (Funcs.SetEvent, 0x22 + 2)
             });
             _memoryIo.AllocateAndExecute(bytes);
         }

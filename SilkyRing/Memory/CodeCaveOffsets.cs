@@ -14,5 +14,7 @@ namespace SilkyRing.Memory
             Triggers = 0xB0,
             UpdateCoords = 0x100
         }
+
+        public const int Rykard = 0x300;
     }
 }

@@ -95,6 +95,21 @@
             AddressingMode.Absolute
         );
 
+        public static readonly Pattern AddSubGoal = new Pattern(
+            new byte[] { 0x48, 0x8B, 0xF1, 0x85, 0xD2, 0x0F, 0x88, 0x78 },
+            "xxxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern HasSpEffect = new Pattern(
+            new byte[] { 0x39, 0x51, 0x08, 0x74, 0x0C, 0x48, 0x8B },
+            "xxxxxxx",
+            -0x10,
+            AddressingMode.Absolute
+        );
+
+
         //Funcs
 
 
@@ -106,8 +121,8 @@
         );
 
         public static readonly Pattern SetEvent = new Pattern(
-            new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xC3, 0x81, 0xFB, 0x3D },
-            "x????xxxxx",
+            new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x80, 0x7C, 0x24, 0x60, 0x00, 0x74, 0x5C },
+            "x????xxxxxxx",
             0,
             AddressingMode.Relative,
             1,
@@ -121,6 +136,16 @@
             AddressingMode.Relative,
             1,
             5
+        );
+
+
+        //Patches
+
+        public static readonly Pattern DungeonWarp = new Pattern(
+            new byte[] { 0x74, 0x3A, 0x8B, 0x81, 0xA0 },
+            "xxxxx",
+            0,
+            AddressingMode.Absolute
         );
     }
 

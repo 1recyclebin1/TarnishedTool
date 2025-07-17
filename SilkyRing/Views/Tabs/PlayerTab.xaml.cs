@@ -21,12 +21,12 @@ namespace SilkyRing.Views
         
         private void SetRtsrClick(object sender, RoutedEventArgs e)
         {
-            // _playerViewModel.SetRtsr();
+            _playerViewModel.SetRtsr();
         }
 
         private void SetMaxHpClick(object sender, RoutedEventArgs e)
         {
-            // _playerViewModel.SetMaxHp();
+            _playerViewModel.SetMaxHp();
         }
 
         private void HealthUpDown_Loaded(object sender, RoutedEventArgs e)
@@ -54,28 +54,28 @@ namespace SilkyRing.Views
 
         private void PauseUpdates_GotFocus(object sender, RoutedEventArgs e)
         {
-            // _playerViewModel.PauseUpdates();
+            _playerViewModel.PauseUpdates();
         }
 
         private void SpinnerSetHp(object sender, RoutedEventArgs e)
         {
-            // _playerViewModel.PauseUpdates();
-            // if (HealthUpDown.Value.HasValue)
-            // {
-            //     _playerViewModel.SetHp(HealthUpDown.Value.Value);
-            // }
-            //
-            // _playerViewModel.ResumeUpdates();
+            _playerViewModel.PauseUpdates();
+            if (HealthUpDown.Value.HasValue)
+            {
+                _playerViewModel.SetHp(HealthUpDown.Value.Value);
+            }
+            
+            _playerViewModel.ResumeUpdates();
         }
 
         private void HealthUpDown_LostFocus(object sender, RoutedEventArgs e)
         {
-            // if (HealthUpDown.Value.HasValue)
-            // {
-            //     _playerViewModel.SetHp(HealthUpDown.Value.Value);
-            // }
-            //
-            // _playerViewModel.ResumeUpdates();
+            if (HealthUpDown.Value.HasValue)
+            {
+                _playerViewModel.SetHp(HealthUpDown.Value.Value);
+            }
+            
+            _playerViewModel.ResumeUpdates();
         }
 
         private void HealthUpDown_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -83,7 +83,7 @@ namespace SilkyRing.Views
             if (e.Key != Key.Enter && e.Key != Key.Return) return;
             if (HealthUpDown.Value.HasValue)
             {
-                // _playerViewModel.SetHp(HealthUpDown.Value.Value);
+                _playerViewModel.SetHp(HealthUpDown.Value.Value);
             }
 
             Focus();

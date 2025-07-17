@@ -1,33 +1,38 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using SilkyRing.ViewModels;
 
-namespace SilkyRing.Views
+namespace SilkyRing.Views.Windows
 {
     public partial class LoggerWindow : Window
     {
-        public LoggerWindow()
+        private readonly LoggerViewModel _loggerViewModel;
+        public LoggerWindow(LoggerViewModel viewModel)
         {
             InitializeComponent();
+            _loggerViewModel = viewModel;
+            DataContext = _loggerViewModel;
         }
 
         private void ClearUniqueSetEvents_Click(object sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            _loggerViewModel.ClearUniqueSetEvents();
         }
 
         private void ClearUniqueSpEffects_Click(object sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            _loggerViewModel.ClearUniqueSpEffects();
         }
 
         private void ClearConsole_Click(object sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            _loggerViewModel.ClearConsole();
         }
 
         private void PauseAllLogging_Click(object sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            _loggerViewModel.PauseAllLogging();
         }
 
         private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -46,5 +51,6 @@ namespace SilkyRing.Views
         }
         private void MinimizeButton_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
         private void CloseButton_Click(object sender, RoutedEventArgs e) => Close();
+        
     }
 }

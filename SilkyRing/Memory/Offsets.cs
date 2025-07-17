@@ -15,6 +15,7 @@ namespace SilkyRing.Memory
             DamageManager.Offsets.Initialize();
             WorldHitMan.Offsets.Initialize();
             WorldChrManDbg.Offsets.Initialize();
+            GameDataMan.Offsets.Initialize();
         }
 
 
@@ -87,14 +88,17 @@ namespace SilkyRing.Memory
                         public static void Initialize()
                         {
                             ChrDataPtr = 0x0;
+                            ChrBehaviorPtr = 0x28;
                             ChrSuperArmorPtr = 0x40;
                             ChrPhysicsPtr = 0x68;
 
                             ChrData.Initialize();
+                            ChrBehavior.Initialize();
                             ChrPhysics.Initialize();
                         }
 
                         public static int ChrDataPtr { get; private set; }
+                        public static int ChrBehaviorPtr { get; private set; }
                         public static int ChrSuperArmorPtr { get; private set; }
                         public static int ChrPhysicsPtr { get; private set; }
 
@@ -116,6 +120,17 @@ namespace SilkyRing.Memory
                             public static int Health { get; private set; }
                             public static int MaxHealth { get; private set; }
                             public static int Flags { get; private set; }
+                        }
+                        
+                        public static class ChrBehavior
+                        {
+                            public static void Initialize()
+                            {
+                                AnimSpeed = 0x17C8;
+                            }
+
+                            public static int AnimSpeed { get; private set; }
+                        
                         }
                         
                         public static class ChrSuperArmor
@@ -265,6 +280,21 @@ namespace SilkyRing.Memory
             }
         }
         
+        public static class GameDataMan
+        {
+            public static IntPtr Base;
+
+            public static class Offsets
+            {
+                public static void Initialize()
+                {
+                    Ng = 0x120;
+                }
+
+                public static int Ng { get; private set; }
+            }
+        }
+        
         public static class TargetView
         {
             public static IntPtr Base;
@@ -353,6 +383,7 @@ namespace SilkyRing.Memory
             public static long GraceWarp;
             public static long SetEvent;
             public static long SetSpEffect;
+            public static long GiveRunes;
         }
 
         public static class Patches

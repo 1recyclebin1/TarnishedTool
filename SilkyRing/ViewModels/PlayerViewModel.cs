@@ -9,8 +9,8 @@ namespace SilkyRing.ViewModels
 {
     public class PlayerViewModel : BaseViewModel
     {
-        // private int _currentHp;
-        // private int _currentMaxHp;
+        private int _currentHp;
+        private int _currentMaxHp;
         //
         // private bool _isPos1Saved;
         // private bool _isPos2Saved;
@@ -51,20 +51,22 @@ namespace SilkyRing.ViewModels
         // private int _soulLevel;
         // private int _soulMemory;
         // private int _souls = 10000; 
-        // private int _newGame;
-        // private float _playerSpeed;
+        private int _newGame;
+
         // private int _currentSoulLevel;
-        //
+        
         // private HealthWindow _healthWindow;
+
         // private bool _isHealthWindowOpen;
-        //
-        // private float _playerDesiredSpeed = -1f;
-        // private const float DefaultSpeed = 1f;
-        // private const float Epsilon = 0.0001f;
-        //
-        // private bool _pauseUpdates = true;
+        
+        private float _playerSpeed;
+        private float _playerDesiredSpeed = -1f;
+        private const float DefaultSpeed = 1f;
+        private const float Epsilon = 0.0001f;
+        
+        private bool _pauseUpdates = true;
         private bool _areOptionsEnabled;
-        // private readonly DispatcherTimer _timer;
+        private readonly DispatcherTimer _timer;
 
         private readonly PlayerService _playerService;
         // private readonly DamageControlService _damageControlService;
@@ -77,29 +79,29 @@ namespace SilkyRing.ViewModels
 
             RegisterHotkeys();
 
-            // _timer = new DispatcherTimer
-            // {
-            //     Interval = TimeSpan.FromMilliseconds(100)
-            // };
-            // _timer.Tick += (s, e) =>
-            // {
-            //     if (_pauseUpdates) return;
-            //
-            //     CurrentHp = _playerService.GetHp();
-            //     CurrentMaxHp = _playerService.GetMaxHp();
-            //     PlayerSpeed = _playerService.GetPlayerSpeed();
-            //     int newSoulLevel = _playerService.GetSoulLevel();
-            //     SoulMemory = _playerService.GetSoulMemory();
-            //     _coords = _playerService.GetCoords();
-            //     PosX = _coords.x;
-            //     PosY = _coords.y;
-            //     PosZ = _coords.z;
-            //     if (_currentSoulLevel == newSoulLevel) return;
-            //     SoulLevel = newSoulLevel;
-            //     _currentSoulLevel = newSoulLevel;
-            //     LoadStats();
-            // };
-            // _timer.Start();
+            _timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(100)
+            };
+            _timer.Tick += (s, e) =>
+            {
+                if (_pauseUpdates) return;
+            
+                CurrentHp = _playerService.GetHp();
+                CurrentMaxHp = _playerService.GetMaxHp();
+                PlayerSpeed = _playerService.GetPlayerSpeed();
+                // int newSoulLevel = _playerService.GetSoulLevel();
+                // SoulMemory = _playerService.GetSoulMemory();
+                // _coords = _playerService.GetCoords();
+                // PosX = _coords.x;
+                // PosY = _coords.y;
+                // PosZ = _coords.z;
+                // if (_currentSoulLevel == newSoulLevel) return;
+                // SoulLevel = newSoulLevel;
+                // _currentSoulLevel = newSoulLevel;
+                LoadStats();
+            };
+            _timer.Start();
         }
 
         private void RegisterHotkeys()
@@ -146,48 +148,48 @@ namespace SilkyRing.ViewModels
             // Intelligence = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Intelligence);
             // Faith = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Faith);
             // SoulLevel = _playerService.GetSoulLevel();
-            // NewGame = _playerService.GetNewGame();
+            NewGame = _playerService.GetNewGame();
             // PlayerSpeed = _playerService.GetPlayerSpeed();
         }
 
 
-        // public void PauseUpdates()
-        // {
-        //     _pauseUpdates = true;
-        // }
-        //
-        // public void ResumeUpdates()
-        // {
-        //     _pauseUpdates = false;
-        // }
+        public void PauseUpdates()
+        {
+            _pauseUpdates = true;
+        }
+        
+        public void ResumeUpdates()
+        {
+            _pauseUpdates = false;
+        }
 
         public bool AreOptionsEnabled
         {
             get => _areOptionsEnabled;
             set => SetProperty(ref _areOptionsEnabled, value);
         }
-        //
-        // public int CurrentHp
-        // {
-        //     get => _currentHp;
-        //     set => SetProperty(ref _currentHp, value);
-        // }
-        //
-        // public int CurrentMaxHp
-        // {
-        //     get => _currentMaxHp;
-        //     set => SetProperty(ref _currentMaxHp, value);
-        // }
-        //
-        // public void SetHp(int hp)
-        // {
-        //     _playerService.SetHp(hp);
-        //     CurrentHp = hp;
-        // }
-        //
-        // public void SetRtsr() => _playerService.SetRtsr();
-        //
-        // public void SetMaxHp() =>_playerService.SetFullHp();
+
+        public int CurrentHp
+        {
+            get => _currentHp;
+            set => SetProperty(ref _currentHp, value);
+        }
+        
+        public int CurrentMaxHp
+        {
+            get => _currentMaxHp;
+            set => SetProperty(ref _currentMaxHp, value);
+        }
+        
+        public void SetHp(int hp)
+        {
+            _playerService.SetHp(hp);
+            CurrentHp = hp;
+        }
+        
+        public void SetRtsr() => _playerService.SetRtsr();
+        
+        public void SetMaxHp() =>_playerService.SetFullHp();
         //
         //
         // public bool IsHealthWindowOpen
@@ -564,53 +566,53 @@ namespace SilkyRing.ViewModels
         //     set => SetProperty(ref _souls, value);
         // }
         //
-        // public int NewGame
-        // {
-        //     get => _newGame;
-        //     set
-        //     {
-        //         if (SetProperty(ref _newGame, value))
-        //         {
-        //             _playerService.SetNewGame(value);
-        //         }
-        //     }
-        // }
-        //
-        // public float PlayerSpeed
-        // {
-        //     get => _playerSpeed;
-        //     set
-        //     {
-        //         if (SetProperty(ref _playerSpeed, value))
-        //         {
-        //             _playerService.SetPlayerSpeed(value);
-        //         }
-        //     }
-        // }
-        //
-        // public void SetSpeed(float value) => PlayerSpeed = value;
-        //
-        // private void ToggleSpeed()
-        // {
-        //     if (!AreOptionsEnabled) return;
-        //
-        //     if (!IsApproximately(PlayerSpeed, DefaultSpeed))
-        //     {
-        //         _playerDesiredSpeed = PlayerSpeed;
-        //         SetSpeed(DefaultSpeed);
-        //     }
-        //     else if (_playerDesiredSpeed >= 0)
-        //     {
-        //         SetSpeed(_playerDesiredSpeed);
-        //     }
-        // }
-        //
-        // private bool IsApproximately(float a, float b)
-        // {
-        //     return Math.Abs(a - b) < Epsilon;
-        // }
-        //
-        //
+        public int NewGame
+        {
+            get => _newGame;
+            set
+            {
+                if (SetProperty(ref _newGame, value))
+                {
+                    _playerService.SetNewGame(value);
+                }
+            }
+        }
+        
+        public float PlayerSpeed
+        {
+            get => _playerSpeed;
+            set
+            {
+                if (SetProperty(ref _playerSpeed, value))
+                {
+                    _playerService.SetPlayerSpeed(value);
+                }
+            }
+        }
+        
+        public void SetSpeed(float value) => PlayerSpeed = value;
+        
+        private void ToggleSpeed()
+        {
+            if (!AreOptionsEnabled) return;
+        
+            if (!IsApproximately(PlayerSpeed, DefaultSpeed))
+            {
+                _playerDesiredSpeed = PlayerSpeed;
+                SetSpeed(DefaultSpeed);
+            }
+            else if (_playerDesiredSpeed >= 0)
+            {
+                SetSpeed(_playerDesiredSpeed);
+            }
+        }
+        
+        private bool IsApproximately(float a, float b)
+        {
+            return Math.Abs(a - b) < Epsilon;
+        }
+        
+        
         public void TryEnableFeatures()
         {
             if (IsNoDamageEnabled) _playerService.ToggleChrDataFlag(
@@ -626,10 +628,10 @@ namespace SilkyRing.ViewModels
             );
             
             AreOptionsEnabled = true;
-            // LoadStats();
-            // _timer.Start();
+            LoadStats();
+            _timer.Start();
         }
-        //
+
         public void TryApplyOneTimeFeatures()
         {
             if (IsOneShotEnabled) _playerService.ToggleDebugFlag(WorldChrManDbg.Offsets.OneShot, true);
@@ -643,14 +645,14 @@ namespace SilkyRing.ViewModels
             if (IsNoRuneGainEnabled) _playerService.ToggleNoRuneGain(true);
             if (IsNoRuneLossEnabled) _playerService.ToggleNoRuneLoss(true);
             if (IsNoRuneArcLossEnabled) _playerService.ToggleNoRuneArcLoss(true);
-            // _pauseUpdates = false;
+            _pauseUpdates = false;
         }
         
         public void DisableFeatures()
         {
             AreOptionsEnabled = false;
             
-            // _timer.Stop();
+            _timer.Stop();
         }
 
         // public void GiveSouls() => _playerService.GiveSouls(Souls);

@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using SilkyRing.Memory.DLLShared;
 
@@ -111,8 +113,13 @@ namespace SilkyRing.ViewModels
     
         public void ClearConsole()
         {
-            LogText = string.Empty;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                _logBuilder.Clear();
+                LogText = string.Empty;
+            });
         }
+        
         public void PauseAllLogging()
         {
             IsSetEventLogging = false;
@@ -122,12 +129,43 @@ namespace SilkyRing.ViewModels
             IsSetEventUniqueLogging = false;
         }
     
+        private readonly StringBuilder _logBuilder = new StringBuilder();
+        private const int MaxLength = 100000;
+        
+        private DateTime _lastUiUpdate = DateTime.MinValue;
+        private readonly StringBuilder _pendingLogs = new StringBuilder();
+        private readonly object _logLock = new object();
+
         private void OnLogReceived(object sender, string logs)
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            lock (_logLock)
             {
-                LogText += logs;
-            });
+                _pendingLogs.Append(logs);
+            }
+            
+            if ((DateTime.Now - _lastUiUpdate).TotalMilliseconds >= 250)
+            {
+                string logsToAdd;
+                lock (_logLock)
+                {
+                    logsToAdd = _pendingLogs.ToString();
+                    _pendingLogs.Clear();
+                }
+        
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    _logBuilder.Append(logsToAdd);
+            
+                    if (_logBuilder.Length > MaxLength)
+                    {
+                        _logBuilder.Remove(0, _logBuilder.Length - 75000);
+                    }
+            
+                    LogText = _logBuilder.ToString();
+                });
+        
+                _lastUiUpdate = DateTime.Now;
+            }
         }
     }
 }

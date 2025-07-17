@@ -96,19 +96,19 @@
         <Compile Include="ViewModels\PlayerViewModel.cs" />
         <Compile Include="ViewModels\TravelViewModel.cs" />
         <Compile Include="ViewModels\UtilityViewModel.cs" />
-        <Compile Include="Views\EnemyTab.xaml.cs">
+        <Compile Include="Views\Tabs\EnemyTab.xaml.cs">
           <DependentUpon>EnemyTab.xaml</DependentUpon>
         </Compile>
-        <Compile Include="Views\EventTab.xaml.cs">
+        <Compile Include="Views\Tabs\EventTab.xaml.cs">
           <DependentUpon>EventTab.xaml</DependentUpon>
         </Compile>
-        <Compile Include="Views\PlayerTab.xaml.cs">
+        <Compile Include="Views\Tabs\PlayerTab.xaml.cs">
           <DependentUpon>PlayerTab.xaml</DependentUpon>
         </Compile>
-        <Compile Include="Views\TravelTab.xaml.cs">
+        <Compile Include="Views\Tabs\TravelTab.xaml.cs">
           <DependentUpon>TravelTab.xaml</DependentUpon>
         </Compile>
-        <Compile Include="Views\UtilityTab.xaml.cs">
+        <Compile Include="Views\Tabs\UtilityTab.xaml.cs">
           <DependentUpon>UtilityTab.xaml</DependentUpon>
         </Compile>
         <Compile Include="Views\Windows\LoggerWindow.xaml.cs">
@@ -126,11 +126,11 @@
             <DependentUpon>MainWindow.xaml</DependentUpon>
             <SubType>Code</SubType>
         </Compile>
-        <Page Include="Views\EnemyTab.xaml" />
-        <Page Include="Views\EventTab.xaml" />
-        <Page Include="Views\PlayerTab.xaml" />
-        <Page Include="Views\TravelTab.xaml" />
-        <Page Include="Views\UtilityTab.xaml" />
+        <Page Include="Views\Tabs\EnemyTab.xaml" />
+        <Page Include="Views\Tabs\EventTab.xaml" />
+        <Page Include="Views\Tabs\PlayerTab.xaml" />
+        <Page Include="Views\Tabs\TravelTab.xaml" />
+        <Page Include="Views\Tabs\UtilityTab.xaml" />
         <Page Include="Views\Windows\LoggerWindow.xaml" />
     </ItemGroup>
     <ItemGroup>
@@ -163,9 +163,6 @@
       <Content Include="Resources\DLL\dll.dll">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Views\Tabs\" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
 </Project>

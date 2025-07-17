@@ -17,82 +17,47 @@ namespace SilkyRing.Services
             _hookManager = hookManager;
         }
 
-        // public int GetHp() =>
-        //     _memoryIo.ReadInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Hp));
-        //
-        // public int GetMaxHp() =>
-        //     _memoryIo.ReadInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.MaxHp));
-        //
-        // public void SetHp(int hp) =>
-        //     _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Hp), hp);
-        //
-        //
-        // public void SetFullHp()
-        // {
-        //     var full = _memoryIo.ReadInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.FullHpWithHollowing));
-        //     _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Hp), full);
-        // }
-        //
-        // public void SetRtsr()
-        // {
-        //     var full = _memoryIo.ReadInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.FullHpWithHollowing));
-        //     _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Hp), (full * 30) / 100);
-        // }
-        //
+        public int GetHp() =>
+            _memoryIo.ReadInt32(GetChrDataFieldPtr(WorldChrMan.Offsets.ChrIns.Modules.ChrData.Health));
+
+        public int GetMaxHp() =>
+            _memoryIo.ReadInt32(GetChrDataFieldPtr(WorldChrMan.Offsets.ChrIns.Modules.ChrData.MaxHealth));
+
+        public void SetHp(int hp) =>
+            _memoryIo.WriteInt32(GetChrDataFieldPtr(WorldChrMan.Offsets.ChrIns.Modules.ChrData.Health), hp);
+        
+        
+        public void SetFullHp()
+        {
+            var full = _memoryIo.ReadInt32(GetChrDataFieldPtr(WorldChrMan.Offsets.ChrIns.Modules.ChrData.MaxHealth));
+            _memoryIo.WriteInt32(GetChrDataFieldPtr(WorldChrMan.Offsets.ChrIns.Modules.ChrData.Health), full);
+        }
+        
+        public void SetRtsr()
+        {
+            var full = _memoryIo.ReadInt32(GetChrDataFieldPtr(WorldChrMan.Offsets.ChrIns.Modules.ChrData.MaxHealth));
+            _memoryIo.WriteInt32(GetChrDataFieldPtr(WorldChrMan.Offsets.ChrIns.Modules.ChrData.Health), (full * 20) / 100);
+        }
+        
         // public int GetSp() =>
         //     _memoryIo.ReadInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Stamina));
         //
         // public void SetSp(int sp) =>
         //     _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Stamina), sp);
-        //
-        // private IntPtr GetPlayerCtrlField(int fieldOffset) =>
-        //     _memoryIo.FollowPointers(GameManagerImp.Base, new[] { GameManagerImp.Offsets.PlayerCtrl, fieldOffset },
-        //         false);
-        //
-        //
-        // public void ToggleNoDeath(bool isNoDeathEnabled) =>
-        //     _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.MinHp),
-        //         isNoDeathEnabled ? 1 : -99999);
-        //
-        // public void ToggleNoDamage(bool isNoDamageEnabled)
-        // {
-        //     var hookLoc = Offsets.Hooks.HpWrite;
-        //     var code = CodeCaveOffsets.Base + CodeCaveOffsets.PlayerNoDamage;
-        //
-        //     if (isNoDamageEnabled)
-        //     {
-        //         if (GameVersion.Current.Edition == GameEdition.Scholar)
-        //         {
-        //             var codeBytes = AsmLoader.GetAsmBytes("PlayerNoDamage64");
-        //             var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt64());
-        //             Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
-        //             bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 6, code + 0x2C);
-        //             Array.Copy(bytes, 0, codeBytes, 0x27 + 1, 4);
-        //             _memoryIo.WriteBytes(code, codeBytes);
-        //
-        //             _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[] { 0x89, 0x83, 0x68, 0x01, 0x00, 0x00 });
-        //         }
-        //         else
-        //         {
-        //             var codeBytes = AsmLoader.GetAsmBytes("PlayerNoDamage32");
-        //             var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt32());
-        //             Array.Copy(bytes, 0, codeBytes, 0x1 + 1, 4);
-        //             bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 6, code + 0x1F);
-        //             Array.Copy(bytes, 0, codeBytes, 0x1A + 1, 4);
-        //             _memoryIo.WriteBytes(code, codeBytes);
-        //             _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[] { 0x89, 0x8E, 0xFC, 0x00, 0x00, 0x00 });
-        //         }
-        //         
-        //     }
-        //     else
-        //     {
-        //         _hookManager.UninstallHook(code.ToInt64());
-        //     }
-        // }
-        //
-        //
-        // public void ToggleInfiniteStamina(bool isInfiniteStaminaEnabled) =>
-        //     _memoryIo.WriteByte(Patches.InfiniteStam + 1, isInfiniteStaminaEnabled ? 0x82 : 0x83);
+        
+        
+        private IntPtr GetChrDataFieldPtr(int fieldOffset)
+        {
+            return _memoryIo.FollowPointers(WorldChrMan.Base,
+                new[]
+                {
+                    WorldChrMan.Offsets.PlayerInsPtr,
+                    WorldChrMan.Offsets.ChrIns.ModulesPtr,
+                    WorldChrMan.Offsets.ChrIns.Modules.ChrDataPtr,
+                    fieldOffset
+                }, false);
+        }
+
         //
         // public int GetPlayerStat(int statOffset) => _memoryIo.ReadUInt8(GetStatPtr(statOffset));
         //
@@ -214,74 +179,22 @@ namespace SilkyRing.Services
         //
         // public int GetSoulLevel() => _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.SoulLevel));
         //
-        // public float GetPlayerSpeed() => _memoryIo.ReadFloat(GetSpeedPtr());
-        //
-        // public void SetPlayerSpeed(float speed) => _memoryIo.WriteFloat(GetSpeedPtr(), speed);
-        //
-        // private IntPtr GetSpeedPtr()
-        // {
-        //     return _memoryIo.FollowPointers(GameManagerImp.Base, new[]
-        //     {
-        //         GameManagerImp.Offsets.PlayerCtrl,
-        //         GameManagerImp.ChrCtrlOffsets.Speed
-        //     }, false);
-        // }
-        //
-        // public void ToggleNoGoodsConsume(bool isNoGoodsConsumeEnabled)
-        // {
-        //     if (GameVersion.Current.Edition == GameEdition.Scholar)
-        //     {
-        //         _memoryIo.WriteBytes(Patches.InfiniteGoods,
-        //             isNoGoodsConsumeEnabled
-        //                 ? new byte[] { 0x90, 0x90, 0x90, 0x90 }
-        //                 : new byte[] { 0x66, 0x29, 0x73, 0x20 });
-        //     }
-        //     else
-        //     {
-        //         _memoryIo.WriteBytes(Patches.InfiniteGoods,
-        //             isNoGoodsConsumeEnabled
-        //                 ? new byte[] { 0x90, 0x90, 0x90, 0x90 }
-        //                 : new byte[] { 0x66, 0x29, 0x5E, 0x18 }
-        //         );
-        //     }
-        // }
-        //
-        // public void ToggleInfiniteCasts(bool isInfiniteCastsEnabled)
-        // {
-        //     if (GameVersion.Current.Edition == GameEdition.Scholar)
-        //     {
-        //         _memoryIo.WriteBytes(Patches.InfiniteCasts,
-        //             isInfiniteCastsEnabled
-        //                 ? new byte[] { 0x90, 0x90, 0x90 }
-        //                 : new byte[] { 0x88, 0x4D, 0x20 });
-        //     }
-        //     else
-        //     {
-        //         _memoryIo.WriteBytes(Patches.InfiniteCasts,
-        //             isInfiniteCastsEnabled
-        //                 ? new byte[] { 0x90, 0x90, 0x90 }
-        //                 : new byte[] { 0x88, 0x43, 0x18 });
-        //     }
-        // }
-        //
-        // public void ToggleInfiniteDurability(bool isInfiniteDuraEnabled)
-        // {
-        //     if (GameVersion.Current.Edition == GameEdition.Scholar)
-        //     {
-        //         _memoryIo.WriteBytes(Patches.InfiniteDurability,
-        //             isInfiniteDuraEnabled
-        //                 ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
-        //                 : new byte[] { 0xF3, 0x0F, 0x11, 0xB4, 0xC3, 0x94, 0x00, 0x00, 0x00 });
-        //     }
-        //     else
-        //     {
-        //         _memoryIo.WriteBytes(Patches.InfiniteDurability,
-        //             isInfiniteDuraEnabled
-        //                 ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, }
-        //                 : new byte[] { 0xF3, 0x0F, 0x11, 0x47, 0x6C });
-        //     }
-        // }
-        //
+        public float GetPlayerSpeed() => _memoryIo.ReadFloat(GetPlayerSpeedPtr());
+
+        public void SetPlayerSpeed(float speed) => _memoryIo.WriteFloat(GetPlayerSpeedPtr(), speed);
+
+        private IntPtr GetPlayerSpeedPtr()
+        {
+            return _memoryIo.FollowPointers(WorldChrMan.Base,
+                new[]
+                {
+                    WorldChrMan.Offsets.PlayerInsPtr,
+                    WorldChrMan.Offsets.ChrIns.ModulesPtr,
+                    WorldChrMan.Offsets.ChrIns.Modules.ChrBehaviorPtr,
+                    WorldChrMan.Offsets.ChrIns.Modules.ChrBehavior.AnimSpeed
+                }, false);
+        }
+       
         // public void SavePos(int index)
         // {
         //     byte[] positionBytes = _memoryIo.ReadBytes(GetPositionPtr(), 0x40);
@@ -326,17 +239,6 @@ namespace SilkyRing.Services
         //     return (x, y, z);
         // }
         //
-        // public void SetNewGame(int value) => _memoryIo.WriteByte(GetNewGamePtr(), value);
-        //
-        // public int GetNewGame() => _memoryIo.ReadUInt8(GetNewGamePtr());
-        //
-        // private IntPtr GetNewGamePtr() =>
-        //     _memoryIo.FollowPointers(GameManagerImp.Base, new[]
-        //     {
-        //         GameManagerImp.Offsets.GameDataManager,
-        //         GameManagerImp.GameDataManagerOffsets.NewGamePtr,
-        //         GameManagerImp.GameDataManagerOffsets.NewGame
-        //     }, false);
         //
         // public void GiveSouls(int souls)
         // {
@@ -415,19 +317,7 @@ namespace SilkyRing.Services
         //     
         // }
         //
-        // public void ToggleSilent(bool isSilentEnabled)
-        // {
-        //     if (isSilentEnabled)
-        //     {
-        //         _nopManager.InstallNop(Patches.Silent.ToInt64(),
-        //             GameVersion.Current.Edition == GameEdition.Scholar ? 5 : 16);
-        //     }
-        //     else _nopManager.RestoreNop(Patches.Silent.ToInt64());
-        // }
-        //
-        // public void ToggleHidden(bool isHiddenEnabled) =>
-        //     _memoryIo.WriteBytes(Patches.Hidden + 1, isHiddenEnabled ? new byte[] { 0x85 } : new byte[] { 0x84 });
-        //
+
         public void ToggleInfinitePoise(bool isInfinitePoiseEnabled)
         {
             var code = CodeCaveOffsets.Base + CodeCaveOffsets.InfinitePoise;
@@ -457,136 +347,7 @@ namespace SilkyRing.Services
         //
         // public void ToggleAutoSetNg7(bool isAutoSetNewGameSevenEnabled) =>
         //     _memoryIo.WriteByte(Patches.Ng7 + 3, isAutoSetNewGameSevenEnabled ? 9 : 1);
-        //
-        // public void SetSpEffect(GameIds.SpEffects.SpEffectData restoreHumanity)
-        // {
-        //     var spEffectParams = CodeCaveOffsets.Base + CodeCaveOffsets.SpEffectParams;
-        //     var code = CodeCaveOffsets.Base + CodeCaveOffsets.SpEffectCode;
-        //
-        //     var chrSpEffectCtrl = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
-        //     {
-        //         GameManagerImp.Offsets.PlayerCtrl,
-        //         GameManagerImp.ChrCtrlOffsets.ChrSpEffectCtrl
-        //     }, true);
-        //
-        //     var setEffectFunc = Offsets.Funcs.SetSpEffect;
-        //
-        //     _memoryIo.WriteInt32(spEffectParams, restoreHumanity.EffectId);
-        //     _memoryIo.WriteInt32(spEffectParams + 0x4, restoreHumanity.Quantity);
-        //     _memoryIo.WriteFloat(spEffectParams + 0x8, restoreHumanity.FloatValue);
-        //     _memoryIo.WriteByte(spEffectParams + 0xC, restoreHumanity.EffectType);
-        //     _memoryIo.WriteByte(spEffectParams + 0xD, restoreHumanity.Param1);
-        //     _memoryIo.WriteByte(spEffectParams + 0xE, restoreHumanity.Param2);
-        //     _memoryIo.WriteByte(spEffectParams + 0xF, restoreHumanity.Param3);
-        //
-        //     if (GameVersion.Current.Edition == GameEdition.Scholar)
-        //     {
-        //         var codeBytes = AsmLoader.GetAsmBytes("SetSpEffect64");
-        //         var bytes = BitConverter.GetBytes(chrSpEffectCtrl.ToInt64());
-        //         Array.Copy(bytes, 0, codeBytes, 0x7 + 2, 8);
-        //         AsmHelper.WriteRelativeOffsets(codeBytes, new[]
-        //         {
-        //             (code.ToInt64(), spEffectParams.ToInt64(), 7, 0x0 + 3),
-        //             (code.ToInt64() + 0x15, setEffectFunc, 5, 0x15 + 1)
-        //         });
-        //
-        //         _memoryIo.WriteBytes(code, codeBytes);
-        //     }
-        //     else
-        //     {
-        //         var codeBytes = AsmLoader.GetAsmBytes("SetSpEffect32");
-        //
-        //         var bytes = BitConverter.GetBytes(spEffectParams.ToInt32());
-        //         Array.Copy(bytes, 0, codeBytes, 0x3 + 2, 4);
-        //         bytes = BitConverter.GetBytes(chrSpEffectCtrl.ToInt32());
-        //         Array.Copy(bytes, 0, codeBytes, 0xA + 1, 4);
-        //
-        //         AsmHelper.WriteRelativeOffsets(codeBytes, new[]
-        //         {
-        //             (code.ToInt64() + 0xF, setEffectFunc, 5, 0xF + 1)
-        //         });
-        //
-        //         _memoryIo.WriteBytes(code, codeBytes);
-        //     }
-        //
-        //     _memoryIo.RunThread(code);
-        // }
-        //
-        // public void ToggleNoSoulGain(bool isEnabled)
-        // {
-        //     if (isEnabled) _nopManager.InstallNop(Patches.NoSoulGain.ToInt64(), 5);
-        //     else _nopManager.RestoreNop(Patches.NoSoulGain.ToInt64());
-        // }
-        //
-        // public void ToggleNoHollowing(bool isEnabled)
-        // {
-        //     if (GameVersion.Current.Edition == GameEdition.Scholar)
-        //     {
-        //         _memoryIo.WriteBytes(Patches.NoHollowing,
-        //             isEnabled
-        //                 ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
-        //                 : new byte[] { 0x88, 0x81, 0xAC, 0x01, 0x00, 0x00 }
-        //         );
-        //     }
-        //     else
-        //     {
-        //         _memoryIo.WriteBytes(Patches.NoHollowing,
-        //             isEnabled
-        //                 ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
-        //                 : new byte[] { 0x88, 0x91, 0xA8, 0x01, 0x00, 0x00 }
-        //         );
-        //     }
-        // }
-        //
-        // public void ToggleNoSoulLoss(bool isEnabled)
-        // {
-        //     if (GameVersion.Current.Edition == GameEdition.Scholar)
-        //     {
-        //         _memoryIo.WriteBytes(Patches.NoSoulLoss,
-        //             isEnabled
-        //                 ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
-        //                 : new byte[] { 0x89, 0x90, 0xEC, 0x00, 0x00, 0x00 }
-        //         );
-        //     }
-        //     else
-        //     {
-        //         _memoryIo.WriteBytes(Patches.NoSoulLoss,
-        //             isEnabled
-        //                 ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
-        //                 : new byte[] { 0xC7, 0x80, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
-        //         );
-        //     }
-        // }
-        //
-        // public void ToggleSoulMemWrite(bool isEnabled)
-        // {
-        //     if (GameVersion.Current.Edition == GameEdition.Scholar)
-        //     {
-        //         if (isEnabled)
-        //         {
-        //             _memoryIo.WriteBytes(Patches.SoulMemWrite1, new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 });
-        //             _memoryIo.WriteBytes(Patches.SoulMemWrite2, new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 });
-        //         }
-        //         else
-        //         {
-        //             _memoryIo.WriteBytes(Patches.SoulMemWrite1, new byte[] { 0x89, 0x81, 0xF4, 0x00, 0x00, 0x00 });
-        //             _memoryIo.WriteBytes(Patches.SoulMemWrite2, new byte[] { 0x89, 0x81, 0xFC, 0x00, 0x00, 0x00 });
-        //         }
-        //     }
-        //     else
-        //     {
-        //         if (isEnabled)
-        //         {
-        //             _memoryIo.WriteBytes(Patches.SoulMemWrite1, new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 });
-        //             _memoryIo.WriteBytes(Patches.SoulMemWrite2, new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 });
-        //         }
-        //         else
-        //         {
-        //             _memoryIo.WriteBytes(Patches.SoulMemWrite1, new byte[] { 0x89, 0x81, 0xF0, 0x00, 0x00, 0x00 });
-        //             _memoryIo.WriteBytes(Patches.SoulMemWrite2, new byte[] { 0x89, 0x91, 0xF8, 0x00, 0x00, 0x00 });
-        //         }
-        //     }
-        // }
+
         public void ApplySpEffect(long spEffectId)
         {
             var bytes = AsmLoader.GetAsmBytes("SetSpEffect");
@@ -625,10 +386,16 @@ namespace SilkyRing.Services
         public void ToggleNoRuneArcLoss(bool isNoRuneArcLossEnabled) =>
             _memoryIo.WriteByte(Patches.NoRuneArcLoss, isNoRuneArcLossEnabled ? 0xEB : 0x74);
 
-        public void ToggleNoRuneLoss(bool isNoRuneLossEnabled) => 
-        _memoryIo.WriteBytes(Patches.NoRuneLossOnDeath, 
-            isNoRuneLossEnabled
-                ? new byte[] { 0x90, 0x90, 0x90 }
-                : new byte[] { 0x89, 0x45, 0x6C});
+        public void ToggleNoRuneLoss(bool isNoRuneLossEnabled) =>
+            _memoryIo.WriteBytes(Patches.NoRuneLossOnDeath,
+                isNoRuneLossEnabled
+                    ? new byte[] { 0x90, 0x90, 0x90 }
+                    : new byte[] { 0x89, 0x45, 0x6C });
+
+        public void SetNewGame(int value) =>
+            _memoryIo.WriteInt32((IntPtr)_memoryIo.ReadInt64(GameDataMan.Base) + GameDataMan.Offsets.Ng, value);
+
+        public int GetNewGame() => 
+            _memoryIo.ReadInt32((IntPtr)_memoryIo.ReadInt64(GameDataMan.Base) + GameDataMan.Offsets.Ng);
     }
 }

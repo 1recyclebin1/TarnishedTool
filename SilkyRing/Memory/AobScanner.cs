@@ -43,6 +43,7 @@ namespace SilkyRing.Memory
             GameMan.Base = FindAddressByPattern(Pattern.GameMan);
             WorldHitMan.Base = FindAddressByPattern(Pattern.WorldHitMan);
             WorldChrManDbg.Base = FindAddressByPattern(Pattern.WorldChrManDbg);
+            GameDataMan.Base = FindAddressByPattern(Pattern.GameDataMan);
             
            
 
@@ -120,6 +121,7 @@ namespace SilkyRing.Memory
             Funcs.GraceWarp = FindAddressByPattern(Pattern.GraceWarp).ToInt64();
             Funcs.SetEvent = FindAddressByPattern(Pattern.SetEvent).ToInt64();
             Funcs.SetSpEffect = FindAddressByPattern(Pattern.SetSpEffect).ToInt64();
+            Funcs.GiveRunes = FindAddressByPattern(Pattern.GiveRunes).ToInt64();
             // Offsets.Funcs.ItemSpawn = FindAddressByPattern(Patterns.ItemSpawnFunc).ToInt64();
             // Offsets.Funcs.BreakAllObjects = FindAddressByPattern(Patterns.BreakAllObjects).ToInt64();
             // Offsets.Funcs.RestoreAllObjects = FindAddressByPattern(Patterns.RestoreAllObjects).ToInt64();
@@ -150,6 +152,7 @@ namespace SilkyRing.Memory
             Console.WriteLine($"GameMan.Base: 0x{GameMan.Base.ToInt64():X}");
             Console.WriteLine($"WorldHitMan.Base: 0x{WorldHitMan.Base.ToInt64():X}");
             Console.WriteLine($"WorldChrManDbg.Base: 0x{WorldChrManDbg.Base.ToInt64():X}");
+            Console.WriteLine($"GameDataMan.Base: 0x{GameDataMan.Base.ToInt64():X}");
            
              Console.WriteLine($"Patches.NoLogo: 0x{Patches.DungeonWarp.ToInt64():X}");
              Console.WriteLine($"NoRunesFromEnemies.NoLogo: 0x{Patches.NoRunesFromEnemies.ToInt64():X}");
@@ -167,6 +170,7 @@ namespace SilkyRing.Memory
              Console.WriteLine($"Funcs.GraceWarp: 0x{Funcs.GraceWarp:X}");
              Console.WriteLine($"Funcs.SetEvent: 0x{Funcs.SetEvent:X}");
              Console.WriteLine($"Funcs.SetSpEffect: 0x{Funcs.SetSpEffect:X}");
+             Console.WriteLine($"Funcs.GiveRunes: 0x{Funcs.GiveRunes:X}");
 #endif
         }
 

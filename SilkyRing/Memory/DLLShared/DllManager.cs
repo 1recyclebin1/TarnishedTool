@@ -101,6 +101,12 @@ namespace SilkyRing.Memory.DLLShared
             {
                 try
                 {
+                    if (_activeLoggerCount == 0)
+                    {
+                        Thread.Sleep(100);
+                        continue;
+                    }
+                    
                     int writePos = _logAccessor.ReadInt32(WritePosOffset);
                     int readPos = _logAccessor.ReadInt32(ReadPosOffset);
                     
@@ -130,11 +136,22 @@ namespace SilkyRing.Memory.DLLShared
             }
         }
 
+        private int _activeLoggerCount = 0;
+        
         public void SetLogCommand(LogCommand command, bool isEnabled)
         {
             if (!_isLogSharedMemInitialized) return;
             int offset = CommandArrayOffset + ((int)command * sizeof(int));
             _logAccessor.Write(offset, isEnabled ? 1 : 0);
+
+            if (isEnabled)
+            {
+                _activeLoggerCount++;
+            }
+            else
+            {
+                _activeLoggerCount--;
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using SilkyRing.Memory.DLLShared;
 using SilkyRing.Services;
 using SilkyRing.Views;
+using SilkyRing.Views.Windows;
 using static SilkyRing.Memory.Offsets;
 
 namespace SilkyRing.ViewModels
@@ -388,10 +389,10 @@ namespace SilkyRing.ViewModels
         {
             
             var viewModel = new LoggerViewModel(_dllManager);
-            var window = new LoggerWindow { DataContext = viewModel };
+            var window = new LoggerWindow(viewModel);
             window.Show();
             
-            // await viewModel.InitializeAsync();
+            await viewModel.InitializeAsync();
 
         }
     }

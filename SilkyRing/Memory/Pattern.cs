@@ -110,6 +110,15 @@
             8
         );
 
+        public static readonly Pattern GameDataMan = new Pattern(
+            new byte[] { 0x0F, 0x84, 0x27, 0x01, 0x00, 0x00, 0xF6, 0x41 },
+            "xxxxxxxx",
+            -0x1B,
+            AddressingMode.Relative,
+            3,
+            7
+        );
+
 
         //Hooks
         public static readonly Pattern UpdateCoords = new Pattern(
@@ -204,6 +213,15 @@
             5
         );
 
+        public static readonly Pattern GiveRunes = new Pattern(
+            new byte[] { 0x74, 0x12, 0x8B, 0x53, 0x6C },
+            "xxxxx",
+            0xA,
+            AddressingMode.Relative,
+            1,
+            5
+        );
+
 
         //Patches
 
@@ -234,7 +252,6 @@
             0xB,
             AddressingMode.Absolute
         );
-        
     }
 
 

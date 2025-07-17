@@ -523,7 +523,7 @@
                                                 Value="{Binding NewGame}"
                                                 TextAlignment="Center"
                                                 Width="80"
-                                                Minimum="1"
+                                                Minimum="0"
                                                 Maximum="9"
                                                 Grid.Column="0"
                                                 IsEnabled="{Binding AreOptionsEnabled}"

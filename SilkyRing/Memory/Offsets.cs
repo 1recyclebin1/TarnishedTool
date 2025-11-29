@@ -172,6 +172,7 @@ namespace SilkyRing.Memory
             public static long BlueTargetView;
             public static long LockedTargetPtr;
             public static long InfinitePoise;
+            public static long ShouldUpdateAi;
         }
 
         public static class Funcs

@@ -60,6 +60,25 @@ namespace SilkyRing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 50                      push   rax
+        ///48 8b 41 10             mov    rax,QWORD PTR [rcx+0x10]
+        ///48 3b 05 00 00 00 00    cmp    rax,QWORD PTR [rip+0x0]        # c &lt;_main+0xc&gt;
+        ///75 0b                   jne    19 &lt;skip&gt;
+        ///58                      pop    rax
+        ///48 89 5c 24 08          mov    QWORD PTR [rsp+0x8],rbx
+        ///e9 00 00 00 00          jmp    19 &lt;skip&gt;
+        ///000000000019 &lt;skip&gt;:
+        ///58                      pop    rax
+        ///30 c0                   xor    al,al
+        ///c3                      ret.
+        /// </summary>
+        internal static string DisableAllExceptTarget {
+            get {
+                return ResourceManager.GetString("DisableAllExceptTarget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 b9 00 00 00 00 00    movabs rcx,0x0
         ///00 00 00
         ///48 ba 00 00 00 00 00    movabs rdx,0x0

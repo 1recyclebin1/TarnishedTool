@@ -131,6 +131,29 @@ namespace SilkyRing.Services
             memoryService.AllocateAndExecute(bytes);
         }
 
+        public void ToggleDisableAllExceptTarget(bool isEnabled)
+        {
+            var code = CodeCaveOffsets.Base + CodeCaveOffsets.DisableAllExceptTarget;
+            if (isEnabled)
+            {
+                var lockedTargetPtr = CodeCaveOffsets.Base + (int)CodeCaveOffsets.LockedTarget.SavedPtr;
+                var hookLoc = Hooks.ShouldUpdateAi;
+                var bytes = AsmLoader.GetAsmBytes("DisableAllExceptTarget");
+                AsmHelper.WriteRelativeOffsets(bytes, new []
+                {
+                    (code.ToInt64() + 0x5, lockedTargetPtr.ToInt64(), 7, 0x5 + 3),
+                    (code.ToInt64() + 0x14, hookLoc + 0x5, 5, 0x14 + 1)
+                });
+
+                memoryService.WriteBytes(code, bytes);
+                hookManager.InstallHook(code.ToInt64(), hookLoc, [0x48, 0x89, 0x5C, 0x24, 0x08]);
+            }
+            else
+            {
+                hookManager.UninstallHook(code.ToInt64());
+            }
+        }
+
         private IntPtr GetChrFlagsPtr()
         {
             return memoryService.FollowPointers(

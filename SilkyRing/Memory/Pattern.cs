@@ -184,6 +184,13 @@
             AddressingMode.Absolute
         );
 
+        public static readonly Pattern ShouldUpdateAi = new Pattern(
+            new byte[] { 0x84, 0xC0, 0x40, 0x0F, 0x94, 0xC6, 0x83 },
+            "xxxxxxx",
+            -0x1B,
+            AddressingMode.Absolute
+        );
+
 
         //Funcs
 

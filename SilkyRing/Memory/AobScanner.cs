@@ -45,14 +45,14 @@ namespace SilkyRing.Memory
             WorldHitMan.Base = FindAddressByPattern(Pattern.WorldHitMan);
             WorldChrManDbg.Base = FindAddressByPattern(Pattern.WorldChrManDbg);
             GameDataMan.Base = FindAddressByPattern(Pattern.GameDataMan);
-            
-           
 
 
             TryPatternWithFallback("DungeonWarp", Pattern.DungeonWarp, addr => Patches.DungeonWarp = addr, saved);
-            TryPatternWithFallback("NoRunesFromEnemies", Pattern.NoRunesFromEnemies, addr => Patches.NoRunesFromEnemies = addr, saved);
+            TryPatternWithFallback("NoRunesFromEnemies", Pattern.NoRunesFromEnemies,
+                addr => Patches.NoRunesFromEnemies = addr, saved);
             TryPatternWithFallback("NoRuneArcLoss", Pattern.NoRuneArcLoss, addr => Patches.NoRuneArcLoss = addr, saved);
-            TryPatternWithFallback("NoRuneLossOnDeath", Pattern.NoRuneLossOnDeath, addr => Patches.NoRuneLossOnDeath = addr, saved);
+            TryPatternWithFallback("NoRuneLossOnDeath", Pattern.NoRuneLossOnDeath,
+                addr => Patches.NoRuneLossOnDeath = addr, saved);
             // TryPatternWithFallback("AccessFullShop", Patterns.AccessFullShop, addr => Offsets.Patches.AccessFullShop = addr, saved);
             // TryPatternWithFallback("RepeatAct", Patterns.RepeatAct, addr => Offsets.Patches.RepeatAct = addr, saved);
             // TryPatternWithFallback("GameSpeed", Patterns.GameSpeed, addr => Offsets.Patches.GameSpeed = addr, saved);
@@ -84,34 +84,8 @@ namespace SilkyRing.Memory
                 addr => Hooks.LockedTargetPtr = addr.ToInt64(), saved);
             TryPatternWithFallback("InfinitePoise", Pattern.InfinitePoise,
                 addr => Hooks.InfinitePoise = addr.ToInt64(), saved);
-            // TryPatternWithFallback("AddSubGoal", Patterns.AddSubGoal, addr => Offsets.Hooks.AddSubGoal = addr.ToInt64(),
-            //     saved);
-            // TryPatternWithFallback("InAirTimer", Patterns.NoClipInAirTimer,
-            //     addr => Offsets.Hooks.InAirTimer = addr.ToInt64(), saved);
-            // TryPatternWithFallback("NoClipKeyboard", Patterns.NoClipKeyboard,
-            //     addr => Offsets.Hooks.NoClipKeyboard = addr.ToInt64(), saved);
-            // TryPatternWithFallback("NoClipUpdateCoords", Patterns.NoClipUpdateCoords,
-            //     addr => Offsets.Hooks.NoClipUpdateCoords = addr.ToInt64(), saved);
-            // TryPatternWithFallback("CameraUpLimit", Patterns.CameraUpLimit,
-            //     addr => Offsets.Hooks.CameraUpLimit = addr.ToInt64(), saved);
-            // TryPatternWithFallback("ItemLotBase", Patterns.ItemLotBase,
-            //     addr => Offsets.Hooks.ItemLotBase = addr.ToInt64(), saved);
-            // TryPatternWithFallback("ArgoSpeed", Patterns.ArgoSpeed,
-            //     addr => Offsets.Hooks.ArgoSpeed = addr.ToInt64(), saved);
-            //
-            // var triggers = FindAddressesByPattern(Patterns.NoClipTriggers, 2);
-            // if (triggers[0] == IntPtr.Zero && saved.TryGetValue("NoClipTriggers", out var value))
-            // {
-            //     Offsets.Hooks.NoClipTriggers = value;
-            //     Offsets.Hooks.NoClipTriggers2 = saved["NoClipTriggers2"];
-            // }
-            // else if (triggers[0] != IntPtr.Zero)
-            // {
-            //     Offsets.Hooks.NoClipTriggers = triggers[0].ToInt64();
-            //     Offsets.Hooks.NoClipTriggers2 = triggers[1].ToInt64();
-            //     saved["NoClipTriggers"] = triggers[0].ToInt64();
-            //     saved["NoClipTriggers2"] = triggers[1].ToInt64();
-            // }
+            TryPatternWithFallback("ShouldUpdateAi", Pattern.ShouldUpdateAi,
+                addr => Hooks.ShouldUpdateAi = addr.ToInt64(), saved);
 
             using (var writer = new StreamWriter(savePath))
             {
@@ -124,7 +98,6 @@ namespace SilkyRing.Memory
             Funcs.SetSpEffect = FindAddressByPattern(Pattern.SetSpEffect).ToInt64();
             Funcs.GiveRunes = FindAddressByPattern(Pattern.GiveRunes).ToInt64();
             Funcs.LookupByFieldInsHandle = FindAddressByPattern(Pattern.LookupByFieldInsHandle).ToInt64();
-      
 
 
 #if DEBUG
@@ -139,27 +112,28 @@ namespace SilkyRing.Memory
             Console.WriteLine($"WorldHitMan.Base: 0x{WorldHitMan.Base.ToInt64():X}");
             Console.WriteLine($"WorldChrManDbg.Base: 0x{WorldChrManDbg.Base.ToInt64():X}");
             Console.WriteLine($"GameDataMan.Base: 0x{GameDataMan.Base.ToInt64():X}");
-           
-             Console.WriteLine($"Patches.NoLogo: 0x{Patches.DungeonWarp.ToInt64():X}");
-             Console.WriteLine($"NoRunesFromEnemies.NoLogo: 0x{Patches.NoRunesFromEnemies.ToInt64():X}");
-             Console.WriteLine($"NoRuneArcLoss.NoLogo: 0x{Patches.NoRuneArcLoss.ToInt64():X}");
-             Console.WriteLine($"NoRuneLossOnDeath.NoLogo: 0x{Patches.NoRuneLossOnDeath.ToInt64():X}");
-             
-             Console.WriteLine($"Hooks.UpdateCoords: 0x{Hooks.UpdateCoords:X}");
-             Console.WriteLine($"Hooks.InAirTimer: 0x{Hooks.InAirTimer:X}");
-             Console.WriteLine($"Hooks.NoClipKb: 0x{Hooks.NoClipKb:X}");
-             Console.WriteLine($"Hooks.NoClipTriggers: 0x{Hooks.NoClipTriggers:X}");
-             Console.WriteLine($"Hooks.AddSubGoal: 0x{Hooks.CreateGoalObj:X}");
-             Console.WriteLine($"Hooks.HasSpEffect: 0x{Hooks.HasSpEffect:X}");
-             Console.WriteLine($"Hooks.BlueTargetView: 0x{Hooks.BlueTargetView:X}");
-             Console.WriteLine($"Hooks.LockedTargetPtr: 0x{Hooks.LockedTargetPtr:X}");
-             Console.WriteLine($"Hooks.InfinitePoise: 0x{Hooks.InfinitePoise:X}");
-//             
-             Console.WriteLine($"Funcs.GraceWarp: 0x{Funcs.GraceWarp:X}");
-             Console.WriteLine($"Funcs.SetEvent: 0x{Funcs.SetEvent:X}");
-             Console.WriteLine($"Funcs.SetSpEffect: 0x{Funcs.SetSpEffect:X}");
-             Console.WriteLine($"Funcs.GiveRunes: 0x{Funcs.GiveRunes:X}");
-             Console.WriteLine($"Funcs.LookupByFieldInsHandle: 0x{Funcs.LookupByFieldInsHandle:X}");
+
+            Console.WriteLine($"Patches.NoLogo: 0x{Patches.DungeonWarp.ToInt64():X}");
+            Console.WriteLine($"NoRunesFromEnemies.NoLogo: 0x{Patches.NoRunesFromEnemies.ToInt64():X}");
+            Console.WriteLine($"NoRuneArcLoss.NoLogo: 0x{Patches.NoRuneArcLoss.ToInt64():X}");
+            Console.WriteLine($"NoRuneLossOnDeath.NoLogo: 0x{Patches.NoRuneLossOnDeath.ToInt64():X}");
+
+            Console.WriteLine($"Hooks.UpdateCoords: 0x{Hooks.UpdateCoords:X}");
+            Console.WriteLine($"Hooks.InAirTimer: 0x{Hooks.InAirTimer:X}");
+            Console.WriteLine($"Hooks.NoClipKb: 0x{Hooks.NoClipKb:X}");
+            Console.WriteLine($"Hooks.NoClipTriggers: 0x{Hooks.NoClipTriggers:X}");
+            Console.WriteLine($"Hooks.AddSubGoal: 0x{Hooks.CreateGoalObj:X}");
+            Console.WriteLine($"Hooks.HasSpEffect: 0x{Hooks.HasSpEffect:X}");
+            Console.WriteLine($"Hooks.BlueTargetView: 0x{Hooks.BlueTargetView:X}");
+            Console.WriteLine($"Hooks.LockedTargetPtr: 0x{Hooks.LockedTargetPtr:X}");
+            Console.WriteLine($"Hooks.InfinitePoise: 0x{Hooks.InfinitePoise:X}");
+            Console.WriteLine($"Hooks.ShouldUpdateAi: 0x{Hooks.ShouldUpdateAi:X}");
+
+            Console.WriteLine($"Funcs.GraceWarp: 0x{Funcs.GraceWarp:X}");
+            Console.WriteLine($"Funcs.SetEvent: 0x{Funcs.SetEvent:X}");
+            Console.WriteLine($"Funcs.SetSpEffect: 0x{Funcs.SetSpEffect:X}");
+            Console.WriteLine($"Funcs.GiveRunes: 0x{Funcs.GiveRunes:X}");
+            Console.WriteLine($"Funcs.LookupByFieldInsHandle: 0x{Funcs.LookupByFieldInsHandle:X}");
 #endif
         }
 

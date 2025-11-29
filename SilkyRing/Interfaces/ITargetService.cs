@@ -31,4 +31,5 @@ public interface ITargetService
     bool IsTargetNoDamageEnabled();
 
     void KillAllBesidesTarget();
+    void ToggleDisableAllExceptTarget(bool isEnabled);
 }

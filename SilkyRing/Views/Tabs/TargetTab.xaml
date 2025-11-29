@@ -489,7 +489,7 @@
                                FontWeight="Bold"
                                Margin="5,10,0,0" />
 
-                    <TextBox Height="70"></TextBox>
+                    <TextBox Height="70" />
 
                     <StackPanel Orientation="Horizontal">
                         <Button Content="Kill All Enemies Besides Target"
@@ -505,10 +505,17 @@
 
                         </Button>
 
-                        <Button Content="Disable All Ai Besides Target"
-                                IsEnabled="{Binding AreOptionsEnabled}"
-                                HorizontalAlignment="Right"
-                                Margin="130,0,0,0" />
+                        <CheckBox Content="Disable All Ai Besides Target">
+                            <CheckBox.IsEnabled>
+                                <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                    <Binding Path="AreOptionsEnabled" />
+                                    <Binding Path="IsValidTarget" />
+                                </MultiBinding>
+                            </CheckBox.IsEnabled>
+                            <CheckBox.IsChecked>
+                                <Binding Path="IsDisableAllExceptTargetEnabled" />
+                            </CheckBox.IsChecked>
+                        </CheckBox>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>

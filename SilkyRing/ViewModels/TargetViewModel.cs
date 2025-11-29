@@ -239,7 +239,19 @@ namespace SilkyRing.ViewModels
                 _targetService.ToggleTargetingView(_isTargetingViewEnabled);
             }
         }
-
+        
+        private bool _isDisableAllExceptTargetEnabled;
+        public bool IsDisableAllExceptTargetEnabled
+        {
+            get => _isDisableAllExceptTargetEnabled;
+            set
+            {
+                if (!SetProperty(ref _isDisableAllExceptTargetEnabled, value)) return;
+                _targetService.ToggleDisableAllExceptTarget(_isDisableAllExceptTargetEnabled);
+            }
+        }
+        
+        
         #endregion
 
    

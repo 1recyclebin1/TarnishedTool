@@ -30,5 +30,7 @@ namespace SilkyRing.Memory
         }
 
         public const int InfinitePoise = 0x590;
+
+        public const int DisableAllExceptTarget = 0x600;
     }
 }

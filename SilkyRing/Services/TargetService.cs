@@ -10,11 +10,11 @@ namespace SilkyRing.Services
     {
         public void ToggleTargetHook(bool isEnabled)
         {
-            var code = CodeCaveOffsets.Base + (int)CodeCaveOffsets.LockedTarget.Code;
+            var code = CodeCaveOffsets.Base + CodeCaveOffsets.SaveTargetPtrCode;
             if (isEnabled)
             {
                 var hook = Hooks.LockedTargetPtr;
-                var savedPtr = CodeCaveOffsets.Base + (int)CodeCaveOffsets.LockedTarget.SavedPtr;
+                var savedPtr = CodeCaveOffsets.Base + CodeCaveOffsets.TargetPtr;
                 var bytes = AsmLoader.GetAsmBytes("LockedTarget");
                 AsmHelper.WriteRelativeOffsets(bytes, new[]
                 {
@@ -32,7 +32,7 @@ namespace SilkyRing.Services
         }
 
         public ulong GetTargetAddr() =>
-            memoryService.ReadUInt64(CodeCaveOffsets.Base + (int)CodeCaveOffsets.LockedTarget.SavedPtr);
+            memoryService.ReadUInt64(CodeCaveOffsets.Base + CodeCaveOffsets.TargetPtr);
 
         public void SetHp(int health) =>
             memoryService.WriteInt32(GetChrDataPtr() + (int)ChrIns.ChrDataOffsets.Health, health);
@@ -43,9 +43,18 @@ namespace SilkyRing.Services
         public int GetMaxHp() =>
             memoryService.ReadInt32(GetChrDataPtr() + (int)ChrIns.ChrDataOffsets.MaxHealth);
 
+        public float GetCurrentPoise() =>
+            memoryService.ReadFloat(GetChrSuperArmorPtr() + (int)ChrIns.ChrSuperArmorOffsets.CurrentPoise);
+
+        public float GetMaxPoise() =>
+            memoryService.ReadFloat(GetChrSuperArmorPtr() + (int)ChrIns.ChrSuperArmorOffsets.MaxPoise);
+
+        public float GetPoiseTimer() =>
+            memoryService.ReadFloat(GetChrSuperArmorPtr() + (int)ChrIns.ChrSuperArmorOffsets.PoiseTimer);
+
         public float[] GetPosition()
         {
-            var posPtr = memoryService.FollowPointers(CodeCaveOffsets.Base + (int)CodeCaveOffsets.LockedTarget.SavedPtr,
+            var posPtr = memoryService.FollowPointers(CodeCaveOffsets.Base + CodeCaveOffsets.TargetPtr,
                 [..ChrIns.ChrPhysicsModule, (int)ChrIns.ChrPhysicsOffsets.Coords], false);
 
             float[] position = new float[3];
@@ -68,7 +77,6 @@ namespace SilkyRing.Services
 
         public bool IsAiDisabled() =>
             memoryService.IsBitSet(GetChrFlagsPtr() + ChrIns.DisableAi.Offset, ChrIns.DisableAi.Bit);
-
 
         public void ForceAct(int act) =>
             memoryService.WriteUInt8(GetAiThinkPtr() + (int)ChrIns.AiThinkOffsets.ForceAct, act);
@@ -110,24 +118,47 @@ namespace SilkyRing.Services
             memoryService.SetBitValue(bitFlags, (int)ChrIns.ChrDataBitFlags.NoDamage, isFreezeHealthEnabled);
         }
 
-        public bool IsTargetNoDamageEnabled()
+        public bool IsNoDamageEnabled()
         {
             var bitFlags = GetChrDataPtr() + (int)ChrIns.ChrDataOffsets.Flags;
             return memoryService.IsBitSet(bitFlags, (int)ChrIns.ChrDataBitFlags.NoDamage);
+        }
+
+        public void ToggleNoStagger(bool isEnabled)
+        {
+            var code = CodeCaveOffsets.Base + CodeCaveOffsets.TargetNoStagger;
+            if (isEnabled)
+            {
+                var hookLoc = Hooks.TargetNoStagger;
+                var lockedTarget = CodeCaveOffsets.Base + CodeCaveOffsets.TargetPtr;
+                var bytes = AsmLoader.GetAsmBytes("TargetNoStagger");
+                AsmHelper.WriteRelativeOffsets(bytes, new []
+                {
+                    (code.ToInt64() + 0x1, lockedTarget.ToInt64(), 7, 0x1 + 3),
+                    (code.ToInt64() + 0x19, hookLoc + 5, 5, 0x19 + 1)
+                });
+                memoryService.WriteBytes(code, bytes);
+                hookManager.InstallHook(code.ToInt64(), hookLoc,
+                    [0xF3, 0x0F, 0x11, 0x47, 0x10]);
+            }
+            else
+            {
+                hookManager.UninstallHook(code.ToInt64());
+            }
         }
 
         public void KillAllBesidesTarget()
         {
             var worldChrMan = memoryService.ReadInt64(WorldChrMan.Base);
             var lockedTarget =
-                memoryService.ReadInt64(CodeCaveOffsets.Base + (int)CodeCaveOffsets.LockedTarget.SavedPtr);
+                memoryService.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.TargetPtr);
             var bytes = AsmLoader.GetAsmBytes("KillAll");
-            AsmHelper.WriteAbsoluteAddresses(bytes, new []
+            AsmHelper.WriteAbsoluteAddresses(bytes, new[]
             {
                 (lockedTarget, 0x4 + 2),
                 (worldChrMan, 0xE + 2),
             });
-            
+
             memoryService.AllocateAndExecute(bytes);
         }
 
@@ -136,10 +167,10 @@ namespace SilkyRing.Services
             var code = CodeCaveOffsets.Base + CodeCaveOffsets.DisableAllExceptTarget;
             if (isEnabled)
             {
-                var lockedTargetPtr = CodeCaveOffsets.Base + (int)CodeCaveOffsets.LockedTarget.SavedPtr;
+                var lockedTargetPtr = CodeCaveOffsets.Base + CodeCaveOffsets.TargetPtr;
                 var hookLoc = Hooks.ShouldUpdateAi;
                 var bytes = AsmLoader.GetAsmBytes("DisableAllExceptTarget");
-                AsmHelper.WriteRelativeOffsets(bytes, new []
+                AsmHelper.WriteRelativeOffsets(bytes, new[]
                 {
                     (code.ToInt64() + 0x5, lockedTargetPtr.ToInt64(), 7, 0x5 + 3),
                     (code.ToInt64() + 0x14, hookLoc + 0x5, 5, 0x14 + 1)
@@ -160,25 +191,26 @@ namespace SilkyRing.Services
         private IntPtr GetChrFlagsPtr()
         {
             return memoryService.FollowPointers(
-                CodeCaveOffsets.Base + (int)CodeCaveOffsets.LockedTarget.SavedPtr,
+                CodeCaveOffsets.Base + CodeCaveOffsets.TargetPtr,
                 [ChrIns.ChrCtrl, ..ChrIns.ChrCtrlFlags], false
             );
         }
 
         private IntPtr GetChrDataPtr() =>
-            memoryService.FollowPointers(CodeCaveOffsets.Base + (int)CodeCaveOffsets.LockedTarget.SavedPtr,
+            memoryService.FollowPointers(CodeCaveOffsets.Base + CodeCaveOffsets.TargetPtr,
                 [..ChrIns.ChrDataModule], true);
 
         private IntPtr GetChrBehaviorPtr() =>
-            memoryService.FollowPointers(CodeCaveOffsets.Base + (int)CodeCaveOffsets.LockedTarget.SavedPtr,
+            memoryService.FollowPointers(CodeCaveOffsets.Base + CodeCaveOffsets.TargetPtr,
                 [..ChrIns.ChrBehaviorModule], true);
 
+        public IntPtr GetChrSuperArmorPtr() =>
+            memoryService.FollowPointers(CodeCaveOffsets.Base + CodeCaveOffsets.TargetPtr,
+                [..ChrIns.ChrSuperArmorModule], true);
 
-        private IntPtr GetAiThinkPtr()
-        {
-            return memoryService.FollowPointers(CodeCaveOffsets.Base + (int)CodeCaveOffsets.LockedTarget.SavedPtr, [
+        private IntPtr GetAiThinkPtr() =>
+            memoryService.FollowPointers(CodeCaveOffsets.Base + CodeCaveOffsets.TargetPtr, [
                 ..ChrIns.AiThink,
             ], true);
-        }
     }
 }

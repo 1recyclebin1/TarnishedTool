@@ -195,8 +195,8 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0" Margin="0,5,10,0">
-                                <CheckBox Content="Heavy Stagger" Margin="0,5"
-                                          IsChecked="{Binding ShowHeavyPoise, FallbackValue=False}" />
+                                <CheckBox Content="Poise" Margin="0,5"
+                                          IsChecked="{Binding ShowPoise, FallbackValue=False}" />
                                 <CheckBox Content="Light Stagger" Margin="0,5"
                                           IsChecked="{Binding ShowLightPoise, FallbackValue=False}" />
                                 <CheckBox Content="Bleed" Margin="0,5"
@@ -221,11 +221,14 @@
                                 </Grid.ColumnDefinitions>
 
                                 <StackPanel Grid.Row="0" Grid.Column="0"
-                                            Visibility="{Binding ShowHeavyPoise, Converter={StaticResource BoolToVis}, FallbackValue=Visible}"
+                                            Visibility="{Binding ShowPoise, Converter={StaticResource BoolToVis}, FallbackValue=Visible}"
                                             Margin="0,0,5,5">
+                                    <TextBlock
+                                        Text="{Binding PoiseTimer, StringFormat={}Poise: {0:F1}s, Mode=OneWay}"
+                                        HorizontalAlignment="Center" Margin="0,2,0,0" />
                                     <ProgressBar Height="25"
-                                                 Value="{Binding TargetCurrentHeavyPoise}"
-                                                 Maximum="{Binding TargetMaxHeavyPoise, FallbackValue=100}">
+                                                 Value="{Binding CurrentPoise}"
+                                                 Maximum="{Binding MaxPoise, FallbackValue=100}">
                                         <ProgressBar.Template>
                                             <ControlTemplate TargetType="ProgressBar">
                                                 <Border BorderBrush="#444444" BorderThickness="1" Background="#222222"
@@ -242,10 +245,10 @@
                                         </ProgressBar.Template>
                                     </ProgressBar>
                                     <TextBlock HorizontalAlignment="Center" Margin="0,2,0,0">
-                                        <Run Text="Heavy stagger " />
-                                        <Run Text="{Binding TargetCurrentHeavyPoise, StringFormat=F1, Mode=OneWay}" />
+                                        <Run Text="Poise " />
+                                        <Run Text="{Binding CurrentPoise, StringFormat=F1, Mode=OneWay}" />
                                         <Run Text="/" />
-                                        <Run Text="{Binding TargetMaxHeavyPoise, Mode=OneWay}" />
+                                        <Run Text="{Binding MaxPoise, Mode=OneWay}" />
                                     </TextBlock>
                                 </StackPanel>
 
@@ -415,6 +418,7 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Grid.Column="0"
@@ -460,6 +464,18 @@
                             </CheckBox.IsEnabled>
                             <CheckBox.IsChecked>
                                 <Binding Path="IsTargetingViewEnabled" />
+                            </CheckBox.IsChecked>
+                        </CheckBox>
+                        
+                        <CheckBox Grid.Column="4" Content="No Stagger" Margin="5,0,0,0">
+                            <CheckBox.IsEnabled>
+                                <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                    <Binding Path="AreOptionsEnabled" />
+                                    <Binding Path="IsValidTarget" />
+                                </MultiBinding>
+                            </CheckBox.IsEnabled>
+                            <CheckBox.IsChecked>
+                                <Binding Path="IsNoStaggerEnabled" />
                             </CheckBox.IsChecked>
                         </CheckBox>
                     </Grid>
@@ -531,7 +547,7 @@
                                 IsEnabled="{Binding AreOptionsEnabled}"
                                 Command="{Binding ForActSequenceCommand}"
                                 HorizontalAlignment="Right"
-                                
+                                Height="35"
                                 Margin="10,0,0,0" />
                         
                         <Border

@@ -11,9 +11,9 @@ public interface ITargetService
     int GetCurrentHp();
     int GetMaxHp();
     
-    // float GetCurrentPoise();
-    // float GetMaxPoise();
-    // float GetPoiseTimer();
+    float GetCurrentPoise();
+    float GetMaxPoise();
+    float GetPoiseTimer();
     
     float[] GetPosition();
     float GetSpeed();
@@ -28,7 +28,8 @@ public interface ITargetService
     void ToggleTargetingView(bool isTargetingViewEnabled);
     bool IsTargetViewEnabled();
     void ToggleTargetNoDamage(bool isFreezeHealthEnabled);
-    bool IsTargetNoDamageEnabled();
+    bool IsNoDamageEnabled();
+    void ToggleNoStagger(bool isEnabled);
 
     void KillAllBesidesTarget();
     void ToggleDisableAllExceptTarget(bool isEnabled);

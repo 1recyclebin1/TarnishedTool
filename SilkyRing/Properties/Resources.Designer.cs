@@ -79,6 +79,31 @@ namespace SilkyRing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 1,Nebula Hand Slam
+        ///3,Spin Swing
+        ///4,Straight Nebula
+        ///5,Single Poke
+        ///6,5 Hit Combo
+        ///7,Wave of Gold
+        ///8,Fire Breath
+        ///10,Grab
+        ///11,Swim Left Attack
+        ///12,Swim Right Attack
+        ///14,Standing Needles
+        ///15,Stake Attack
+        ///19,Fly Attack
+        ///20,Nebula Swipe
+        ///21,Nebula AoE
+        ///30,Swim Needles
+        ///31,Flying Needles.
+        /// </summary>
+        internal static string EbActs {
+            get {
+                return ResourceManager.GetString("EbActs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 80 3d 00 00 00 00 01    cmp    BYTE PTR [rip+0x0],0x1        # 7 &lt;_main+0x7&gt;
         ///75 39                   jne    42 &lt;normal&gt;
         ///81 78 28 00 00 00 00    cmp    DWORD PTR [rax+0x28],0x0
@@ -355,6 +380,23 @@ namespace SilkyRing.Properties {
         internal static string SetSpEffect {
             get {
                 return ResourceManager.GetString("SetSpEffect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 50                      push   rax
+        ///48 8b 05 00 00 00 00    mov    rax,QWORD PTR [rip+0x0]        # 8 &lt;_main+0x8&gt;
+        ///48 3b 47 08             cmp    rax,QWORD PTR [rdi+0x8]
+        ///75 05                   jne    13 &lt;normal&gt;
+        ///f3 0f 10 47 14          movss  xmm0,DWORD PTR [rdi+0x14]
+        ///000000000013 &lt;normal&gt;:
+        ///f3 0f 11 47 10          movss  DWORD PTR [rdi+0x10],xmm0
+        ///58                      pop    rax
+        ///e9 00 00 00 00          jmp    1e &lt;normal+0xb&gt;.
+        /// </summary>
+        internal static string TargetNoStagger {
+            get {
+                return ResourceManager.GetString("TargetNoStagger", resourceCulture);
             }
         }
     }

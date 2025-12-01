@@ -197,6 +197,13 @@
             AddressingMode.Absolute
         );
 
+        public static readonly Pattern TargetNoStagger = new Pattern(
+            new byte[] { 0xF3, 0x0F, 0x11, 0x47, 0x10, 0xF6 },
+            "xxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
         //Funcs
 
         public static readonly Pattern GraceWarp = new Pattern(

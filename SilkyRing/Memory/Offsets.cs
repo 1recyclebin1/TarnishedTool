@@ -17,13 +17,20 @@ namespace SilkyRing.Memory
             public const int ChrCtrl = 0x58;
             public const int SpEffectMan = 0x178;
             public const int Modules = 0x190;
+            public const int Flags = 0x530;
             public const int ChrManipulator = 0x580;
+
+            public enum ChrInsFlags
+            {
+                NoHit = 1 << 3,
+            }
 
 
             public static readonly int[] ChrCtrlFlags = [0xC8, 0x24];
             public static readonly BitFlag DisableAi = new(0x0, 1 << 0);
 
             public static readonly int[] ChrDataModule = [Modules, 0x0];
+            public static readonly int[] ChrResistModule = [Modules, 0x20];
             public static readonly int[] ChrBehaviorModule = [Modules, 0x28];
             public static readonly int[] ChrSuperArmorModule = [Modules, 0x40];
             public static readonly int[] ChrPhysicsModule = [Modules, 0x68];
@@ -40,6 +47,20 @@ namespace SilkyRing.Memory
             {
                 NoDeath = 1 << 0,
                 NoDamage = 1 << 1,
+            }
+            
+            public enum ChrResistOffsets
+            {
+                PoisonCurrent = 0x10,
+                RotCurrent = 0x14,
+                BleedCurrent = 0x18,
+                FrostCurrent = 0x20,
+                SleepCurrent = 0x24,
+                PoisonMax = 0x2C,
+                RotMax = 0x30,
+                BleedMax = 0x34,
+                FrostMax = 0x3C,
+                SleepMax = 0x40,
             }
 
             public enum ChrBehaviorOffsets
@@ -67,6 +88,18 @@ namespace SilkyRing.Memory
                 TargetingSystem = 0xC480,
                 ForceAct = 0xE9C1,
                 LastAct = 0xE9C2,
+            }
+            
+            public static readonly int[] NpcParam = [ChrManipulator, 0xC0, 0x18];
+            public static readonly int[] NpcThinkParam = [ChrManipulator, 0xC0, 0x30];
+
+            public enum NpcParamOffsets
+            {
+                PoisonImmune = 0x64,
+                RotImmune = 0x64,
+                BleedImmune = 0x178,
+                FrostImmune = 0x180,
+                SleepImmune = 0x184
             }
             
             public static readonly BitFlag BlueTargetView = new(0xC8, 1 << 4);
@@ -175,6 +208,7 @@ namespace SilkyRing.Memory
             public static long InfinitePoise;
             public static long ShouldUpdateAi;
             public static long GetForceActIdx;
+            public static long TargetNoStagger;
         }
 
         public static class Funcs

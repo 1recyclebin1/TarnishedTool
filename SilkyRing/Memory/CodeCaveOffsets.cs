@@ -23,12 +23,9 @@ namespace SilkyRing.Memory
             BlueTargetView = 0x360
         }
 
-        public enum LockedTarget
-        {
-            SavedPtr = 0x560,
-            Code = 0x570,
-        }
-
+        public const int TargetPtr = 0x560;
+        public const int SaveTargetPtrCode = 0x570;
+            
         public const int InfinitePoise = 0x590;
 
         public const int DisableAllExceptTarget = 0x600;
@@ -37,5 +34,9 @@ namespace SilkyRing.Memory
         public const int CurrentIdx = 0x6A0;
         public const int ShouldRun = 0x6A4;
         public const int ForceActSequence = 0x6B0;
+
+        public const int TargetNoStagger = 0x750;
+        
+        
     }
 }

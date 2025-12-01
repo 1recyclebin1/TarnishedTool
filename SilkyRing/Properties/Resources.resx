@@ -877,4 +877,34 @@ e9 00 00 00 00          jmp    42 &lt;normal&gt;
 0f be 80 c1 e9 00 00    movsx  eax,BYTE PTR [rax+0xe9c1]
 e9 00 00 00 00          jmp    4e &lt;normal+0xc&gt;</value>
   </data>
+  <data name="EbActs" xml:space="preserve">
+    <value>1,Nebula Hand Slam
+3,Spin Swing
+4,Straight Nebula
+5,Single Poke
+6,5 Hit Combo
+7,Wave of Gold
+8,Fire Breath
+10,Grab
+11,Swim Left Attack
+12,Swim Right Attack
+14,Standing Needles
+15,Stake Attack
+19,Fly Attack
+20,Nebula Swipe
+21,Nebula AoE
+30,Swim Needles
+31,Flying Needles</value>
+  </data>
+  <data name="TargetNoStagger" xml:space="preserve">
+    <value>50                      push   rax
+48 8b 05 00 00 00 00    mov    rax,QWORD PTR [rip+0x0]        # 8 &lt;_main+0x8&gt;
+48 3b 47 08             cmp    rax,QWORD PTR [rdi+0x8]
+75 05                   jne    13 &lt;normal&gt;
+f3 0f 10 47 14          movss  xmm0,DWORD PTR [rdi+0x14]
+000000000013 &lt;normal&gt;:
+f3 0f 11 47 10          movss  DWORD PTR [rdi+0x10],xmm0
+58                      pop    rax
+e9 00 00 00 00          jmp    1e &lt;normal+0xb&gt;</value>
+  </data>
 </root>

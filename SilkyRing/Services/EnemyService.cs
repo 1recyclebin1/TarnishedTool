@@ -8,6 +8,8 @@ namespace SilkyRing.Services;
 
 public class EnemyService(MemoryService memoryService, HookManager hookManager) : IEnemyService
 {
+    private const int MaxNumOfActs = 10;
+    
     public void ToggleRykardMega(bool isRykardNoMegaEnabled)
     {
         var code = CodeCaveOffsets.Base + CodeCaveOffsets.Rykard;
@@ -38,6 +40,11 @@ public class EnemyService(MemoryService memoryService, HookManager hookManager) 
         for (int i = 0; i < actSequence.Length; i++)
         {
             memoryService.WriteInt32(actsArr + 0x4 * i, actSequence[i]);
+        }
+        
+        for (int i = actSequence.Length; i < MaxNumOfActs + 1; i++)
+        {
+            memoryService.WriteInt32(actsArr + 0x4 * i, 0);
         }
 
         memoryService.WriteInt32(currentIdx, 0);

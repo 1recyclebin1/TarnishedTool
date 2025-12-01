@@ -12,8 +12,6 @@ namespace SilkyRing.ViewModels
     {
         private readonly DispatcherTimer _targetTick;
 
-        private const int MaxNumOfActs = 10;
-
         private bool _customHpHasBeenSet;
 
         private ulong _currentTargetId;
@@ -124,7 +122,7 @@ namespace SilkyRing.ViewModels
                 {
                     _targetService.ToggleTargetHook(true);
                     _targetTick.Start();
-                    // ShowAllResistances = true;
+                    ShowAllResistances = true;
                 }
                 else
                 {
@@ -140,6 +138,59 @@ namespace SilkyRing.ViewModels
                     // ShowBleed = false;
                     // ShowPoison = false;
                     // ShowToxic = false;
+                }
+            }
+        }
+
+        private float _currentPoise;
+        
+        public float CurrentPoise
+        {
+            get => _currentPoise;
+            set => SetProperty(ref _currentPoise, value);
+        }
+
+        private float _maxPoise;
+        
+        public float MaxPoise
+        {
+            get => _maxPoise;
+            set => SetProperty(ref _maxPoise, value);
+        }
+
+        private float _poiseTimer;
+        
+        public float PoiseTimer
+        {
+            get => _poiseTimer;
+            set => SetProperty(ref _poiseTimer, value);
+        }
+
+        private bool _showPoise;
+        
+        public bool ShowPoise
+        {
+            get => _showPoise;
+            set
+            {
+                SetProperty(ref _showPoise, value);
+                // if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
+                // _resistancesWindowWindow.DataContext = null;
+                // _resistancesWindowWindow.DataContext = this;
+            }
+        }
+        
+        
+        private bool _showAllResistances;
+        
+        public bool ShowAllResistances
+        {
+            get => _showAllResistances;
+            set
+            {
+                if (SetProperty(ref _showAllResistances, value))
+                {
+                    UpdateResistancesDisplay();
                 }
             }
         }
@@ -269,6 +320,18 @@ namespace SilkyRing.ViewModels
             {
                 if (!SetProperty(ref _isTargetingViewEnabled, value)) return;
                 _targetService.ToggleTargetingView(_isTargetingViewEnabled);
+            }
+        }
+        
+        private bool _isNoStaggerEnabled;
+
+        public bool IsNoStaggerEnabled
+        {
+            get => _isNoStaggerEnabled;
+            set
+            {
+                if (!SetProperty(ref _isNoStaggerEnabled, value)) return;
+                _targetService.ToggleNoStagger(_isNoStaggerEnabled);
             }
         }
 
@@ -403,10 +466,10 @@ namespace SilkyRing.ViewModels
                     IsRepeatActEnabled = false;
                 }
 
-                IsFreezeHealthEnabled = _targetService.IsTargetNoDamageEnabled();
+                IsFreezeHealthEnabled = _targetService.IsNoDamageEnabled();
                 _currentTargetId = targetId;
-                // TargetMaxHeavyPoise = _enemyService.GetTargetResistance(GameManagerImp.ChrCtrlOffsets.HeavyPoiseMax);
-                // TargetMaxLightPoise = _enemyService.GetTargetResistance(GameManagerImp.ChrCtrlOffsets.LightPoiseMax);
+                MaxPoise = _targetService.GetMaxPoise();
+                
                 // (IsPoisonToxicImmune, IsBleedImmune) = _enemyService.GetImmunities();
                 // TargetMaxPoison = IsPoisonToxicImmune
                 //     ? 0
@@ -430,8 +493,9 @@ namespace SilkyRing.ViewModels
             MaxHealth = _targetService.GetMaxHp();
             LastAct = _targetService.GetLastAct();
             TargetSpeed = _targetService.GetSpeed();
-            // TargetCurrentHeavyPoise = _enemyService.GetTargetResistance(GameManagerImp.ChrCtrlOffsets.HeavyPoiseCurrent);
-            // TargetCurrentLightPoise = _enemyService.GetTargetResistance(GameManagerImp.ChrCtrlOffsets.LightPoiseCurrent);
+            CurrentPoise = _targetService.GetCurrentPoise();
+            PoiseTimer = _targetService.GetPoiseTimer();
+            
             // TargetCurrentPoison = IsPoisonToxicImmune
             //     ? 0
             //     : _enemyService.GetTargetResistance(GameManagerImp.ChrCtrlOffsets.PoisonCurrent);
@@ -466,6 +530,31 @@ namespace SilkyRing.ViewModels
 
             return true;
         }
+        
+        private void UpdateResistancesDisplay()
+        {
+            if (!IsTargetOptionsEnabled) return;
+            if (_showAllResistances)
+            {
+                // ShowBleed = true;
+                ShowPoise = true;
+                // ShowPoison = true;
+                // ShowFrost = true;
+                // ShowToxic = true;
+            }
+            else
+            {
+                // ShowBleed = false;
+                ShowPoise = false;
+                // ShowPoison = false;
+                // ShowFrost = false;
+                // ShowToxic = false;
+            }
+            //
+            // if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
+            // _resistancesWindowWindow.DataContext = null;
+            // _resistancesWindowWindow.DataContext = this;
+        }
 
         private void UpdateDefenses()
         {
@@ -491,11 +580,10 @@ namespace SilkyRing.ViewModels
             }
             string actSequence = ActSequence.Trim();
             string[] parts = actSequence.Split(' ');
-            int[] acts = new int[MaxNumOfActs + 1]; // +1 for trailing zero
+            int[] acts = new int[parts.Length];
 
-            for (int i = 0; i < MaxNumOfActs; i++)
+            for (int i = 0; i < parts.Length; i++)
             {
-                if (i >= parts.Length) continue;
                 if (!int.TryParse(parts[i], out int act) || act < 0 || act > 99)
                 {
                     MsgBox.Show("Invalid act: " + parts[i]);
@@ -575,235 +663,8 @@ namespace SilkyRing.ViewModels
         // public bool ShowBleedAndNotImmune => ShowBleed && !IsBleedImmune;
         // public bool ShowPoisonAndNotImmune => ShowPoison && !IsPoisonToxicImmune;
         // public bool ShowToxicAndNotImmune => ShowToxic && !IsPoisonToxicImmune;
-        //
-        //
-        // public float TargetCurrentHeavyPoise
-        // {
-        //     get => _targetCurrentHeavyPoise;
-        //     set => SetProperty(ref _targetCurrentHeavyPoise, value);
-        // }
-        //
-        // public float TargetMaxHeavyPoise
-        // {
-        //     get => _targetMaxHeavyPoise;
-        //     set => SetProperty(ref _targetMaxHeavyPoise, value);
-        // }
-        //
-        //
-        //
-        // public bool ShowHeavyPoise
-        // {
-        //     get => _showHeavyPoise;
-        //     set
-        //     {
-        //         SetProperty(ref _showHeavyPoise, value);
-        //         if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
-        //         _resistancesWindowWindow.DataContext = null;
-        //         _resistancesWindowWindow.DataContext = this;
-        //     }
-        // }
-        //
-        // public bool ShowLightPoise
-        // {
-        //     get => _showLightPoise;
-        //     set
-        //     {
-        //         SetProperty(ref _showLightPoise, value);
-        //         if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
-        //         _resistancesWindowWindow.DataContext = null;
-        //         _resistancesWindowWindow.DataContext = this;
-        //     }
-        // }
-        //
-        // public float TargetCurrentLightPoise
-        // {
-        //     get => _targetCurrentLightPoise;
-        //     set => SetProperty(ref _targetCurrentLightPoise, value);
-        // }
-        //
-        // public float TargetMaxLightPoise
-        // {
-        //     get => _targetMaxLightPoise;
-        //     set => SetProperty(ref _targetMaxLightPoise, value);
-        // }
-        //
-        // public bool IsLightPoiseImmune
-        // {
-        //     get => _isLightPoiseImmune;
-        //     set => SetProperty(ref _isLightPoiseImmune, value);
-        // }
-        //
-        // public float TargetCurrentBleed
-        // {
-        //     get => _targetCurrentBleed;
-        //     set => SetProperty(ref _targetCurrentBleed, value);
-        // }
-        //
-        // public float TargetMaxBleed
-        // {
-        //     get => _targetMaxBleed;
-        //     set => SetProperty(ref _targetMaxBleed, value);
-        // }
-        //
-        // public bool ShowBleed
-        // {
-        //     get => _showBleed;
-        //     set
-        //     {
-        //         SetProperty(ref _showBleed, value);
-        //         if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
-        //         _resistancesWindowWindow.DataContext = null;
-        //         _resistancesWindowWindow.DataContext = this;
-        //     }
-        // }
-        //
-        // public bool IsBleedImmune
-        // {
-        //     get => _isBleedImmune;
-        //     set => SetProperty(ref _isBleedImmune, value);
-        // }
-        //
-        // public float TargetCurrentPoison
-        // {
-        //     get => _targetCurrentPoison;
-        //     set => SetProperty(ref _targetCurrentPoison, value);
-        // }
-        //
-        // public float TargetMaxPoison
-        // {
-        //     get => _targetMaxPoison;
-        //     set => SetProperty(ref _targetMaxPoison, value);
-        // }
-        //
-        // public bool ShowPoison
-        // {
-        //     get => _showPoison;
-        //     set
-        //     {
-        //         SetProperty(ref _showPoison, value);
-        //         if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
-        //         _resistancesWindowWindow.DataContext = null;
-        //         _resistancesWindowWindow.DataContext = this;
-        //     }
-        // }
-        //
-        // public bool IsPoisonToxicImmune
-        // {
-        //     get => _isPoisonToxicImmune;
-        //     set => SetProperty(ref _isPoisonToxicImmune, value);
-        // }
-        //
-        // public float TargetCurrentToxic
-        // {
-        //     get => _targetCurrentToxic;
-        //     set => SetProperty(ref _targetCurrentToxic, value);
-        // }
-        //
-        // public float TargetMaxToxic
-        // {
-        //     get => _targetMaxToxic;
-        //     set => SetProperty(ref _targetMaxToxic, value);
-        // }
-        //
-        // public bool ShowToxic
-        // {
-        //     get => _showToxic;
-        //     set
-        //     {
-        //         SetProperty(ref _showToxic, value);
-        //         if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
-        //         _resistancesWindowWindow.DataContext = null;
-        //         _resistancesWindowWindow.DataContext = this;
-        //     }
-        // }
-        //
-        //
-        // public bool ShowAllResistances
-        // {
-        //     get => _showAllResistances;
-        //     set
-        //     {
-        //         if (SetProperty(ref _showAllResistances, value))
-        //         {
-        //             UpdateResistancesDisplay();
-        //         }
-        //     }
-        // }
-        //
-
-
-
-        //
-        // public void TryApplyOneTimeFeatures()
-        // {
-        //     if (IsAllDisableAiEnabled) _enemyService.ToggleDisableAi(true);
-        //     IsScholar = GameVersion.Current.Edition == GameEdition.Scholar;
-        // }
-        //
-        //
-        // private float _slashDefense;
-        // public float SlashDefense
-        // {
-        //     get => _slashDefense;
-        //     set => SetProperty(ref _slashDefense, value);
-        // }
-        //
-        // private float _thrustDefense;
-        // public float ThrustDefense
-        // {
-        //     get => _thrustDefense;
-        //     set => SetProperty(ref _thrustDefense, value);
-        // }
-        //
-        // private float _strikeDefense;
-        // public float StrikeDefense
-        // {
-        //     get => _strikeDefense;
-        //     set => SetProperty(ref _strikeDefense, value);
-        // }
-        //
-        // private int _magicResist;
-        // public int MagicResist
-        // {
-        //     get => _magicResist;
-        //     set => SetProperty(ref _magicResist, value);
-        // }
-        //
-        // private int _lightningResist;
-        // public int LightningResist
-        // {
-        //     get => _lightningResist;
-        //     set => SetProperty(ref _lightningResist, value);
-        // }
-        //
-        // private int _fireResist;
-        // public int FireResist
-        // {
-        //     get => _fireResist;
-        //     set => SetProperty(ref _fireResist, value);
-        // }
-        //
-        // private int _darkResist;
-        // public int DarkResist
-        // {
-        //     get => _darkResist;
-        //     set => SetProperty(ref _darkResist, value);
-        // }
-        //
-        // private int _poisonToxicResist;
-        // public int PoisonToxicResist
-        // {
-        //     get => _poisonToxicResist;
-        //     set => SetProperty(ref _poisonToxicResist, value);
-        // }
-        //
-        // private int _bleedResist;
-        // public int BleedResist
-        // {
-        //     get => _bleedResist;
-        //     set => SetProperty(ref _bleedResist, value);
-        // }
-        //
+   
+        
         public void OpenDefenseWindow()
         {
             // if (_defenseWindow != null && _defenseWindow.IsVisible) 

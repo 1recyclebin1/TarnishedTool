@@ -89,6 +89,7 @@
         <Compile Include="Interfaces\IUtilityService.cs" />
         <Compile Include="Memory\BitFlag.cs" />
         <Compile Include="Memory\GameIds.cs" />
+        <Compile Include="Models\Act.cs" />
         <Compile Include="Models\Grace.cs" />
         <Compile Include="Services\EnemyService.cs" />
         <Compile Include="Services\TargetService.cs" />

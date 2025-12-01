@@ -88,6 +88,8 @@ namespace SilkyRing.Memory
                 addr => Hooks.ShouldUpdateAi = addr.ToInt64(), saved);
             TryPatternWithFallback("GetForceActIdx", Pattern.GetForceActIdx,
                 addr => Hooks.GetForceActIdx = addr.ToInt64(), saved);
+            TryPatternWithFallback("TargetNoStagger", Pattern.TargetNoStagger,
+                addr => Hooks.TargetNoStagger = addr.ToInt64(), saved);
 
             using (var writer = new StreamWriter(savePath))
             {
@@ -131,6 +133,7 @@ namespace SilkyRing.Memory
             Console.WriteLine($"Hooks.InfinitePoise: 0x{Hooks.InfinitePoise:X}");
             Console.WriteLine($"Hooks.ShouldUpdateAi: 0x{Hooks.ShouldUpdateAi:X}");
             Console.WriteLine($"Hooks.GetForceActIdx: 0x{Hooks.GetForceActIdx:X}");
+            Console.WriteLine($"Hooks.TargetNoStagger: 0x{Hooks.TargetNoStagger:X}");
 
             Console.WriteLine($"Funcs.GraceWarp: 0x{Funcs.GraceWarp:X}");
             Console.WriteLine($"Funcs.SetEvent: 0x{Funcs.SetEvent:X}");

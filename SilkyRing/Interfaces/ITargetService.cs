@@ -6,15 +6,12 @@ public interface ITargetService
 {
     void ToggleTargetHook(bool isEnabled);
     ulong GetTargetAddr();
-    
     void SetHp(int hp);
     int GetCurrentHp();
     int GetMaxHp();
-    
     float GetCurrentPoise();
     float GetMaxPoise();
     float GetPoiseTimer();
-    
     float[] GetPosition();
     float GetSpeed();
     void SetSpeed(float speed);
@@ -30,8 +27,9 @@ public interface ITargetService
     void ToggleTargetNoDamage(bool isFreezeHealthEnabled);
     bool IsNoDamageEnabled();
     void ToggleNoStagger(bool isEnabled);
-
     void KillAllBesidesTarget();
     void ToggleDisableAllExceptTarget(bool isEnabled);
     int GetNpcThinkParamId();
+    int GetResistance(int offset);
+
 }

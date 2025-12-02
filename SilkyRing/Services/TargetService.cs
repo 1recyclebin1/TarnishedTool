@@ -132,7 +132,7 @@ namespace SilkyRing.Services
                 var hookLoc = Hooks.TargetNoStagger;
                 var lockedTarget = CodeCaveOffsets.Base + CodeCaveOffsets.TargetPtr;
                 var bytes = AsmLoader.GetAsmBytes("TargetNoStagger");
-                AsmHelper.WriteRelativeOffsets(bytes, new []
+                AsmHelper.WriteRelativeOffsets(bytes, new[]
                 {
                     (code.ToInt64() + 0x1, lockedTarget.ToInt64(), 7, 0x1 + 3),
                     (code.ToInt64() + 0x19, hookLoc + 5, 5, 0x19 + 1)
@@ -188,13 +188,18 @@ namespace SilkyRing.Services
         public int GetNpcThinkParamId() =>
             memoryService.ReadInt32(GetAiThinkPtr() + (int)ChrIns.AiThinkOffsets.NpcThinkParamId);
 
-        private IntPtr GetChrFlagsPtr()
-        {
-            return memoryService.FollowPointers(
+        public int GetResistance(int offset) =>
+            memoryService.ReadInt32(GetChrResistPtr() + offset);
+
+        private IntPtr GetChrFlagsPtr() =>
+            memoryService.FollowPointers(
                 CodeCaveOffsets.Base + CodeCaveOffsets.TargetPtr,
-                [ChrIns.ChrCtrl, ..ChrIns.ChrCtrlFlags], false
-            );
-        }
+                [ChrIns.ChrCtrl, ..ChrIns.ChrCtrlFlags], false);
+
+        private nint GetChrResistPtr() =>
+            memoryService.FollowPointers(
+                CodeCaveOffsets.Base + CodeCaveOffsets.TargetPtr,
+                [..ChrIns.ChrResistModule], true);
 
         private IntPtr GetChrDataPtr() =>
             memoryService.FollowPointers(CodeCaveOffsets.Base + CodeCaveOffsets.TargetPtr,

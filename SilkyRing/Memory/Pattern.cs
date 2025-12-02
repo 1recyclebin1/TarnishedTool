@@ -204,6 +204,13 @@
             AddressingMode.Absolute
         );
 
+        public static readonly Pattern AttackInfo = new Pattern(
+            new byte[] { 0xF3, 0x44, 0x0F, 0x59, 0xC8, 0x44, 0x0F, 0x2F },
+            "xxxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
         //Funcs
 
         public static readonly Pattern GraceWarp = new Pattern(

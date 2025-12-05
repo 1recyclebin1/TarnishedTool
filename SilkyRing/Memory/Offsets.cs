@@ -19,12 +19,12 @@ namespace SilkyRing.Memory
             public const int Modules = 0x190;
             public const int Flags = 0x530;
             public const int ChrManipulator = 0x580;
-
-            public enum ChrInsFlags
-            {
-                NoHit = 1 << 3,
-            }
-
+            
+            public static readonly BitFlag NoHit = new(0x0, 1 << 3);
+            public static readonly BitFlag NoAttack = new(0x0, 1 << 4);
+            public static readonly BitFlag NoMove = new(0x0, 1 << 5);
+            // 1 << 6 is a red capsule towards the direction the boss is facing
+            //1 << 7 same but white capsule
 
             public static readonly int[] ChrCtrlFlags = [0xC8, 0x24];
             public static readonly BitFlag DisableAi = new(0x0, 1 << 0);

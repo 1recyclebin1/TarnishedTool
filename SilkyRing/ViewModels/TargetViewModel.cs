@@ -603,16 +603,15 @@ namespace SilkyRing.ViewModels
             get => _isShowAttackInfoEnabled;
             set
             {
-                if (!SetProperty(ref _isShowAttackInfoEnabled, value))
+                if (SetProperty(ref _isShowAttackInfoEnabled, value))
                 {
                     if (_isShowAttackInfoEnabled)
                     {
                         OpenAttackInfoWindow();
                     }
+
                     _attackInfoService.ToggleAttackInfoHook(_isShowAttackInfoEnabled);
-                    
                 }
-                
             }
         }
 

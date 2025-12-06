@@ -21,14 +21,9 @@ namespace SilkyRing.ViewModels
         private AttackInfoWindow _attackInfoWindow;
         private AttackInfoViewModel _attackInfoViewModel;
 
-        // private ResistancesWindow _resistancesWindowWindow;
-        // private bool _isResistancesWindowOpen;
-        //
+        private ResistancesWindow _resistancesWindowWindow;
+        
         private DefensesWindow _defensesWindow;
-        //
-        //
-        //
-        // private bool _showAllResistances;
 
         private readonly ITargetService _targetService;
         private readonly IEnemyService _enemyService;
@@ -113,7 +108,7 @@ namespace SilkyRing.ViewModels
                     _targetTick.Stop();
                     IsRepeatActEnabled = false;
                     ShowAllResistances = false;
-                    // IsResistancesWindowOpen = false;
+                    IsResistancesWindowOpen = false;
                     IsFreezeHealthEnabled = false;
                     IsDisableAllExceptTargetEnabled = false;
                     _targetService.ToggleTargetHook(false);
@@ -124,6 +119,8 @@ namespace SilkyRing.ViewModels
                     ShowFrost = false;
                     ShowBleed = false;
                 }
+                
+                RefreshResistancesWindow();
             }
         }
 
@@ -159,9 +156,7 @@ namespace SilkyRing.ViewModels
             set
             {
                 SetProperty(ref _showPoise, value);
-                // if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
-                // _resistancesWindowWindow.DataContext = null;
-                // _resistancesWindowWindow.DataContext = this;
+                RefreshResistancesWindow();
             }
         }
 
@@ -189,9 +184,7 @@ namespace SilkyRing.ViewModels
             set
             {
                 SetProperty(ref _showPoison, value);
-                // if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
-                // _resistancesWindowWindow.DataContext = null;
-                // _resistancesWindowWindow.DataContext = this;
+                RefreshResistancesWindow();
             }
         }
 
@@ -227,9 +220,7 @@ namespace SilkyRing.ViewModels
             set
             {
                 SetProperty(ref _showBleed, value);
-                // if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
-                // _resistancesWindowWindow.DataContext = null;
-                // _resistancesWindowWindow.DataContext = this;
+                RefreshResistancesWindow();
             }
         }
 
@@ -265,9 +256,7 @@ namespace SilkyRing.ViewModels
             set
             {
                 SetProperty(ref _showRot, value);
-                // if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
-                // _resistancesWindowWindow.DataContext = null;
-                // _resistancesWindowWindow.DataContext = this;
+                RefreshResistancesWindow();
             }
         }
 
@@ -303,9 +292,7 @@ namespace SilkyRing.ViewModels
             set
             {
                 SetProperty(ref _showFrost, value);
-                // if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
-                // _resistancesWindowWindow.DataContext = null;
-                // _resistancesWindowWindow.DataContext = this;
+                RefreshResistancesWindow();
             }
         }
 
@@ -341,12 +328,11 @@ namespace SilkyRing.ViewModels
             set
             {
                 SetProperty(ref _showSleep, value);
-                // if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
-                // _resistancesWindowWindow.DataContext = null;
-                // _resistancesWindowWindow.DataContext = this;
+                RefreshResistancesWindow();
+             
             }
         }
-
+        
         private bool _isSleepImmune;
 
         public bool IsSleepImmune
@@ -376,7 +362,7 @@ namespace SilkyRing.ViewModels
             get => _standardDefense;
             set => SetProperty(ref _standardDefense, value);
         }
-
+        
         private float _slashDefense;
 
         public float SlashDefense
@@ -667,6 +653,21 @@ namespace SilkyRing.ViewModels
             get => _dist;
             set => SetProperty(ref _dist, value);
         }
+        
+        private bool _isResistancesWindowOpen;
+        
+        public bool IsResistancesWindowOpen
+        {
+            get => _isResistancesWindowOpen;
+            set
+            {
+                if (!SetProperty(ref _isResistancesWindowOpen, value)) return;
+                if (value)
+                    OpenResistancesWindow();
+                else
+                    CloseResistancesWindow();
+            }
+        }
 
         #endregion
 
@@ -687,7 +688,6 @@ namespace SilkyRing.ViewModels
         private void OnGameNotLoaded()
         {
             _targetTick.Stop();
-            // IsFreezeHealthEnabled = false;
             LastAct = 0;
             ForceAct = 0;
             AreOptionsEnabled = false;
@@ -767,6 +767,9 @@ namespace SilkyRing.ViewModels
             {
                 IsFreezeAiEnabled = _targetService.IsAiDisabled();
                 IsTargetingViewEnabled = _targetService.IsTargetViewEnabled();
+                IsNoMoveEnabled = _targetService.IsNoMoveEnabled();
+                IsNoAttackEnabled = _targetService.IsNoAttackEnabled();
+                
                 int forceActValue = _targetService.GetForceAct();
                 if (forceActValue != 0)
                 {
@@ -783,13 +786,9 @@ namespace SilkyRing.ViewModels
                 _currentTargetId = targetId;
                 MaxPoise = _targetService.GetMaxPoise();
                 
-                //TODO if enabled
                 UpdateImmunities();
                 UpdateDefenses();
-                //
-                // if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
-                // _resistancesWindowWindow.DataContext = null;
-                // _resistancesWindowWindow.DataContext = this;
+                RefreshResistancesWindow();
             }
 
 
@@ -870,34 +869,7 @@ namespace SilkyRing.ViewModels
 
             return true;
         }
-
-        private void UpdateResistancesDisplay()
-        {
-            if (!IsTargetOptionsEnabled) return;
-            if (_showAllResistances)
-            {
-                ShowPoise = true;
-                ShowSleep = true;
-                ShowPoison = true;
-                ShowRot = true;
-                ShowFrost = true;
-                ShowBleed = true;
-            }
-            else
-            {
-                ShowPoise = false;
-                ShowSleep = false;
-                ShowPoison = false;
-                ShowRot = false;
-                ShowFrost = false;
-                ShowBleed = false;
-            }
-            //
-            // if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
-            // _resistancesWindowWindow.DataContext = null;
-            // _resistancesWindowWindow.DataContext = this;
-        }
-
+        
         private void KillAllBesidesTarget() => _targetService.KillAllBesidesTarget();
 
         private void ForceActSequence()
@@ -963,68 +935,61 @@ namespace SilkyRing.ViewModels
 
         #endregion
 
-        //
-        // private void UpdateResistancesDisplay()
-        // {
-        //     if (!IsTargetOptionsEnabled) return;
-        //     if (_showAllResistances)
-        //     {
-        //         ShowBleed = true;
-        //         ShowHeavyPoise = true;
-        //         ShowLightPoise = true;
-        //         ShowPoison = true;
-        //         ShowToxic = true;
-        //     }
-        //     else
-        //     {
-        //         ShowBleed = false;
-        //         ShowHeavyPoise = false;
-        //         ShowLightPoise = false;
-        //         ShowPoison = false;
-        //         ShowToxic = false;
-        //     }
-        //
-        //     if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
-        //     _resistancesWindowWindow.DataContext = null;
-        //     _resistancesWindowWindow.DataContext = this;
-        // }
-        //
-        // public bool IsResistancesWindowOpen
-        // {
-        //     get => _isResistancesWindowOpen;
-        //     set
-        //     {
-        //         if (!SetProperty(ref _isResistancesWindowOpen, value)) return;
-        //         if (value)
-        //             OpenResistancesWindow();
-        //         else
-        //             CloseResistancesWindow();
-        //     }
-        // }
-        //
-        // private void OpenResistancesWindow()
-        // {
-        //     if (_resistancesWindowWindow != null && _resistancesWindowWindow.IsVisible) return;
-        //     _resistancesWindowWindow = new ResistancesWindow
-        //     {
-        //         DataContext = this
-        //     };
-        //     _resistancesWindowWindow.Closed += (s, e) => _isResistancesWindowOpen = false;
-        //     _resistancesWindowWindow.Show();
-        // }
-        //
-        // private void CloseResistancesWindow()
-        // {
-        //     if (_resistancesWindowWindow == null || !_resistancesWindowWindow.IsVisible) return;
-        //     _resistancesWindowWindow.Close();
-        //     _resistancesWindowWindow = null;
-        // }
-        //
-
-        //
-        // public bool ShowLightPoiseAndNotImmune => ShowLightPoise && !IsLightPoiseImmune;
-        // public bool ShowBleedAndNotImmune => ShowBleed && !IsBleedImmune;
-        // public bool ShowPoisonAndNotImmune => ShowPoison && !IsPoisonToxicImmune;
-        // public bool ShowToxicAndNotImmune => ShowToxic && !IsPoisonToxicImmune;
+        
+        private void UpdateResistancesDisplay()
+        {
+            if (!IsTargetOptionsEnabled) return;
+            if (_showAllResistances)
+            {
+                ShowPoise = true;
+                ShowSleep = true;
+                ShowPoison = true;
+                ShowRot = true;
+                ShowFrost = true;
+                ShowBleed = true;
+            }
+            else
+            {
+                ShowPoise = false;
+                ShowSleep = false;
+                ShowPoison = false;
+                ShowRot = false;
+                ShowFrost = false;
+                ShowBleed = false;
+            }
+            RefreshResistancesWindow();
+        }
+        
+        private void OpenResistancesWindow()
+        {
+            if (_resistancesWindowWindow != null && _resistancesWindowWindow.IsVisible) return;
+            _resistancesWindowWindow = new ResistancesWindow
+            {
+                DataContext = this
+            };
+            _resistancesWindowWindow.Closed += (s, e) => _isResistancesWindowOpen = false;
+            _resistancesWindowWindow.Show();
+        }
+        
+        private void CloseResistancesWindow()
+        {
+            if (_resistancesWindowWindow == null || !_resistancesWindowWindow.IsVisible) return;
+            _resistancesWindowWindow.Close();
+            _resistancesWindowWindow = null;
+        }
+        
+        private void RefreshResistancesWindow()
+        {
+            if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
+            _resistancesWindowWindow.DataContext = null;
+            _resistancesWindowWindow.DataContext = this;
+        }
+        
+        
+        public bool ShowSleepAndNotImmune => ShowSleep && !IsSleepImmune;
+        public bool ShowPoisonAndNotImmune => ShowPoison && !IsPoisonImmune;
+        public bool ShowRotAndNotImmune => ShowRot && !IsRotImmune;
+        public bool ShowFrostAndNotImmune => ShowFrost && !IsFrostImmune;
+        public bool ShowBleedAndNotImmune => ShowBleed && !IsBleedImmune;
     }
 }

@@ -111,6 +111,7 @@
         <Compile Include="Utilities\MsgBox.cs" />
         <Compile Include="Utilities\SettingsManager.cs" />
         <Compile Include="Utilities\UpDownHelper.cs" />
+        <Compile Include="Utilities\User32.cs" />
         <Compile Include="ViewModels\AttackInfoViewModel.cs" />
         <Compile Include="ViewModels\BaseViewModel.cs" />
         <Compile Include="ViewModels\EnemyViewModel.cs" />

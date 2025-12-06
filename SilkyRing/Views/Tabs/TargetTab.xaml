@@ -271,7 +271,8 @@
                                                             CornerRadius="3">
                                                         <Grid x:Name="PART_Track">
                                                             <Rectangle x:Name="PART_Indicator"
-                                                                       Fill="{Binding IsSleepImmune, Converter={StaticResource ImmuneFillConverter}, ConverterParameter=#CE93D8}"
+                                                                       Fill="{Binding IsSleepImmune,
+                                                                        Converter={StaticResource ImmuneFillConverter}, ConverterParameter=#CE93D8}"
                                                                        HorizontalAlignment="Left"
                                                                        RadiusX="2" RadiusY="2"
                                                                        Margin="1" />

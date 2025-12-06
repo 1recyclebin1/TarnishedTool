@@ -17,7 +17,7 @@ namespace SilkyRing.ViewModels
         private bool _customHpHasBeenSet;
 
         private ulong _currentTargetId;
-        
+
         private AttackInfoWindow _attackInfoWindow;
         private AttackInfoViewModel _attackInfoViewModel;
 
@@ -31,10 +31,9 @@ namespace SilkyRing.ViewModels
         // private bool _showAllResistances;
 
         private readonly ITargetService _targetService;
-
         private readonly IEnemyService _enemyService;
-
         private readonly IAttackInfoService _attackInfoService;
+
         // private readonly HotkeyManager _hotkeyManager;
 
         public TargetViewModel(ITargetService targetService, IStateService stateService, IEnemyService enemyService,
@@ -43,7 +42,7 @@ namespace SilkyRing.ViewModels
             _targetService = targetService;
             _enemyService = enemyService;
             _attackInfoService = attackInfoService;
-            
+
             _attackInfoViewModel = new AttackInfoViewModel();
 
             // _hotkeyManager = hotkeyManager;
@@ -65,8 +64,6 @@ namespace SilkyRing.ViewModels
             };
             _targetTick.Tick += TargetTick;
         }
-
-       
 
         #region Commands
 
@@ -450,6 +447,34 @@ namespace SilkyRing.ViewModels
             }
         }
 
+        private bool _isNoAttackEnabled;
+
+        public bool IsNoAttackEnabled
+        {
+            get => _isNoAttackEnabled;
+            set
+            {
+                if (SetProperty(ref _isNoAttackEnabled, value))
+                {
+                    _targetService.ToggleNoAttack(_isNoAttackEnabled);
+                }
+            }
+        }
+
+        private bool _isNoMoveEnabled;
+
+        public bool IsNoMoveEnabled
+        {
+            get => _isNoMoveEnabled;
+            set
+            {
+                if (SetProperty(ref _isNoMoveEnabled, value))
+                {
+                    _targetService.ToggleNoMove(_isNoMoveEnabled);
+                }
+            }
+        }
+
         private bool _isRepeatActEnabled;
 
         public bool IsRepeatActEnabled
@@ -494,6 +519,26 @@ namespace SilkyRing.ViewModels
         {
             get => _lastAct;
             set => SetProperty(ref _lastAct, value);
+        }
+
+        private int _currentAnimation;
+
+        public int CurrentAnimation
+        {
+            get => _currentAnimation;
+            set => SetProperty(ref _currentAnimation, value);
+        }
+
+        private int _requestedAnimation;
+
+        public int RequestedAnimation
+        {
+            get => _requestedAnimation;
+            set
+            {
+                if (!SetProperty(ref _requestedAnimation, value)) return;
+                _targetService.SetAnimation(_requestedAnimation);
+            }
         }
 
         private int _customHp;
@@ -595,9 +640,9 @@ namespace SilkyRing.ViewModels
             get => _actSequence;
             set => SetProperty(ref _actSequence, value);
         }
-        
+
         private bool _isShowAttackInfoEnabled;
-        
+
         public bool IsShowAttackInfoEnabled
         {
             get => _isShowAttackInfoEnabled;
@@ -614,8 +659,14 @@ namespace SilkyRing.ViewModels
                 }
             }
         }
-
         
+        private float _dist;
+
+        public float Dist
+        {
+            get => _dist;
+            set => SetProperty(ref _dist, value);
+        }
 
         #endregion
 
@@ -731,6 +782,8 @@ namespace SilkyRing.ViewModels
                 IsFreezeHealthEnabled = _targetService.IsNoDamageEnabled();
                 _currentTargetId = targetId;
                 MaxPoise = _targetService.GetMaxPoise();
+                
+                //TODO if enabled
                 UpdateImmunities();
                 UpdateDefenses();
                 //
@@ -739,12 +792,16 @@ namespace SilkyRing.ViewModels
                 // _resistancesWindowWindow.DataContext = this;
             }
 
+
             CurrentHealth = _targetService.GetCurrentHp();
             MaxHealth = _targetService.GetMaxHp();
             LastAct = _targetService.GetLastAct();
+            CurrentAnimation = _targetService.GetCurrentAnimation();
             TargetSpeed = _targetService.GetSpeed();
             CurrentPoise = _targetService.GetCurrentPoise();
             PoiseTimer = _targetService.GetPoiseTimer();
+            
+            Dist = _targetService.GetDist();
 
             CurrentPoison = _targetService.GetResistance((int)ChrIns.ChrResistOffsets.PoisonCurrent);
             MaxPoison = _targetService.GetResistance((int)ChrIns.ChrResistOffsets.PoisonMax);
@@ -869,35 +926,35 @@ namespace SilkyRing.ViewModels
             var npcThinkParamId = _targetService.GetNpcThinkParamId();
             _enemyService.ForceActSequence(acts, npcThinkParamId);
         }
-        
+
         private void OpenDefenseWindow()
         {
-            if (_defensesWindow != null && _defensesWindow.IsVisible) 
+            if (_defensesWindow != null && _defensesWindow.IsVisible)
             {
-                _defensesWindow.Activate(); 
+                _defensesWindow.Activate();
                 return;
             }
-            
+
             _defensesWindow = new DefensesWindow
             {
                 DataContext = this
             };
-            
+
             _defensesWindow.Closed += (s, e) => _defensesWindow = null;
             _defensesWindow.Show();
         }
-        
+
         private void OpenAttackInfoWindow()
         {
             _attackInfoWindow = new AttackInfoWindow
             {
                 DataContext = _attackInfoViewModel
             };
-            
+
             _attackInfoWindow.Closed += (s, e) => _attackInfoWindow = null;
             _attackInfoWindow.Show();
         }
-        
+
         #endregion
 
         #region Public Methods
@@ -964,12 +1021,10 @@ namespace SilkyRing.ViewModels
         // }
         //
 
-
         //
         // public bool ShowLightPoiseAndNotImmune => ShowLightPoise && !IsLightPoiseImmune;
         // public bool ShowBleedAndNotImmune => ShowBleed && !IsBleedImmune;
         // public bool ShowPoisonAndNotImmune => ShowPoison && !IsPoisonToxicImmune;
         // public bool ShowToxicAndNotImmune => ShowToxic && !IsPoisonToxicImmune;
-        
     }
 }

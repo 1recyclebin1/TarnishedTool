@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Numerics;
 using SilkyRing.Interfaces;
 using SilkyRing.Memory;
+using SilkyRing.Models;
 using SilkyRing.Utilities;
 using static SilkyRing.Memory.Offsets;
 
@@ -8,6 +10,25 @@ namespace SilkyRing.Services
 {
     public class PlayerService(MemoryService memoryService, HookManager hookManager) : IPlayerService
     {
+        public Vector3 GetPlayerPos() =>
+            ReadVector3(GetChrPhysicsPtr() + (int)ChrIns.ChrPhysicsOffsets.Coords);
+
+        public void SavePos()
+        {
+        }
+
+        public void RestorePos()
+        {
+        }
+
+        public PosWithHurtbox GetPosWithHurtbox()
+        {
+            var physPtr = GetChrPhysicsPtr();
+            var position = ReadVector3(physPtr + (int)ChrIns.ChrPhysicsOffsets.Coords);
+            var capsuleRadius = memoryService.ReadFloat(physPtr + (int)ChrIns.ChrPhysicsOffsets.HurtCapsuleRadius);
+            return new PosWithHurtbox(position, capsuleRadius);
+        }
+
         public void SetHp(int hp) =>
             memoryService.WriteInt32(GetChrDataPtr() + (int)ChrIns.ChrDataOffsets.Health, hp);
 
@@ -34,13 +55,13 @@ namespace SilkyRing.Services
         //
         // public void SetSp(int sp) =>
         //     _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Stamina), sp);
-        
+
         public float GetSpeed() =>
             memoryService.ReadFloat(GetChrBehaviorPtr() + (int)ChrIns.ChrBehaviorOffsets.AnimSpeed);
 
         public void SetSpeed(float speed) =>
             memoryService.WriteFloat(GetChrBehaviorPtr() + (int)ChrIns.ChrBehaviorOffsets.AnimSpeed, speed);
-        
+
         public void ToggleInfinitePoise(bool isInfinitePoiseEnabled)
         {
             var code = CodeCaveOffsets.Base + CodeCaveOffsets.InfinitePoise;
@@ -66,7 +87,6 @@ namespace SilkyRing.Services
                 hookManager.UninstallHook(code.ToInt64());
             }
         }
-        
 
         public void ApplySpEffect(long spEffectId)
         {
@@ -118,7 +138,7 @@ namespace SilkyRing.Services
             var bytes = AsmLoader.GetAsmBytes("GiveRunes");
             var playerGameData =
                 memoryService.ReadInt64((IntPtr)memoryService.ReadInt64(GameDataMan.Base) +
-                                    GameDataMan.PlayerGameData);
+                                        GameDataMan.PlayerGameData);
             AsmHelper.WriteAbsoluteAddresses(bytes, new[]
             {
                 (playerGameData, 0x0 + 2),
@@ -131,7 +151,7 @@ namespace SilkyRing.Services
 
         public int GetRuneLevel() =>
             memoryService.ReadInt32((IntPtr)memoryService.ReadInt64(GameDataMan.Base) + GameDataMan.RuneLevel);
-        
+
         private IntPtr GetChrDataPtr() =>
             memoryService.FollowPointers(WorldChrMan.Base, [WorldChrMan.PlayerIns, ..ChrIns.ChrDataModule], true);
 
@@ -141,5 +161,14 @@ namespace SilkyRing.Services
         private IntPtr GetChrBehaviorPtr() =>
             memoryService.FollowPointers(WorldChrMan.Base, [WorldChrMan.PlayerIns, ..ChrIns.ChrBehaviorModule], true);
 
+        private Vector3 ReadVector3(IntPtr address)
+        {
+            byte[] coordBytes = memoryService.ReadBytes(address, 12);
+            return new Vector3(
+                BitConverter.ToSingle(coordBytes, 0),
+                BitConverter.ToSingle(coordBytes, 4),
+                BitConverter.ToSingle(coordBytes, 8)
+            );
+        }
     }
 }

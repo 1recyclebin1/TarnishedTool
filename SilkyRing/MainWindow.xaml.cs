@@ -57,7 +57,7 @@ namespace SilkyRing
             var utilityService = new UtilityService(_memoryService, hookManager);
             var eventService = new EventService(_memoryService, hookManager);
             IAttackInfoService attackInfoService = new AttackInfoService(_memoryService, hookManager);
-            ITargetService targetService = new TargetService(_memoryService, hookManager);
+            ITargetService targetService = new TargetService(_memoryService, hookManager, playerService);
             IEnemyService enemyService = new EnemyService(_memoryService, hookManager);
             var travelService = new TravelService(_memoryService, hookManager);
             

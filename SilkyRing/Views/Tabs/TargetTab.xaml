@@ -458,199 +458,220 @@
                     <Grid Margin="0,10,0,10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-                        <TextBlock Grid.Column="0"
-                                   Text="Speed Modifier:"
-                                   VerticalAlignment="Center"
-                                   Margin="0,0,10,0" />
+                        <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top"
+                                    Margin="0,0,20,0">
+                            <TextBlock Text="Speed Modifier:" VerticalAlignment="Center" Margin="0,0,10,0" />
+                            <xctk:DoubleUpDown x:Name="SpeedUpDown"
+                                               Value="{Binding TargetSpeed}"
+                                               FormatString="F2"
+                                               Minimum="0"
+                                               Maximum="5"
+                                               Increment="0.50"
+                                               Width="100">
+                                <xctk:DoubleUpDown.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                        <Binding Path="AreOptionsEnabled" />
+                                        <Binding Path="IsValidTarget" />
+                                    </MultiBinding>
+                                </xctk:DoubleUpDown.IsEnabled>
+                            </xctk:DoubleUpDown>
+                        </StackPanel>
 
-                        <xctk:DoubleUpDown x:Name="SpeedUpDown" Grid.Column="1"
-                                           Value="{Binding TargetSpeed}"
-                                           FormatString="F2"
-                                           Minimum="0"
-                                           Maximum="5"
-                                           Increment="0.50"
-                                           Width="100"
+                        <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Vertical" VerticalAlignment="Top"
+                                    Margin="0,10,20,0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Last Act:" VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding LastAct}" VerticalAlignment="Center" Width="20"
+                                           TextAlignment="Right" Margin="5,0,15,0" />
+                                <TextBlock Text="Force Act:" VerticalAlignment="Center" Margin="0,0,10,0" />
+                                <xctk:IntegerUpDown Width="50" Height="20"
+                                                    Value="{Binding ForceAct, UpdateSourceTrigger=PropertyChanged}"
+                                                    Minimum="0"
+                                                    Maximum="255"
+                                                    VerticalAlignment="Center">
+                                    <xctk:IntegerUpDown.IsEnabled>
+                                        <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                            <Binding Path="AreOptionsEnabled" />
+                                            <Binding Path="IsValidTarget" />
+                                        </MultiBinding>
+                                    </xctk:IntegerUpDown.IsEnabled>
+                                </xctk:IntegerUpDown>
+                                <Border Background="#3498db" CornerRadius="10" Width="12" Height="12" Margin="5,0,0,0"
+                                        VerticalAlignment="Center"
+                                        ToolTip="Force Act:&#x0A;• Enter 0 for normal behavior&#x0A;• Enter a number to repeat a specific action&#x0A;• Numbers exceeding available acts will be ignored"
+                                        ToolTipService.InitialShowDelay="100">
+                                    <TextBlock Text="i" Foreground="White" HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" FontWeight="Bold" FontSize="10" />
+                                </Border>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Top"
+                                        Margin="0,10,20,0">
+                                <TextBlock Text="Current Animation:" VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding CurrentAnimation}" VerticalAlignment="Center" Width="35"
+                                           TextAlignment="Right" Margin="5,0,15,0" />
+                            </StackPanel>
+                            <!-- <StackPanel Orientation="Horizontal" Margin="0, 10, 0, 0"> -->
+                            <!--     <TextBlock Text="Force Animation" VerticalAlignment="Center" Margin="0,0,10,0" /> -->
+                            <!--     <xctk:IntegerUpDown Width="80" Height="20" -->
+                            <!--                         Value="{Binding RequestedAnimation, UpdateSourceTrigger=PropertyChanged}" -->
+                            <!--                         Minimum="-1" -->
+                            <!--                         Maximum="999999" -->
+                            <!--                         VerticalAlignment="Center"> -->
+                            <!--         <xctk:IntegerUpDown.IsEnabled> -->
+                            <!--             <MultiBinding Converter="{StaticResource BooleanAndConverter}"> -->
+                            <!--                 <Binding Path="AreOptionsEnabled" /> -->
+                            <!--                 <Binding Path="IsValidTarget" /> -->
+                            <!--             </MultiBinding> -->
+                            <!--         </xctk:IntegerUpDown.IsEnabled> -->
+                            <!--     </xctk:IntegerUpDown> -->
+                            <!--     <Border Background="#3498db" CornerRadius="10" Width="12" Height="12" Margin="10,0,0,0" -->
+                            <!--             VerticalAlignment="Center" -->
+                            <!--             ToolTip="Will force the animation until set to -1&#x0A; you can use the keybind to toggle between the selected anim and -1" -->
+                            <!--             ToolTipService.InitialShowDelay="100"> -->
+                            <!--         <TextBlock Text="i" Foreground="White" HorizontalAlignment="Center" -->
+                            <!--                    VerticalAlignment="Center" FontWeight="Bold" FontSize="10" /> -->
+                            <!--     </Border> -->
+                            <!-- </StackPanel> -->
+                        </StackPanel>
 
-                                           HorizontalAlignment="Left">
-                            <xctk:DoubleUpDown.IsEnabled>
-                                <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                    <Binding Path="AreOptionsEnabled" />
-                                    <Binding Path="IsValidTarget" />
-                                </MultiBinding>
-                            </xctk:DoubleUpDown.IsEnabled>
-                        </xctk:DoubleUpDown>
 
-                        <CheckBox Grid.Column="2" Content="Disable Target AI" Margin="15,0,0,0">
-                            <CheckBox.IsEnabled>
-                                <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                    <Binding Path="AreOptionsEnabled" />
-                                    <Binding Path="IsValidTarget" />
-                                </MultiBinding>
-                            </CheckBox.IsEnabled>
-                            <CheckBox.IsChecked>
-                                <Binding Path="IsFreezeAiEnabled" />
-                            </CheckBox.IsChecked>
-                        </CheckBox>
+                        <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                        <CheckBox Grid.Column="3" Content="Targeting View" Margin="5,0,0,0">
-                            <CheckBox.IsEnabled>
-                                <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                    <Binding Path="AreOptionsEnabled" />
-                                    <Binding Path="IsValidTarget" />
-                                </MultiBinding>
-                            </CheckBox.IsEnabled>
-                            <CheckBox.IsChecked>
-                                <Binding Path="IsTargetingViewEnabled" />
-                            </CheckBox.IsChecked>
-                        </CheckBox>
+                            <CheckBox Grid.Row="0" Grid.Column="0" Content="Disable AI" Margin="0,2,20,2"
+                                      IsChecked="{Binding IsFreezeAiEnabled}">
+                                <CheckBox.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                        <Binding Path="AreOptionsEnabled" />
+                                        <Binding Path="IsValidTarget" />
+                                    </MultiBinding>
+                                </CheckBox.IsEnabled>
+                            </CheckBox>
+                            <CheckBox Grid.Row="0" Grid.Column="1" Content="Targeting View" Margin="0,2,0,2"
+                                      IsChecked="{Binding IsTargetingViewEnabled}">
+                                <CheckBox.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                        <Binding Path="AreOptionsEnabled" />
+                                        <Binding Path="IsValidTarget" />
+                                    </MultiBinding>
+                                </CheckBox.IsEnabled>
+                            </CheckBox>
 
-                        <CheckBox Grid.Column="4" Content="No Stagger" Margin="5,0,0,0">
-                            <CheckBox.IsEnabled>
-                                <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                    <Binding Path="AreOptionsEnabled" />
-                                    <Binding Path="IsValidTarget" />
-                                </MultiBinding>
-                            </CheckBox.IsEnabled>
-                            <CheckBox.IsChecked>
-                                <Binding Path="IsNoStaggerEnabled" />
-                            </CheckBox.IsChecked>
-                        </CheckBox>
+                            <CheckBox Grid.Row="1" Grid.Column="0" Content="Disable All AI Besides Target"
+                                      Margin="0,2,20,2" IsChecked="{Binding IsDisableAllExceptTargetEnabled}">
+                                <CheckBox.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                        <Binding Path="AreOptionsEnabled" />
+                                        <Binding Path="IsValidTarget" />
+                                    </MultiBinding>
+                                </CheckBox.IsEnabled>
+                            </CheckBox>
+                            <CheckBox Grid.Row="1" Grid.Column="1" Content="Show Attack Info" Margin="0,2,0,2"
+                                      IsChecked="{Binding IsShowAttackInfoEnabled}">
+                                <CheckBox.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                        <Binding Path="AreOptionsEnabled" />
+                                        <Binding Path="IsValidTarget" />
+                                    </MultiBinding>
+                                </CheckBox.IsEnabled>
+                            </CheckBox>
+
+                            <CheckBox Grid.Row="2" Grid.Column="0" Content="No Stagger" Margin="0,2,20,2"
+                                      IsChecked="{Binding IsNoStaggerEnabled}">
+                                <CheckBox.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                        <Binding Path="AreOptionsEnabled" />
+                                        <Binding Path="IsValidTarget" />
+                                    </MultiBinding>
+                                </CheckBox.IsEnabled>
+                            </CheckBox>
+                            <CheckBox Grid.Row="2" Grid.Column="1" Content="Show Defenses" Margin="0,2,0,2"
+                                      IsChecked="{Binding IsShowDefensesEnabled}">
+                                <CheckBox.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                        <Binding Path="AreOptionsEnabled" />
+                                        <Binding Path="IsValidTarget" />
+                                    </MultiBinding>
+                                </CheckBox.IsEnabled>
+                            </CheckBox>
+
+                            <CheckBox Grid.Row="3" Grid.Column="0" Content="No Attack" Margin="0,2,20,2"
+                                      IsChecked="{Binding IsNoAttackEnabled}">
+                                <CheckBox.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                        <Binding Path="AreOptionsEnabled" />
+                                        <Binding Path="IsValidTarget" />
+                                    </MultiBinding>
+                                </CheckBox.IsEnabled>
+                            </CheckBox>
+
+                            <CheckBox Grid.Row="3" Grid.Column="1" Content="No Move" Margin="0,2,20,2"
+                                      IsChecked="{Binding IsNoMoveEnabled}">
+                                <CheckBox.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                        <Binding Path="AreOptionsEnabled" />
+                                        <Binding Path="IsValidTarget" />
+                                    </MultiBinding>
+                                </CheckBox.IsEnabled>
+                            </CheckBox>
+
+                            <CheckBox Grid.Row="4" Grid.Column="0" Content="Repeat Last Act" Margin="0,2,20,2"
+                                      IsChecked="{Binding IsRepeatActEnabled}">
+                                <CheckBox.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                        <Binding Path="AreOptionsEnabled" />
+                                        <Binding Path="IsValidTarget" />
+                                    </MultiBinding>
+                                </CheckBox.IsEnabled>
+                            </CheckBox>
+                        </Grid>
                     </Grid>
+
+                    <TextBlock Text="Force Act Sequence" FontWeight="Bold" Margin="5,10,0,0" />
                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <CheckBox x:Name="RepeatActCheckbox" Content="Repeat Last Act" Margin="10,0,0,0">
-                            <CheckBox.IsEnabled>
-                                <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                    <Binding Path="AreOptionsEnabled" />
-                                    <Binding Path="IsValidTarget" />
-                                </MultiBinding>
-                            </CheckBox.IsEnabled>
-                            <CheckBox.IsChecked>
-                                <Binding Path="IsRepeatActEnabled" />
-                            </CheckBox.IsChecked>
-                        </CheckBox>
-                        <TextBlock Text="Last Act: " Margin="20,0,0,0" VerticalAlignment="Center" />
-                        <TextBlock Text="{Binding LastAct}" VerticalAlignment="Center" Width="20" TextAlignment="Right" />
-                        <TextBlock Text="Force Act: " Margin="30,0,10,0" VerticalAlignment="Center" />
-                        <xctk:IntegerUpDown Width="50" Height="20"
-                                            Value="{Binding ForceAct, UpdateSourceTrigger=PropertyChanged}"
-                                            Minimum="0"
-                                            Maximum="255"
-                                            VerticalAlignment="Center">
-                            <xctk:IntegerUpDown.IsEnabled>
-                                <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                    <Binding Path="AreOptionsEnabled" />
-                                    <Binding Path="IsValidTarget" />
-                                </MultiBinding>
-                            </xctk:IntegerUpDown.IsEnabled>
-                        </xctk:IntegerUpDown>
-                        <Border
-                            Background="#3498db"
-                            CornerRadius="10"
-                            Width="12"
-                            Height="12"
-                            Margin="5,0,0,0"
-                            VerticalAlignment="Center"
-                            ToolTip="Force Act:&#x0A;• Enter 0 for normal behavior&#x0A;• Enter a number to repeat a specific action&#x0A;• Numbers exceeding available acts will be ignored"
-                            ToolTipService.InitialShowDelay='100'>
-                            <TextBlock Text="i"
-                                       Foreground="White"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"
-                                       FontWeight="Bold"
-                                       FontSize="10" />
-                        </Border>
-                        <Button Content="Defenses"
-                                IsEnabled="{Binding AreOptionsEnabled}"
-                                Command="{Binding OpenDefensesWindowCommand}"
-                                HorizontalAlignment="Right"
-                                Margin="130,0,0,0" />
-                    </StackPanel>
-
-                    <TextBlock Text="Force Act Sequence"
-                               FontWeight="Bold"
-                               Margin="5,10,0,0" />
-
-                    <StackPanel Orientation="Horizontal">
-
-                        <TextBox
-                            Text="{Binding ActSequence}"
-                            Height="35"
-                            Width="250"
-                            FontSize="14"
-                            Margin="10"
-                            MaxLength="29">
-                        </TextBox>
-
-                        <Button Content="Force acts"
-                                IsEnabled="{Binding AreOptionsEnabled}"
-                                Command="{Binding ForActSequenceCommand}"
-                                HorizontalAlignment="Right"
-                                Height="35"
-                                Margin="10,0,0,0" />
-
-                        <Border
-                            Background="#3498db"
-                            CornerRadius="10"
-                            Width="12"
-                            Height="12"
-                            Margin="5,0,0,0"
-                            VerticalAlignment="Center"
-                            ToolTip="Enter a sequence of acts separated by spaces, max 10 acts"
-                            ToolTipService.InitialShowDelay='100'>
-                            <TextBlock Text="i"
-                                       Foreground="White"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"
-                                       FontWeight="Bold"
-                                       FontSize="10" />
+                        <TextBox Text="{Binding ActSequence}" Height="35" Width="250" FontSize="14" Margin="10"
+                                 MaxLength="29" />
+                        <Button Content="Force acts" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding ForActSequenceCommand}" Height="35" Margin="10,0,0,0" />
+                        <Border Background="#3498db" CornerRadius="10" Width="12" Height="12" Margin="5,0,0,0"
+                                VerticalAlignment="Center"
+                                ToolTip="Enter a sequence of acts separated by spaces, max 10 acts"
+                                ToolTipService.InitialShowDelay="100">
+                            <TextBlock Text="i" Foreground="White" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" FontWeight="Bold" FontSize="10" />
                         </Border>
                         
-                        <CheckBox Content="Show Attack Info"  Margin="40,0,0,0">
-                            
-                            <CheckBox.IsEnabled>
-                                <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                    <Binding Path="AreOptionsEnabled" />
-                                    <Binding Path="IsValidTarget" />
-                                </MultiBinding>
-                            </CheckBox.IsEnabled>
-                            <CheckBox.IsChecked>
-                                <Binding Path="IsShowAttackInfoEnabled" />
-                            </CheckBox.IsChecked>
-                        </CheckBox>
+                        <TextBlock FontSize="16" Text="Dist:" Margin="40,10,0,0" />
+                        <TextBlock Text="{Binding Dist, StringFormat={}{0:F2}}" Width="40" FontSize="16"
+                                   TextAlignment="Right" Margin="5,10,0,0" />
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Margin="5,10,0,0">
-                        <Button Content="Kill All Enemies Besides Target"
-                                Command="{Binding KillAllCommand}"
-                                HorizontalAlignment="Right"
-                                Margin="130,0,0,0">
-                            <Button.IsEnabled>
-                                <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                    <Binding Path="AreOptionsEnabled" />
-                                    <Binding Path="IsValidTarget" />
-                                </MultiBinding>
-                            </Button.IsEnabled>
-
-                        </Button>
-
-                        <CheckBox Content="Disable All Ai Besides Target">
-                            <CheckBox.IsEnabled>
-                                <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                    <Binding Path="AreOptionsEnabled" />
-                                    <Binding Path="IsValidTarget" />
-                                </MultiBinding>
-                            </CheckBox.IsEnabled>
-                            <CheckBox.IsChecked>
-                                <Binding Path="IsDisableAllExceptTargetEnabled" />
-                            </CheckBox.IsChecked>
-                        </CheckBox>
-                    </StackPanel>
+                    <Button Content="Kill All Enemies Besides Target" Command="{Binding KillAllCommand}"
+                            Margin="10,10,0,0" HorizontalAlignment="Left">
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                <Binding Path="AreOptionsEnabled" />
+                                <Binding Path="IsValidTarget" />
+                            </MultiBinding>
+                        </Button.IsEnabled>
+                    </Button>
                 </StackPanel>
             </StackPanel>
         </Border>

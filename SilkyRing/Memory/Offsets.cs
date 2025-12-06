@@ -18,14 +18,18 @@ namespace SilkyRing.Memory
             public const int SpEffectMan = 0x178;
             public const int Modules = 0x190;
             public const int Flags = 0x530;
+
+            public enum ChrInsFlags
+            {
+                NoHit = 1 << 3,
+                NoAttack = 1 << 4,
+                NoMove = 1 << 5,
+                // 1 << 6 is a red capsule towards the direction the boss is facing
+                //1 << 7 same but white capsule
+            }
+            
             public const int ChrManipulator = 0x580;
             
-            public static readonly BitFlag NoHit = new(0x0, 1 << 3);
-            public static readonly BitFlag NoAttack = new(0x0, 1 << 4);
-            public static readonly BitFlag NoMove = new(0x0, 1 << 5);
-            // 1 << 6 is a red capsule towards the direction the boss is facing
-            //1 << 7 same but white capsule
-
             public static readonly int[] ChrCtrlFlags = [0xC8, 0x24];
             public static readonly BitFlag DisableAi = new(0x0, 1 << 0);
 
@@ -83,7 +87,8 @@ namespace SilkyRing.Memory
 
             public enum ChrPhysicsOffsets
             {
-                Coords = 0x70
+                Coords = 0x70,
+                HurtCapsuleRadius = 0x344
             }
 
             public static readonly int[] AiThink = [ChrManipulator, 0xC0];
@@ -91,6 +96,7 @@ namespace SilkyRing.Memory
             public enum AiThinkOffsets
             {
                 NpcThinkParamId = 0x28,
+                AnimationRequest = 0xC428,
                 TargetingSystem = 0xC480,
                 ForceAct = 0xE9C1,
                 LastAct = 0xE9C2,

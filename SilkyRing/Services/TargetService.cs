@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Numerics;
 using SilkyRing.Interfaces;
 using SilkyRing.Memory;
+using SilkyRing.Models;
 using SilkyRing.Utilities;
 using static SilkyRing.Memory.Offsets;
 
 namespace SilkyRing.Services
 {
-    public class TargetService(MemoryService memoryService, HookManager hookManager) : ITargetService
+    public class TargetService(MemoryService memoryService, HookManager hookManager, IPlayerService playerService)
+        : ITargetService
     {
         public void ToggleTargetHook(bool isEnabled)
         {
@@ -54,8 +57,7 @@ namespace SilkyRing.Services
 
         public float[] GetPosition()
         {
-            var posPtr = memoryService.FollowPointers(CodeCaveOffsets.Base + CodeCaveOffsets.TargetPtr,
-                [..ChrIns.ChrPhysicsModule, (int)ChrIns.ChrPhysicsOffsets.Coords], false);
+            var posPtr = GetChrPhysPtr() + (int)ChrIns.ChrPhysicsOffsets.Coords;
 
             float[] position = new float[3];
             position[0] = memoryService.ReadFloat(posPtr);
@@ -78,6 +80,30 @@ namespace SilkyRing.Services
         public bool IsAiDisabled() =>
             memoryService.IsBitSet(GetChrFlagsPtr() + ChrIns.DisableAi.Offset, ChrIns.DisableAi.Bit);
 
+        public void ToggleNoAttack(bool isNoAttackEnabled)
+        {
+            var bitFlags = GetChrDataPtr() + (int)ChrIns.ChrDataOffsets.Flags;
+            memoryService.SetBitValue(bitFlags, (int)ChrIns.ChrInsFlags.NoAttack, isNoAttackEnabled);
+        }
+
+        public bool IsNoAttackEnabled()
+        {
+            var bitFlags = GetChrDataPtr() + (int)ChrIns.ChrDataOffsets.Flags;
+            return memoryService.IsBitSet(bitFlags, (int)ChrIns.ChrInsFlags.NoAttack);
+        }
+
+        public void ToggleNoMove(bool isNoMoveEnabled)
+        {
+            var bitFlags = GetChrDataPtr() + (int)ChrIns.ChrDataOffsets.Flags;
+            memoryService.SetBitValue(bitFlags, (int)ChrIns.ChrInsFlags.NoMove, isNoMoveEnabled);
+        }
+
+        public bool IsNoMoveEnabled()
+        {
+            var bitFlags = GetChrDataPtr() + (int)ChrIns.ChrDataOffsets.Flags;
+            return memoryService.IsBitSet(bitFlags, (int)ChrIns.ChrInsFlags.NoMove);
+        }
+
         public void ForceAct(int act) =>
             memoryService.WriteUInt8(GetAiThinkPtr() + (int)ChrIns.AiThinkOffsets.ForceAct, act);
 
@@ -95,6 +121,12 @@ namespace SilkyRing.Services
 
         public bool IsTargetRepeating() =>
             memoryService.ReadUInt8(GetAiThinkPtr() + (int)ChrIns.AiThinkOffsets.ForceAct) != 0;
+
+        public int GetCurrentAnimation() => 
+            memoryService.ReadInt32(GetChrTimeActPtr() + (int)ChrIns.ChrTimeActOffsets.AnimationId);
+
+        public void SetAnimation(int animationId) =>
+            memoryService.WriteInt32(GetAiThinkPtr() + (int)ChrIns.AiThinkOffsets.AnimationRequest, animationId);
 
         public void ToggleTargetingView(bool isTargetingViewEnabled)
         {
@@ -218,6 +250,15 @@ namespace SilkyRing.Services
             return defenses;
         }
 
+        public float GetDist()
+        {
+            var playerPos = playerService.GetPosWithHurtbox();
+            var targetPos = GetPosWithHurtbox();
+
+            float distance = Vector3.Distance(playerPos.position, targetPos.position);
+            return distance - targetPos.capsuleRadius - playerPos.capsuleRadius;
+        }
+
         private IntPtr GetChrFlagsPtr() =>
             memoryService.FollowPointers(
                 CodeCaveOffsets.Base + CodeCaveOffsets.TargetPtr,
@@ -231,6 +272,10 @@ namespace SilkyRing.Services
         private IntPtr GetChrDataPtr() =>
             memoryService.FollowPointers(CodeCaveOffsets.Base + CodeCaveOffsets.TargetPtr,
                 [..ChrIns.ChrDataModule], true);
+
+        private IntPtr GetChrTimeActPtr() =>
+            memoryService.FollowPointers(CodeCaveOffsets.Base + CodeCaveOffsets.TargetPtr,
+                [..ChrIns.ChrTimeActModule], true);
 
         private IntPtr GetChrBehaviorPtr() =>
             memoryService.FollowPointers(CodeCaveOffsets.Base + CodeCaveOffsets.TargetPtr,
@@ -247,5 +292,26 @@ namespace SilkyRing.Services
         private IntPtr GetNpcParamPtr() =>
             memoryService.FollowPointers(CodeCaveOffsets.Base + CodeCaveOffsets.TargetPtr,
                 [..ChrIns.NpcParam], true);
+
+        private IntPtr GetChrPhysPtr() => memoryService.FollowPointers(CodeCaveOffsets.Base + CodeCaveOffsets.TargetPtr,
+            [..ChrIns.ChrPhysicsModule], true);
+
+        private PosWithHurtbox GetPosWithHurtbox()
+        {
+            var physPtr = GetChrPhysPtr();
+            var position = ReadVector3(physPtr + (int)ChrIns.ChrPhysicsOffsets.Coords);
+            var capsuleRadius = memoryService.ReadFloat(physPtr + (int)ChrIns.ChrPhysicsOffsets.HurtCapsuleRadius);
+            return new PosWithHurtbox(position, capsuleRadius);
+        }
+
+        private Vector3 ReadVector3(IntPtr address)
+        {
+            byte[] coordBytes = memoryService.ReadBytes(address, 12);
+            return new Vector3(
+                BitConverter.ToSingle(coordBytes, 0),
+                BitConverter.ToSingle(coordBytes, 4),
+                BitConverter.ToSingle(coordBytes, 8)
+            );
+        }
     }
 }

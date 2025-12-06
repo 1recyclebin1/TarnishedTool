@@ -1,9 +1,17 @@
 ﻿// 
 
+using System.Numerics;
+using SilkyRing.Models;
+
 namespace SilkyRing.Interfaces;
 
 public interface IPlayerService
 {
+    Vector3 GetPlayerPos();
+    void SavePos();
+    void RestorePos();
+    PosWithHurtbox GetPosWithHurtbox();
+
     void SetHp(int hp);
     int GetCurrentHp();
     int GetMaxHp();

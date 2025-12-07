@@ -1,43 +1,25 @@
 ﻿using System;
+using System.Windows.Input;
 using System.Windows.Threading;
+using SilkyRing.Core;
 using SilkyRing.Enums;
 using SilkyRing.Interfaces;
 using SilkyRing.Memory;
+using SilkyRing.Models;
 using static SilkyRing.Memory.Offsets;
 
 namespace SilkyRing.ViewModels
 {
     public class PlayerViewModel : BaseViewModel
     {
-        private int _currentHp;
-
-        private int _currentMaxHp;
-
         //
-        // private bool _isPos1Saved;
-        // private bool _isPos2Saved;
-        // private bool _isStateIncluded;
+        // 
+        // 
+        // 
         // private (float x, float y, float z) _coords;
         // private float _posX;
         // private float _posZ;
         // private float _posY;
-        // private CharacterState _saveState1 = new CharacterState();
-        // private CharacterState _saveState2 = new CharacterState();
-        //
-        private bool _isNoDeathEnabled;
-        private bool _isNoDamageEnabled;
-        private bool _isInfiniteStaminaEnabled;
-        private bool _isInfiniteGoodsEnabled;
-        private bool _isOneShotEnabled;
-        private bool _isHiddenEnabled;
-        private bool _isSilentEnabled;
-        private bool _isInfiniteArrowsEnabled;
-        private bool _isInfiniteFpEnabled;
-        private bool _isNoRuneGainEnabled;
-        private bool _isNoRuneLossEnabled;
-        private bool _isNoRuneArcLossEnabled;
-
-        private bool _isInfinitePoiseEnabled;
 
         // private bool _isAutoSetNewGameSevenEnabled;
         //
@@ -70,11 +52,14 @@ namespace SilkyRing.ViewModels
         private const float Epsilon = 0.0001f;
 
         private bool _pauseUpdates = true;
-        private bool _areOptionsEnabled;
-        private readonly DispatcherTimer _timer;
+
+        private readonly DispatcherTimer _playerTick;
 
         private readonly IPlayerService _playerService;
-        // private readonly DamageControlService _damageControlService;
+
+        private readonly CharacterState _saveState1 = new();
+        private readonly CharacterState _saveState2 = new();
+
         // private readonly HotkeyManager _hotkeyManager;
 
         public PlayerViewModel(IPlayerService playerService, IStateService stateService)
@@ -86,37 +71,75 @@ namespace SilkyRing.ViewModels
             stateService.Subscribe(State.Loaded, OnGameLoaded);
             stateService.Subscribe(State.FirstLoaded, OnGameFirstLoaded);
 
-            _timer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromMilliseconds(100)
-            };
-            _timer.Tick += (s, e) =>
-            {
-                if (_pauseUpdates) return;
+            SavePositionCommand = new DelegateCommand(SavePosition);
+            RestorePositionCommand = new DelegateCommand(RestorePosition);
 
-                CurrentHp = _playerService.GetCurrentHp();
-                CurrentMaxHp = _playerService.GetMaxHp();
-                PlayerSpeed = _playerService.GetSpeed();
-                int newRuneLevel = _playerService.GetRuneLevel();
-                // SoulMemory = _playerService.GetSoulMemory();
-                // _coords = _playerService.GetCoords();
-                // PosX = _coords.x;
-                // PosY = _coords.y;
-                // PosZ = _coords.z;
-                if (_currentRuneLevel == newRuneLevel) return;
-                RuneLevel = newRuneLevel;
-                _currentRuneLevel = newRuneLevel;
-                LoadStats();
+
+            _playerTick = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(64)
             };
-            _timer.Start();
+            _playerTick.Tick += PlayerTick;
         }
-
-       
 
         #region Commands
 
+        public ICommand SavePositionCommand { get; set; }
+        public ICommand RestorePositionCommand { get; set; }
+
         #endregion
 
+        #region Properties
+
+        private bool _areOptionsEnabled;
+
+        public bool AreOptionsEnabled
+        {
+            get => _areOptionsEnabled;
+            set => SetProperty(ref _areOptionsEnabled, value);
+        }
+
+        private int _currentHp;
+
+        public int CurrentHp
+        {
+            get => _currentHp;
+            set => SetProperty(ref _currentHp, value);
+        }
+
+        private int _currentMaxHp;
+
+        public int CurrentMaxHp
+        {
+            get => _currentMaxHp;
+            set => SetProperty(ref _currentMaxHp, value);
+        }
+
+        private bool _isPos1Saved;
+
+        public bool IsPos1Saved
+        {
+            get => _isPos1Saved;
+            set => SetProperty(ref _isPos1Saved, value);
+        }
+
+        private bool _isPos2Saved;
+
+        public bool IsPos2Saved
+        {
+            get => _isPos2Saved;
+            set => SetProperty(ref _isPos2Saved, value);
+        }
+
+        private bool _isStateIncluded;
+
+        public bool IsStateIncluded
+        {
+            get => _isStateIncluded;
+            set => SetProperty(ref _isStateIncluded, value);
+        }
+
+        #endregion
 
         public void PauseUpdates()
         {
@@ -126,24 +149,6 @@ namespace SilkyRing.ViewModels
         public void ResumeUpdates()
         {
             _pauseUpdates = false;
-        }
-
-        public bool AreOptionsEnabled
-        {
-            get => _areOptionsEnabled;
-            set => SetProperty(ref _areOptionsEnabled, value);
-        }
-
-        public int CurrentHp
-        {
-            get => _currentHp;
-            set => SetProperty(ref _currentHp, value);
-        }
-
-        public int CurrentMaxHp
-        {
-            get => _currentMaxHp;
-            set => SetProperty(ref _currentMaxHp, value);
         }
 
         public void SetHp(int hp)
@@ -180,17 +185,17 @@ namespace SilkyRing.ViewModels
         //     }
         // }
         //
-        // public bool IsPos1Saved
-        // {
-        //     get => _isPos1Saved;
-        //     set => SetProperty(ref _isPos1Saved, value);
-        // }
         //
-        // public bool IsPos2Saved
-        // {
-        //     get => _isPos2Saved;
-        //     set => SetProperty(ref _isPos2Saved, value);
-        // }
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
         //
         // public void SavePos(int index)
         // {
@@ -220,11 +225,7 @@ namespace SilkyRing.ViewModels
         //     }
         // }
         //
-        // public bool IsStateIncluded
-        // {
-        //     get => _isStateIncluded;
-        //     set => SetProperty(ref _isStateIncluded, value);
-        // }
+
         //
         // public float PosX
         // {
@@ -244,6 +245,9 @@ namespace SilkyRing.ViewModels
         //     set => SetProperty(ref _posZ, value);
         // }
         //
+
+        private bool _isNoDeathEnabled;
+
         public bool IsNoDeathEnabled
         {
             get => _isNoDeathEnabled;
@@ -251,7 +255,6 @@ namespace SilkyRing.ViewModels
             {
                 if (SetProperty(ref _isNoDeathEnabled, value))
                 {
-                    
                     _playerService.ToggleDebugFlag(WorldChrManDbg.PlayerNoDeath, true);
                     // _playerService.ToggleChrDataFlag(
                     //     WorldChrMan.ChrIns.Modules.ChrData.Flags,
@@ -261,6 +264,8 @@ namespace SilkyRing.ViewModels
                 }
             }
         }
+
+        private bool _isNoDamageEnabled;
 
         public bool IsNoDamageEnabled
         {
@@ -278,6 +283,7 @@ namespace SilkyRing.ViewModels
             }
         }
 
+        private bool _isInfiniteStaminaEnabled;
 
         public bool IsInfiniteStaminaEnabled
         {
@@ -291,6 +297,8 @@ namespace SilkyRing.ViewModels
             }
         }
 
+        private bool _isInfiniteGoodsEnabled;
+
         public bool IsInfiniteGoodsEnabled
         {
             get => _isInfiniteGoodsEnabled;
@@ -303,6 +311,7 @@ namespace SilkyRing.ViewModels
             }
         }
 
+        private bool _isOneShotEnabled;
 
         public bool IsOneShotEnabled
         {
@@ -316,6 +325,8 @@ namespace SilkyRing.ViewModels
             }
         }
 
+        private bool _isHiddenEnabled;
+
         public bool IsHiddenEnabled
         {
             get => _isHiddenEnabled;
@@ -327,6 +338,8 @@ namespace SilkyRing.ViewModels
                 }
             }
         }
+
+        private bool _isSilentEnabled;
 
         public bool IsSilentEnabled
         {
@@ -340,6 +353,8 @@ namespace SilkyRing.ViewModels
             }
         }
 
+        private bool _isInfiniteArrowsEnabled;
+
         public bool IsInfiniteArrowsEnabled
         {
             get => _isInfiniteArrowsEnabled;
@@ -351,6 +366,8 @@ namespace SilkyRing.ViewModels
                 }
             }
         }
+
+        private bool _isInfiniteFpEnabled;
 
         public bool IsInfiniteFpEnabled
         {
@@ -364,6 +381,7 @@ namespace SilkyRing.ViewModels
             }
         }
 
+        private bool _isNoRuneLossEnabled;
 
         public bool IsNoRuneLossEnabled
         {
@@ -377,6 +395,8 @@ namespace SilkyRing.ViewModels
             }
         }
 
+        private bool _isNoRuneGainEnabled;
+
         public bool IsNoRuneGainEnabled
         {
             get => _isNoRuneGainEnabled;
@@ -389,6 +409,8 @@ namespace SilkyRing.ViewModels
             }
         }
 
+        private bool _isNoRuneArcLossEnabled;
+
         public bool IsNoRuneArcLossEnabled
         {
             get => _isNoRuneArcLossEnabled;
@@ -400,6 +422,8 @@ namespace SilkyRing.ViewModels
                 }
             }
         }
+
+        private bool _isInfinitePoiseEnabled;
 
         public bool IsInfinitePoiseEnabled
         {
@@ -573,7 +597,6 @@ namespace SilkyRing.ViewModels
             return Math.Abs(a - b) < Epsilon;
         }
 
-
         public void TryEnableFeatures()
         {
             // if (IsNoDamageEnabled) _playerService.ToggleChrDataFlag(
@@ -587,15 +610,13 @@ namespace SilkyRing.ViewModels
             //     (byte)WorldChrMan.ChrIns.Modules.ChrData.Flag.NoDeath,
             //     _isNoDeathEnabled
             // );
-            
         }
-        
 
         public void DisableFeatures()
         {
             AreOptionsEnabled = false;
 
-            _timer.Stop();
+            _playerTick.Stop();
         }
 
         //
@@ -611,7 +632,6 @@ namespace SilkyRing.ViewModels
         // public void Rest() => _playerService.SetSpEffect(GameIds.SpEffects.SpEffectData.BonfireRest);
         public void RestoreSpellcasts()
         {
-         
         }
 
         public void DoRuneArc()
@@ -629,19 +649,17 @@ namespace SilkyRing.ViewModels
 
         public void GiveRunes() => _playerService.GiveRunes(Runes);
 
-
         #region Private Methods
 
         private void OnGameLoaded()
         {
             AreOptionsEnabled = true;
             LoadStats();
-            _timer.Start();
+            _playerTick.Start();
         }
-        
+
         private void OnGameFirstLoaded()
         {
-            
             if (IsOneShotEnabled) _playerService.ToggleDebugFlag(WorldChrManDbg.OneShot, true);
             if (IsInfiniteStaminaEnabled) _playerService.ToggleDebugFlag(WorldChrManDbg.InfiniteStam, true);
             if (IsInfiniteGoodsEnabled) _playerService.ToggleDebugFlag(WorldChrManDbg.InfiniteGoods, true);
@@ -655,7 +673,6 @@ namespace SilkyRing.ViewModels
             if (IsNoRuneArcLossEnabled) _playerService.ToggleNoRuneArcLoss(true);
             _pauseUpdates = false;
         }
-
 
         private void RegisterHotkeys()
         {
@@ -689,6 +706,24 @@ namespace SilkyRing.ViewModels
             // _hotkeyManager.RegisterAction("DecreasePlayerSpeed", () => SetSpeed(Math.Max(0, PlayerSpeed - 0.25f)));
         }
 
+        private void PlayerTick(object sender, EventArgs e)
+        {
+            if (_pauseUpdates) return;
+
+            CurrentHp = _playerService.GetCurrentHp();
+            CurrentMaxHp = _playerService.GetMaxHp();
+            PlayerSpeed = _playerService.GetSpeed();
+            int newRuneLevel = _playerService.GetRuneLevel();
+            // SoulMemory = _playerService.GetSoulMemory();
+            // _coords = _playerService.GetCoords();
+            // PosX = _coords.x;
+            // PosY = _coords.y;
+            // PosZ = _coords.z;
+            if (_currentRuneLevel == newRuneLevel) return;
+            RuneLevel = newRuneLevel;
+            _currentRuneLevel = newRuneLevel;
+            LoadStats();
+        }
 
         private void LoadStats()
         {
@@ -704,6 +739,40 @@ namespace SilkyRing.ViewModels
             RuneLevel = _playerService.GetRuneLevel();
             NewGame = _playerService.GetNewGame();
             // PlayerSpeed = _playerService.GetPlayerSpeed();
+        }
+
+        private void SavePosition(object parameter)
+        {
+            int index = Convert.ToInt32(parameter);
+            var state = index == 0 ? _saveState1 : _saveState2;
+            if (index == 0) IsPos1Saved = true;
+            else IsPos2Saved = true;
+
+            state.IncludesState = IsStateIncluded;
+            if (IsStateIncluded)
+            {
+                state.Hp = CurrentHp;
+                // state.Sp = _playerService.GetSp();
+            }
+
+            _playerService.SavePos(index);
+        }
+
+        private void RestorePosition(object parameter)
+        {
+            int index = Convert.ToInt32(parameter);
+
+            if (index == 0 && !IsPos1Saved) return;
+            if (index == 1 && !IsPos2Saved) return;
+            _playerService.RestorePos(index);
+            if (!IsStateIncluded) return;
+
+            var state = index == 0 ? _saveState1 : _saveState2;
+            if (IsStateIncluded && state.IncludesState)
+            {
+                // _playerService.SetHp(state.Hp);
+                // _playerService.SetSp(state.Sp);
+            }
         }
 
         #endregion

@@ -43,5 +43,10 @@ namespace SilkyRing.Memory
         public const int AttackInfoStart = 0x7C0; // 16 structs
         public const int AttackInfoCode = 0xC40;
 
+        public const int WarpCoords = 0xE40;
+        public const int Angle = 0xE50;
+        public const int WarpCode = 0xE60;
+        public const int AngleCode = 0xE70;
+
     }
 }

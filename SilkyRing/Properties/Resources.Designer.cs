@@ -418,5 +418,34 @@ namespace SilkyRing.Properties {
                 return ResourceManager.GetString("TargetNoStagger", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 0f 10 05 00 00 00 00    movups xmm0,XMMWORD PTR [rip+0x0]        # 7 &lt;_main+0x7&gt;
+        ///0f 11 80 a0 0a 00 00    movups XMMWORD PTR [rax+0xaa0],xmm0
+        ///e9 00 00 00 00          jmp    13 &lt;_main+0x13&gt;.
+        /// </summary>
+        internal static string WarpCoordWrite {
+            get {
+                return ResourceManager.GetString("WarpCoordWrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to b9 ff ff ff ff          mov    ecx,0xffffffff
+        ///ba ff ff ff ff          mov    edx,0xffffffff
+        ///41 b8 ff ff ff ff       mov    r8d,0xffffffff
+        ///41 b9 ff ff ff ff       mov    r9d,0xffffffff
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///48 83 ec 20             sub    rsp,0x20
+        ///ff d0                   call   rax
+        ///48 83 c4 20             add    rsp,0x20
+        ///c3                      ret.
+        /// </summary>
+        internal static string WarpToBlock {
+            get {
+                return ResourceManager.GetString("WarpToBlock", resourceCulture);
+            }
+        }
     }
 }

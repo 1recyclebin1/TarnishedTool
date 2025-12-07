@@ -25,7 +25,7 @@ namespace SilkyRing.Services
             {
                 (WorldChrMan.Base.ToInt64(), 0x0 + 2),
                 (grace.GraceEntityId, 0x12 + 2),
-                (Funcs.GraceWarp, 0x20 + 2)
+                (Functions.GraceWarp, 0x20 + 2)
             });
             
             _memoryService.AllocateAndExecute(bytes);
@@ -39,7 +39,7 @@ namespace SilkyRing.Services
                 (_memoryService.ReadInt64(VirtualMemFlag.Base), 0x4 + 2 ),
                 (grace.FlagId, 0xE + 2),
                 (1, 0x18 + 2),
-                (Funcs.SetEvent, 0x22 + 2)
+                (Functions.SetEvent, 0x22 + 2)
             });
             _memoryService.AllocateAndExecute(bytes);
         }

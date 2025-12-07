@@ -10,6 +10,13 @@ namespace SilkyRing.Memory
             public static IntPtr Base;
 
             public const int PlayerIns = 0x1E508;
+
+            public enum PlayerInsOffsets
+            {
+                CurrentBlockId = 0x6D0,
+                CurrentGlobalCoords = 0x6C0,
+                CurrentGlobalAngle = 0x6CC,
+            }
         }
 
         public static class ChrIns
@@ -168,6 +175,12 @@ namespace SilkyRing.Memory
             public static IntPtr Base;
 
             public const int IsLoaded = 0x94;
+            public const int FadeFlags = 0x96;
+
+            public enum FadeBitFlags
+            {
+                IsFadeScreen = 1 << 1,
+            }
         }
 
         public static class GameDataMan
@@ -230,16 +243,19 @@ namespace SilkyRing.Memory
             public static long GetForceActIdx;
             public static long TargetNoStagger;
             public static long AttackInfo;
+            public static long WarpCoordWrite;
+            public static long WarpAngleWrite;
             
         }
 
-        public static class Funcs
+        public static class Functions
         {
             public static long GraceWarp;
             public static long SetEvent;
             public static long SetSpEffect;
             public static long GiveRunes;
             public static long LookupByFieldInsHandle;
+            public static long WarpToBlock;
         }
 
         public static class Patches

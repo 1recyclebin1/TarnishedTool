@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Numerics;
+using System.Threading;
+using System.Threading.Tasks;
 using SilkyRing.Interfaces;
 using SilkyRing.Memory;
 using SilkyRing.Models;
@@ -10,16 +12,149 @@ namespace SilkyRing.Services
 {
     public class PlayerService(MemoryService memoryService, HookManager hookManager) : IPlayerService
     {
+        private readonly Position[] _positions =
+        [
+            new(0, Vector3.Zero, 0f),
+            new(0, Vector3.Zero, 0f)
+        ];
+
         public Vector3 GetPlayerPos() =>
             ReadVector3(GetChrPhysicsPtr() + (int)ChrIns.ChrPhysicsOffsets.Coords);
 
-        public void SavePos()
+        public void SavePos(int index)
         {
+            var posToSave = _positions[index];
+            var worldChrMan = memoryService.ReadInt64(WorldChrMan.Base);
+            var playerIns = (IntPtr) memoryService.ReadInt64((IntPtr) worldChrMan + WorldChrMan.PlayerIns);
+            posToSave.BlockId = memoryService.ReadUInt32(playerIns + (int)WorldChrMan.PlayerInsOffsets.CurrentBlockId);
+            posToSave.GlobalCoords = ReadVector3(playerIns + (int)WorldChrMan.PlayerInsOffsets.CurrentGlobalCoords);
+            posToSave.GlobalAngle =
+                memoryService.ReadFloat(playerIns + (int)WorldChrMan.PlayerInsOffsets.CurrentGlobalAngle);
         }
 
-        public void RestorePos()
+        public void RestorePos(int index)
         {
+            var savedPos = _positions[index];
+
+            var worldChrMan = memoryService.ReadInt64(WorldChrMan.Base);
+            var playerIns = (IntPtr) memoryService.ReadInt64((IntPtr) worldChrMan + WorldChrMan.PlayerIns);
+
+            uint currentBlockId =
+                memoryService.ReadUInt32(playerIns + (int)WorldChrMan.PlayerInsOffsets.CurrentBlockId);
+            uint currentArea = (currentBlockId >> 24) & 0xFF;
+            uint savedArea = (savedPos.BlockId >> 24) & 0xFF;
+
+            if (currentArea == savedArea)
+            {
+                var currentCoords = ReadVector3(playerIns + (int)WorldChrMan.PlayerInsOffsets.CurrentGlobalCoords);
+                var currentAbsolute = GetAbsoluteCoords(currentCoords, currentBlockId);
+                var savedAbsolute = GetAbsoluteCoords(savedPos.GlobalCoords, savedPos.BlockId);
+                var delta = savedAbsolute - currentAbsolute;
+                var newPos = GetPlayerPos() + delta;
+                WriteVector3(GetChrPhysicsPtr() + (int)ChrIns.ChrPhysicsOffsets.Coords, newPos);
+                memoryService.WriteFloat(playerIns + (int)WorldChrMan.PlayerInsOffsets.CurrentGlobalAngle,
+                    savedPos.GlobalAngle);
+                //TODO maybe restore multiple times or disable gravity or something with Y coord?
+            }
+            else
+            {
+                _ = Task.Run(() => WarpToBlockId(savedPos));
+            }
         }
+        
+        Vector3 GetAbsoluteCoords(Vector3 globalCoords, uint blockId)
+        {
+            byte area = (byte)((blockId >> 24) & 0xFF);
+    
+            if (area == 0x3C) { 
+                byte gridX = (byte)((blockId >> 16) & 0xFF);
+                byte gridZ = (byte)((blockId >> 8) & 0xFF);
+        
+                return new Vector3(
+                    globalCoords.X + 256 * gridX,
+                    globalCoords.Y,
+                    globalCoords.Z + 256 * gridZ
+                );
+            }
+    
+            return globalCoords; 
+        }
+
+        private void WarpToBlockId(Position savedPos)
+        {
+            int area = (int)(savedPos.BlockId >> 24) & 0xFF;
+            int block = (int)(savedPos.BlockId >> 16) & 0xFF;
+            int map = (int)(savedPos.BlockId >> 8) & 0xFF;
+            int altNo = (int)savedPos.BlockId & 0xFF;
+
+            var bytes = AsmLoader.GetAsmBytes("WarpToBlock");
+            AsmHelper.WriteAbsoluteAddress(bytes, Functions.WarpToBlock, 0x16 + 2);
+            AsmHelper.WriteImmediateDwords(bytes, new[]
+            {
+                (area, 0x0 + 1),
+                (block, 0x5 + 1),
+                (map, 0xA + 1),
+                (altNo, 0x10 + 1),
+            });
+
+            memoryService.AllocateAndExecute(bytes);
+
+            HookWarpCoordWrites(savedPos);
+        }
+
+        private void HookWarpCoordWrites(Position savedPos)
+        {
+            int angleOffset = 0xAB0;
+
+            var coordHook = Hooks.WarpCoordWrite;
+            var angleHook = Hooks.WarpAngleWrite;
+
+            var targetCoords = CodeCaveOffsets.Base + CodeCaveOffsets.WarpCoords;
+            var targetAngle = CodeCaveOffsets.Base + CodeCaveOffsets.Angle;
+            var warpCode = CodeCaveOffsets.Base + CodeCaveOffsets.WarpCoords;
+            var angleCode = CodeCaveOffsets.Base + CodeCaveOffsets.WarpCoords;
+            WriteVector3(targetCoords, savedPos.GlobalCoords);
+            memoryService.WriteFloat(targetCoords + 0xC, 1f);
+            memoryService.WriteFloat(targetAngle + 0x4, savedPos.GlobalAngle);
+
+            var bytes = AsmLoader.GetAsmBytes("WarpCoordWrite");
+            AsmHelper.WriteRelativeOffsets(bytes, new[]
+            {
+                (warpCode.ToInt64(), targetCoords.ToInt64(), 7, 0x0 + 3),
+                (warpCode.ToInt64() + 0xE, coordHook, 5, 0xE + 1)
+            });
+            memoryService.WriteBytes(warpCode, bytes);
+
+            AsmHelper.WriteRelativeOffsets(bytes, new[]
+            {
+                (angleCode.ToInt64(), targetAngle.ToInt64(), 7, 0x0 + 3),
+                (angleCode.ToInt64() + 0xE, angleHook, 5, 0xE + 3)
+            });
+            memoryService.WriteBytes(angleCode, bytes);
+            memoryService.WriteInt32(angleCode + 0x7 + 3, angleOffset);
+
+            hookManager.InstallHook(warpCode.ToInt64(), coordHook, [0x0F, 0x11, 0x80, 0xA0, 0x0A, 0x00, 0x00]);
+            hookManager.InstallHook(angleCode.ToInt64(), angleHook, [0x0F, 0x11, 0x80, 0xB0, 0x0A, 0x00, 0x00]);
+
+            var isFadedPtr = (IntPtr) memoryService.ReadInt64(MenuMan.Base) + MenuMan.FadeFlags;
+            var fadeBit = (byte)MenuMan.FadeBitFlags.IsFadeScreen;
+
+            WaitForCondition(() => memoryService.IsBitSet(isFadedPtr, fadeBit));
+            WaitForCondition(() => !memoryService.IsBitSet(isFadedPtr, fadeBit));
+            
+            hookManager.UninstallHook(warpCode.ToInt64());
+            hookManager.UninstallHook(angleCode.ToInt64());
+        }
+        
+        private void WaitForCondition(Func<bool> condition, int timeoutMs = 10000, int pollMs = 50)
+        {
+            int start = Environment.TickCount;
+            while (!condition() && Environment.TickCount < start + timeoutMs)
+            {
+                Thread.Sleep(pollMs);
+            }
+        }
+
 
         public PosWithHurtbox GetPosWithHurtbox()
         {
@@ -68,7 +203,6 @@ namespace SilkyRing.Services
 
             if (isInfinitePoiseEnabled)
             {
-                var origin = Hooks.InfinitePoise;
                 var hook = Hooks.InfinitePoise;
                 var codeBytes = AsmLoader.GetAsmBytes("InfinitePoise");
                 var bytes = BitConverter.GetBytes(WorldChrMan.Base.ToInt64());
@@ -97,7 +231,7 @@ namespace SilkyRing.Services
             {
                 (playerIns, 0x0 + 2),
                 (spEffectId, 0xA + 2),
-                (Funcs.SetSpEffect, 0x18 + 2)
+                (Functions.SetSpEffect, 0x18 + 2)
             });
             memoryService.AllocateAndExecute(bytes);
         }
@@ -143,7 +277,7 @@ namespace SilkyRing.Services
             {
                 (playerGameData, 0x0 + 2),
                 (runes, 0xA + 2),
-                (Funcs.GiveRunes, 0x14 + 2)
+                (Functions.GiveRunes, 0x14 + 2)
             });
 
             memoryService.AllocateAndExecute(bytes);
@@ -169,6 +303,15 @@ namespace SilkyRing.Services
                 BitConverter.ToSingle(coordBytes, 4),
                 BitConverter.ToSingle(coordBytes, 8)
             );
+        }
+
+        private void WriteVector3(IntPtr address, Vector3 value)
+        {
+            byte[] coordBytes = new byte[12];
+            Buffer.BlockCopy(BitConverter.GetBytes(value.X), 0, coordBytes, 0, 4);
+            Buffer.BlockCopy(BitConverter.GetBytes(value.Y), 0, coordBytes, 4, 4);
+            Buffer.BlockCopy(BitConverter.GetBytes(value.Z), 0, coordBytes, 8, 4);
+            memoryService.WriteBytes(address, coordBytes);
         }
     }
 }

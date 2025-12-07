@@ -92,6 +92,10 @@ namespace SilkyRing.Memory
                 addr => Hooks.TargetNoStagger = addr.ToInt64(), saved);
             TryPatternWithFallback("AttackInfo", Pattern.AttackInfo,
                 addr => Hooks.AttackInfo = addr.ToInt64(), saved);
+            TryPatternWithFallback("WarpCoordWrite", Pattern.WarpCoordWrite,
+                addr => Hooks.WarpCoordWrite = addr.ToInt64(), saved);
+            TryPatternWithFallback("WarpAngleWrite", Pattern.WarpAngleWrite,
+                addr => Hooks.WarpAngleWrite = addr.ToInt64(), saved);
 
             using (var writer = new StreamWriter(savePath))
             {
@@ -99,11 +103,12 @@ namespace SilkyRing.Memory
                     writer.WriteLine($"{pair.Key}={pair.Value:X}");
             }
 
-            Funcs.GraceWarp = FindAddressByPattern(Pattern.GraceWarp).ToInt64();
-            Funcs.SetEvent = FindAddressByPattern(Pattern.SetEvent).ToInt64();
-            Funcs.SetSpEffect = FindAddressByPattern(Pattern.SetSpEffect).ToInt64();
-            Funcs.GiveRunes = FindAddressByPattern(Pattern.GiveRunes).ToInt64();
-            Funcs.LookupByFieldInsHandle = FindAddressByPattern(Pattern.LookupByFieldInsHandle).ToInt64();
+            Functions.GraceWarp = FindAddressByPattern(Pattern.GraceWarp).ToInt64();
+            Functions.SetEvent = FindAddressByPattern(Pattern.SetEvent).ToInt64();
+            Functions.SetSpEffect = FindAddressByPattern(Pattern.SetSpEffect).ToInt64();
+            Functions.GiveRunes = FindAddressByPattern(Pattern.GiveRunes).ToInt64();
+            Functions.LookupByFieldInsHandle = FindAddressByPattern(Pattern.LookupByFieldInsHandle).ToInt64();
+            Functions.WarpToBlock = FindAddressByPattern(Pattern.WarpToBlock).ToInt64();
 
 
 #if DEBUG
@@ -137,12 +142,15 @@ namespace SilkyRing.Memory
             Console.WriteLine($"Hooks.GetForceActIdx: 0x{Hooks.GetForceActIdx:X}");
             Console.WriteLine($"Hooks.TargetNoStagger: 0x{Hooks.TargetNoStagger:X}");
             Console.WriteLine($"Hooks.AttackInfo: 0x{Hooks.AttackInfo:X}");
+            Console.WriteLine($"Hooks.WarpCoordWrite: 0x{Hooks.WarpCoordWrite:X}");
+            Console.WriteLine($"Hooks.WarpAngleWrite: 0x{Hooks.WarpAngleWrite:X}");
 
-            Console.WriteLine($"Funcs.GraceWarp: 0x{Funcs.GraceWarp:X}");
-            Console.WriteLine($"Funcs.SetEvent: 0x{Funcs.SetEvent:X}");
-            Console.WriteLine($"Funcs.SetSpEffect: 0x{Funcs.SetSpEffect:X}");
-            Console.WriteLine($"Funcs.GiveRunes: 0x{Funcs.GiveRunes:X}");
-            Console.WriteLine($"Funcs.LookupByFieldInsHandle: 0x{Funcs.LookupByFieldInsHandle:X}");
+            Console.WriteLine($"Funcs.GraceWarp: 0x{Functions.GraceWarp:X}");
+            Console.WriteLine($"Funcs.SetEvent: 0x{Functions.SetEvent:X}");
+            Console.WriteLine($"Funcs.SetSpEffect: 0x{Functions.SetSpEffect:X}");
+            Console.WriteLine($"Funcs.GiveRunes: 0x{Functions.GiveRunes:X}");
+            Console.WriteLine($"Funcs.LookupByFieldInsHandle: 0x{Functions.LookupByFieldInsHandle:X}");
+            Console.WriteLine($"Funcs.WarpToBlock: 0x{Functions.WarpToBlock:X}");
 #endif
         }
 

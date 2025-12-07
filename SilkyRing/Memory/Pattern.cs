@@ -211,6 +211,20 @@
             AddressingMode.Absolute
         );
 
+        public static readonly Pattern WarpCoordWrite = new Pattern(
+            new byte[] { 0x0F, 0x11, 0x80, 0xA0, 0x0A },
+            "xxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern WarpAngleWrite = new Pattern(
+            new byte[] { 0x0F, 0x11, 0x80, 0xB0, 0x0A, 0x00, 0x00, 0xC3 },
+            "xxxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
         //Funcs
 
         public static readonly Pattern GraceWarp = new Pattern(
@@ -251,6 +265,15 @@
             [0xE8, 0x00, 0x00, 0x00, 0x00, 0x48, 0x8B, 0x5C, 0x24, 0x30, 0x48, 0x85, 0xC0, 0x74, 0x15],
             "x????xxxxxxxxxx",
             0,
+            AddressingMode.Relative,
+            1,
+            5
+        );
+
+        public static readonly Pattern WarpToBlock = new Pattern(
+            new byte[] { 0x0F, 0xB6, 0x93, 0xAE },
+            "xxxx",
+            0x13,
             AddressingMode.Relative,
             1,
             5

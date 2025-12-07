@@ -8,8 +8,8 @@ namespace SilkyRing.Interfaces;
 public interface IPlayerService
 {
     Vector3 GetPlayerPos();
-    void SavePos();
-    void RestorePos();
+    void SavePos(int index);
+    void RestorePos(int index);
     PosWithHurtbox GetPosWithHurtbox();
 
     void SetHp(int hp);

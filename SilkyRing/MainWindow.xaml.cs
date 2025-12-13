@@ -72,7 +72,7 @@ namespace SilkyRing
             EnemyViewModel enemyViewModel = new EnemyViewModel(enemyService, _stateService); 
             TargetViewModel targetViewModel = new TargetViewModel(targetService, _stateService, enemyService, attackInfoService);
             EventViewModel eventViewModel = new EventViewModel(eventService, _stateService);
-            UtilityViewModel utilityViewModel = new UtilityViewModel(utilityService, _stateService, ezStateService);
+            UtilityViewModel utilityViewModel = new UtilityViewModel(utilityService, _stateService, ezStateService, playerService);
             // _itemViewModel = new ItemViewModel(itemService);
             SettingsViewModel settingsViewModel = new SettingsViewModel(settingsService, hotkeyManager);
             

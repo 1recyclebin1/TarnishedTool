@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows.Input;
 using SilkyRing.Core;
 using SilkyRing.GameIds;
 using SilkyRing.Interfaces;
@@ -25,12 +26,14 @@ namespace SilkyRing.ViewModels
 
         private readonly UtilityService _utilityService;
         private readonly IEzStateService _ezStateService;
+        private readonly IPlayerService _playerService;
 
         public UtilityViewModel(UtilityService utilityService, IStateService stateService,
-            IEzStateService ezStateService)
+            IEzStateService ezStateService, IPlayerService playerService)
         {
             _utilityService = utilityService;
             _ezStateService = ezStateService;
+            _playerService = playerService;
 
             TestCommand = new DelegateCommand(Test);
 
@@ -39,7 +42,8 @@ namespace SilkyRing.ViewModels
 
         private void Test()
         {
-           _ezStateService.ExecuteTalkCommand(EzState.TalkCommands.OpenKaleShop); 
+            
+            _ezStateService.ExecuteTalkCommand(EzState.TalkCommands.OpenPhysick); 
         }
 
         #region Commands 

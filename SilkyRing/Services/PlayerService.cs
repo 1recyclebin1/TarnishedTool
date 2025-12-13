@@ -375,6 +375,13 @@ namespace SilkyRing.Services
             memoryService.WriteInt32(gameData + offset, newValue);
         }
 
+        public long GetHandle()
+        {
+            var playerIns =
+                memoryService.ReadInt64((IntPtr)memoryService.ReadInt64(WorldChrMan.Base) + WorldChrMan.PlayerIns);
+            return memoryService.ReadInt64((IntPtr)playerIns + (int)WorldChrMan.PlayerInsOffsets.Handle);
+        }
+
         private int CalculateLevelUpCost(int nextLevel)
         {
             float baseLevel = nextLevel + BaseLevelOffset;

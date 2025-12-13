@@ -20,6 +20,7 @@ namespace SilkyRing.Memory
             
             public enum PlayerInsOffsets
             {
+                Handle = 0x8,
                 CurrentBlockId = 0x6D0,
                 CurrentGlobalCoords = 0x6C0,
                 CurrentGlobalAngle = 0x6CC,

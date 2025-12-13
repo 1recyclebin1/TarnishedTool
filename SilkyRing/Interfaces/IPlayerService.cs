@@ -36,4 +36,5 @@ public interface IPlayerService
     int GetRuneLevel();
     Stats GetStats();
     void SetStat(int offset, int newValue);
+    long GetHandle();
 }

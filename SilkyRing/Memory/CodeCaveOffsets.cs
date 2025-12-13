@@ -48,5 +48,8 @@ namespace SilkyRing.Memory
         public const int WarpCode = 0xE60;
         public const int AngleCode = 0xE80;
 
+        public const int EzStateTalkParams = 0x1000;
+        public const int EzStateTalkCode = 0x1040;
+
     }
 }

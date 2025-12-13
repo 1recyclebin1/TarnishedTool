@@ -4,16 +4,10 @@ namespace SilkyRing.GameIds;
 
 public static class EzState
 {
-    public class TalkCommand
+    public class TalkCommand(int commandId, int[] @params)
     {
-        public int CommandId { get; }
-        public int[] Params { get; }
-
-        public TalkCommand(int commandId, int[] @params)
-        {
-            CommandId = commandId;
-            Params = @params;
-        }
+        public int CommandId { get; } = commandId;
+        public int[] Params { get; } = @params;
     }
 
     public static class TalkCommands

@@ -353,5 +353,11 @@
                 </Grid>
             </StackPanel>
         </Border>
+        <Button Grid.Row="3"
+                Command="{Binding TestCommand}"
+                Content="Test">
+            
+        </Button>
     </Grid>
+    
 </UserControl>

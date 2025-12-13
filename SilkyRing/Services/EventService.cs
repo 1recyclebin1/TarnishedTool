@@ -1,19 +1,21 @@
-using System;
+using SilkyRing.Interfaces;
 using SilkyRing.Memory;
-using SilkyRing.Utilities;
 
 namespace SilkyRing.Services
 {
-    public class EventService
+    public class EventService(MemoryService memoryService, HookManager hookManager) : IEventService
     {
-        private readonly MemoryService _memoryService;
-        private readonly HookManager _hookManager;
+        private readonly MemoryService _memoryService = memoryService;
+        private readonly HookManager _hookManager = hookManager;
         
-        public EventService(MemoryService memoryService, HookManager hookManager)
+        public void SetEvent(long eventId)
         {
-            _memoryService = memoryService;
-            _hookManager = hookManager;
+            
         }
-        
+
+        public bool GetEvent(long eventId)
+        {
+            return false;
+        }
     }
 }

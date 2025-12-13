@@ -62,6 +62,7 @@ namespace SilkyRing
             IEnemyService enemyService = new EnemyService(_memoryService, hookManager);
             var travelService = new TravelService(_memoryService, hookManager);
             ISettingsService settingsService = new SettingsService(_memoryService, hookManager);
+            IEzStateService ezStateService = new EzStateService(_memoryService);
             
             // var itemService = new ItemService(_memoryIo);
             // _debugDrawService = new DebugDrawService(_memoryIo);
@@ -71,7 +72,7 @@ namespace SilkyRing
             EnemyViewModel enemyViewModel = new EnemyViewModel(enemyService, _stateService); 
             TargetViewModel targetViewModel = new TargetViewModel(targetService, _stateService, enemyService, attackInfoService);
             EventViewModel eventViewModel = new EventViewModel(eventService, _stateService);
-            UtilityViewModel utilityViewModel = new UtilityViewModel(utilityService, _stateService);
+            UtilityViewModel utilityViewModel = new UtilityViewModel(utilityService, _stateService, ezStateService);
             // _itemViewModel = new ItemViewModel(itemService);
             SettingsViewModel settingsViewModel = new SettingsViewModel(settingsService, hotkeyManager);
             

@@ -1,4 +1,7 @@
-﻿using SilkyRing.Interfaces;
+﻿using System.Windows.Input;
+using SilkyRing.Core;
+using SilkyRing.GameIds;
+using SilkyRing.Interfaces;
 using SilkyRing.Services;
 using static SilkyRing.Memory.Offsets;
 
@@ -21,14 +24,29 @@ namespace SilkyRing.ViewModels
 
 
         private readonly UtilityService _utilityService;
+        private readonly IEzStateService _ezStateService;
 
-
-        public UtilityViewModel(UtilityService utilityService, IStateService stateService)
+        public UtilityViewModel(UtilityService utilityService, IStateService stateService,
+            IEzStateService ezStateService)
         {
             _utilityService = utilityService;
+            _ezStateService = ezStateService;
+
+            TestCommand = new DelegateCommand(Test);
 
             // RegisterHotkeys();
         }
+
+        private void Test()
+        {
+           _ezStateService.ExecuteTalkCommand(EzState.TalkCommands.OpenKaleShop); 
+        }
+
+        #region Commands 
+        
+        public ICommand TestCommand { get; set; }
+        
+        #endregion
 
         // private void RegisterHotkeys()
         // {

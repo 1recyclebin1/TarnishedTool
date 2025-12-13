@@ -60,6 +60,22 @@ namespace SilkyRing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Limgrave,Beast of Farum Azula,520290304,-94.56|89.93|63.94|1,2.50
+        ///Limgrave,Bell Bearing Hunter,1009395200,-2.71|188.32|102.02|1,-0.87
+        ///Limgrave,Black Knife Assassin,504037376,-171.94|177.79|23.30|1,1.47
+        ///Limgrave,Bloodhound Knight Darriwil,1009525504,-15.51|104.36|-112.79|1,0.80
+        ///Limgrave,Crucible Knight,1009394944,-68.52|158.16|45.94|1,-0.83
+        ///Limgrave,Deathbird,1009395200,90.76|199.90|95.32|1,-0.63
+        ///Limgrave,Demi-Human Chief,521076736,20.10|-26.18|-72.41|1,-0.02
+        ///Limgrave,Erdtree Burial Watchdog,503447552 [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string BossWarps {
+            get {
+                return ResourceManager.GetString("BossWarps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 50                      push   rax
         ///48 8b 41 10             mov    rax,QWORD PTR [rcx+0x10]
         ///48 3b 05 00 00 00 00    cmp    rax,QWORD PTR [rip+0x0]        # c &lt;_main+0xc&gt;
@@ -100,6 +116,25 @@ namespace SilkyRing.Properties {
         internal static string EbActs {
             get {
                 return ResourceManager.GetString("EbActs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 48 89 e5                mov    rbp,rsp
+        ///48 81 ec 98 05 00 00    sub    rsp,0x598
+        ///48 8d 8d e0 fb ff ff    lea    rcx,[rbp-0x420]
+        ///ba 00 00 00 00          mov    edx,0x0
+        ///e8 00 00 00 00          call   1b &lt;_main+0x1b&gt;
+        ///48 8d 8d c8 fb ff ff    lea    rcx,[rbp-0x438]
+        ///48 8d 95 c8 fa ff ff    lea    rdx,[rbp-0x538]
+        ///48 89 51 10             mov    QWORD PTR [rcx+0x10],rdx
+        ///4c 8d 85 a8 fa ff ff    lea    r8,[rbp-0x558]
+        ///4c 89 82 98 00 00 00    mov    QWORD PTR [rdx+0x98],r8
+        ///49 89 50 18             mov    QWORD P [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string ExecuteTalkCommand {
+            get {
+                return ResourceManager.GetString("ExecuteTalkCommand", resourceCulture);
             }
         }
         

@@ -119,6 +119,15 @@
             7
         );
 
+        public static readonly Pattern CsDlcImp = new Pattern(
+            new byte[] { 0x48, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0xC6, 0x40, 0x42 },
+            "xxx????xxx",
+            0,
+            AddressingMode.Relative,
+            3,
+            7
+        );
+
         //Hooks
         public static readonly Pattern UpdateCoords = new Pattern(
             new byte[] { 0x0F, 0x11, 0x43, 0x70, 0xC7, 0x43 },

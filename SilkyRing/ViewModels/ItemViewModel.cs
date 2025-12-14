@@ -11,5 +11,7 @@ public class ItemViewModel
     public ItemViewModel(IItemService itemService)
     {
         _itemService = itemService;
+        
+        
     }
 }

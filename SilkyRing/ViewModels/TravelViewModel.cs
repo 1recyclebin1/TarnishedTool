@@ -11,16 +11,16 @@ namespace SilkyRing.ViewModels
     public class TravelViewModel : BaseViewModel
     {
         private readonly ITravelService _travelService;
+        private readonly IEventService _eventService;
 
-        private readonly EventService _eventService;
-        
         public SearchableGroupedCollection<string, Grace> Graces { get; }
         public SearchableGroupedCollection<string, BossWarp> Bosses { get; }
 
-        public TravelViewModel(ITravelService travelService, EventService eventService, IStateService stateService)
+        public TravelViewModel(ITravelService travelService, IEventService eventService, IStateService stateService)
         {
             _travelService = travelService;
-            
+            _eventService = eventService;
+
             stateService.Subscribe(State.Loaded, OnGameLoaded);
             stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);
             

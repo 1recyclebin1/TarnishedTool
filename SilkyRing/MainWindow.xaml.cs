@@ -24,6 +24,7 @@ namespace SilkyRing
     {
         private readonly MemoryService _memoryService;
         private readonly IStateService _stateService;
+        private readonly IDlcService _dlcService;
         private readonly AoBScanner _aobScanner;
 
         private readonly DispatcherTimer _gameLoadedTimer;
@@ -56,7 +57,7 @@ namespace SilkyRing
 
             IPlayerService playerService = new PlayerService(_memoryService, hookManager);
             var utilityService = new UtilityService(_memoryService, hookManager);
-            var eventService = new EventService(_memoryService, hookManager);
+            IEventService eventService = new EventService(_memoryService, hookManager);
             IAttackInfoService attackInfoService = new AttackInfoService(_memoryService, hookManager);
             ITargetService targetService = new TargetService(_memoryService, hookManager, playerService);
             IEnemyService enemyService = new EnemyService(_memoryService, hookManager);
@@ -64,7 +65,9 @@ namespace SilkyRing
             ISettingsService settingsService = new SettingsService(_memoryService, hookManager);
             IEzStateService ezStateService = new EzStateService(_memoryService);
             IItemService itemService = new ItemService(_memoryService);
-     
+            
+            _dlcService = new DlcService(_memoryService);
+
 
             PlayerViewModel playerViewModel = new PlayerViewModel(playerService, _stateService, hotkeyManager);
             TravelViewModel travelViewModel = new TravelViewModel(travelService, eventService, _stateService);
@@ -84,8 +87,7 @@ namespace SilkyRing
             var eventTab = new EventTab(eventViewModel);
             var settingsTab = new SettingsTab(settingsViewModel);
 
-
-            //
+            
             MainTabControl.Items.Add(new TabItem { Header = "Player", Content = playerTab });
             MainTabControl.Items.Add(new TabItem { Header = "Travel", Content = travelTab });
             MainTabControl.Items.Add(new TabItem { Header = "Enemies", Content = enemyTab });
@@ -113,14 +115,10 @@ namespace SilkyRing
         //     VersionChecker.CheckForUpdates(this);
         // }
         private bool _loaded;
-
         private bool _hasScanned;
-
         private bool _hasAllocatedMemory;
-        
-
         private bool _appliedOneTimeFeatures;
-
+        private bool _hasCheckedDlc;
 
         private void Timer_Tick(object sender, EventArgs e)
         {
@@ -148,6 +146,12 @@ namespace SilkyRing
 
                 }
 
+                if (!_hasCheckedDlc)
+                {
+                    _dlcService.CheckDlc();
+                    _hasCheckedDlc = true;
+                }
+
                 if (_stateService.IsLoaded())
                 {
                   
@@ -171,6 +175,7 @@ namespace SilkyRing
                 _hasScanned = false;
                 _loaded = false;
                 _hasAllocatedMemory = false;
+                _hasCheckedDlc = false;
                 _appliedOneTimeFeatures = false;
                 IsAttachedText.Text = "Not attached";
                 IsAttachedText.Foreground = (SolidColorBrush)Application.Current.Resources["NotAttachedBrush"];

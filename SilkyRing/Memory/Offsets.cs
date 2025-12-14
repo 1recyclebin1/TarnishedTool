@@ -268,6 +268,18 @@ namespace SilkyRing.Memory
             public const int AllDisableAi = 0x17;
             public const int PoiseBarsFlag = 0x69;
         }
+        
+        public static class CsDlcImp
+        {
+            public static IntPtr Base;
+
+            public const int ByteFlags = 0x10;
+
+            public enum Flags
+            {
+                DlcCheck = 0x1,
+            }
+        }
 
         public static class Hooks
         {

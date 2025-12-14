@@ -9,11 +9,12 @@ namespace SilkyRing.ViewModels
 {
     public class EventViewModel : BaseViewModel
     {
-        private readonly EventService _eventService;
+        private readonly IEventService _eventService;
 
-        public EventViewModel(EventService eventService, IStateService stateService)
+        public EventViewModel(IEventService eventService, IStateService stateService)
         {
             _eventService = eventService;
+
 
             stateService.Subscribe(State.Loaded, OnGameLoaded);
             stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);

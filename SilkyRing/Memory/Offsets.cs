@@ -313,6 +313,7 @@ namespace SilkyRing.Memory
             public static long ExternalEventTempCtor;
             public static long ExecuteTalkCommand;
             public static long GetEvent;
+            public static long GetPlayerItemQuantityById;
         }
 
         public static class Patches

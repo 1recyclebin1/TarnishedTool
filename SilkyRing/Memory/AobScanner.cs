@@ -113,6 +113,7 @@ namespace SilkyRing.Memory
             Functions.ExternalEventTempCtor = FindAddressByPattern(Pattern.ExternalEventTempCtor).ToInt64();
             Functions.ExecuteTalkCommand = FindAddressByPattern(Pattern.ExecuteTalkCommand).ToInt64();
             Functions.GetEvent = FindAddressByPattern(Pattern.GetEvent).ToInt64();
+            Functions.GetPlayerItemQuantityById = FindAddressByPattern(Pattern.GetPlayerItemQuantityById).ToInt64();
 
 
 #if DEBUG
@@ -157,6 +158,7 @@ namespace SilkyRing.Memory
             Console.WriteLine($"Funcs.LookupByFieldInsHandle: 0x{Functions.LookupByFieldInsHandle:X}");
             Console.WriteLine($"Funcs.WarpToBlock: 0x{Functions.WarpToBlock:X}");
             Console.WriteLine($"Funcs.GetEvent: 0x{Functions.GetEvent:X}");
+            Console.WriteLine($"Funcs.GetPlayerItemQuantityById: 0x{Functions.GetPlayerItemQuantityById:X}");
 #endif
         }
 

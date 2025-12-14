@@ -311,6 +311,15 @@
             5
         );
 
+        public static readonly Pattern GetPlayerItemQuantityById = new Pattern(
+            new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x3B, 0xC6, 0x7D, 0x07 },
+            "x????xxxx",
+            0,
+            AddressingMode.Relative,
+            1,
+            5
+        );
+
         //Patches
 
         public static readonly Pattern DungeonWarp = new Pattern(

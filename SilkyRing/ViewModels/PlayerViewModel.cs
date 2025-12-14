@@ -4,8 +4,8 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using SilkyRing.Core;
 using SilkyRing.Enums;
+using SilkyRing.GameIds;
 using SilkyRing.Interfaces;
-using SilkyRing.Memory;
 using SilkyRing.Models;
 using SilkyRing.Utilities;
 using static SilkyRing.Memory.Offsets;
@@ -585,7 +585,7 @@ namespace SilkyRing.ViewModels
             }
         }
         
-        private void ApplyRuneArc() =>  _playerService.ApplySpEffect(GameIds.SpEffect.RuneArc);
+        private void ApplyRuneArc() =>  _playerService.ApplySpEffect(SpEffect.RuneArc);
         private void GiveRunes() => _playerService.GiveRunes(Runes);
         
         private void ToggleSpeed()

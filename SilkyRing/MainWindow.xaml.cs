@@ -75,7 +75,7 @@ namespace SilkyRing
             TargetViewModel targetViewModel = new TargetViewModel(targetService, _stateService, enemyService, attackInfoService);
             EventViewModel eventViewModel = new EventViewModel(eventService, _stateService);
             UtilityViewModel utilityViewModel = new UtilityViewModel(utilityService, _stateService, ezStateService, playerService);
-            ItemViewModel itemViewModel = new ItemViewModel(itemService);
+            ItemViewModel itemViewModel = new ItemViewModel(itemService, _dlcService, _stateService);
             SettingsViewModel settingsViewModel = new SettingsViewModel(settingsService, hotkeyManager);
             
             var playerTab = new PlayerTab(playerViewModel);
@@ -145,18 +145,13 @@ namespace SilkyRing
                     _hasAllocatedMemory = true;
 
                 }
-
-                if (!_hasCheckedDlc)
-                {
-                    _dlcService.CheckDlc();
-                    _hasCheckedDlc = true;
-                }
-
+                
                 if (_stateService.IsLoaded())
                 {
                   
                     if (_loaded) return;
                     _loaded = true;
+                    _dlcService.CheckDlc();
                     _stateService.Publish(State.Loaded);
                     // _settingsViewModel.ApplyLoadedOptions();
                     if (_appliedOneTimeFeatures) return;

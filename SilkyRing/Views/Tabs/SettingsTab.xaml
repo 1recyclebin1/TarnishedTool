@@ -103,6 +103,42 @@
                         </ItemsControl>
                     </ScrollViewer>
                 </TabItem>
+                <TabItem Header="Enemies">
+                    <ScrollViewer MaxHeight="370" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding EnemiesHotkeys}"
+                                      ItemTemplate="{StaticResource HotkeyItemTemplate}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="2"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem Header="Target">
+                    <ScrollViewer MaxHeight="370" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding TargetHotkeys}"
+                                      ItemTemplate="{StaticResource HotkeyItemTemplate}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="2"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem Header="Utility">
+                    <ScrollViewer MaxHeight="370" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding UtilityHotkeys}"
+                                      ItemTemplate="{StaticResource HotkeyItemTemplate}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="2"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </TabItem>
             </TabControl>
         </StackPanel>
     </Border>

@@ -81,73 +81,25 @@ namespace SilkyRing.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 50000000,Arrow,99,600
-        ///53000000,Ballista Bolt,20,600
-        ///52030000,Black-Key Bolt,99,600
-        ///50310000,Bloodbone Arrow,99,600
-        ///50300000,Bloodbone Arrow (Fletched),99,600
-        ///52150000,Bloodbone Bolt,99,600
-        ///52000000,Bolt,99,600
-        ///50110000,Bone Arrow,99,600
-        ///50030000,Bone Arrow (Fletched),99,600
-        ///53030000,Bone Ballista Bolt,20,600
-        ///52090000,Bone Bolt,99,600
-        ///51060000,Bone Great Arrow,30,600
-        ///51050000,Bone Great Arrow (Fletched),30,600
-        ///52040000,Burred Bolt,99,600
-        ///50330000,Coldbone Arrow,99,600
-        ///50320000,Coldbone Arrow ( [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to 0,50000000,Arrow,99,600
+        ///0,53000000,Ballista Bolt,20,600
+        ///0,52030000,Black-Key Bolt,99,600
+        ///0,50310000,Bloodbone Arrow,99,600
+        ///0,50300000,Bloodbone Arrow (Fletched),99,600
+        ///0,52150000,Bloodbone Bolt,99,600
+        ///0,52000000,Bolt,99,600
+        ///0,50110000,Bone Arrow,99,600
+        ///0,50030000,Bone Arrow (Fletched),99,600
+        ///0,53030000,Bone Ballista Bolt,20,600
+        ///0,52090000,Bone Bolt,99,600
+        ///0,51060000,Bone Great Arrow,30,600
+        ///0,51050000,Bone Great Arrow (Fletched),30,600
+        ///0,52040000,Burred Bolt,99,600
+        ///0,50330000,Coldbone Arrow,99, [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Arrows {
             get {
                 return ResourceManager.GetString("Arrows", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 60120,Obtained Crafting Kit
-        ///67000,Nomadic Warrior&apos;s Cookbook [1]
-        ///67110,Nomadic Warrior&apos;s Cookbook [2]
-        ///67010,Nomadic Warrior&apos;s Cookbook [3]
-        ///67800,Nomadic Warrior&apos;s Cookbook [4]
-        ///67830,Nomadic Warrior&apos;s Cookbook [5]
-        ///67020,Nomadic Warrior&apos;s Cookbook [6]
-        ///67050,Nomadic Warrior&apos;s Cookbook [7]
-        ///67880,Nomadic Warrior&apos;s Cookbook [8]
-        ///67430,Nomadic Warrior&apos;s Cookbook [9]
-        ///67030,Nomadic Warrior&apos;s Cookbook [10]
-        ///67220,Nomadic Warrior&apos;s Cookbook [11]
-        ///67060,Nomadic Warrior&apos;s Cookbook [12]
-        ///67080,Nomadic Warrior&apos;s  [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string BaseCookbooks {
-            get {
-                return ResourceManager.GetString("BaseCookbooks", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 11004,Cerulean Crystal Tear
-        ///11005,Cerulean Crystal Tear
-        ///11025,Cerulean Hidden Tear
-        ///11007,Crimson Bubbletear
-        ///11002,Crimson Crystal Tear
-        ///11003,Crimson Crystal Tear
-        ///11009,Crimsonburst Crystal Tear
-        ///11000,Crimsonspill Crystal Tear
-        ///11020,Crimsonwhorl Bubbletear
-        ///11022,Dexterity-knot Crystal Tear
-        ///11024,Faith-knot Crystal Tear
-        ///11028,Flame-Shrouding Cracked Tear
-        ///11010,Greenburst Crystal Tear
-        ///11001,Greenspill Crystal Tear
-        ///11031,Holy-Shrouding Cracked Tear
-        ///11023,Intelligence-knot Crystal Tear
-        ///11018,Lead [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string BaseCrystalTears {
-            get {
-                return ResourceManager.GetString("BaseCrystalTears", resourceCulture);
             }
         }
         
@@ -168,6 +120,48 @@ namespace SilkyRing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 0,60120,Obtained Crafting Kit,1,1
+        ///0,67000,Nomadic Warrior&apos;s Cookbook [1],1,1
+        ///0,67110,Nomadic Warrior&apos;s Cookbook [2],1,1
+        ///0,67010,Nomadic Warrior&apos;s Cookbook [3],1,1
+        ///0,67800,Nomadic Warrior&apos;s Cookbook [4],1,1
+        ///0,67830,Nomadic Warrior&apos;s Cookbook [5],1,1
+        ///0,67020,Nomadic Warrior&apos;s Cookbook [6],1,1
+        ///0,67050,Nomadic Warrior&apos;s Cookbook [7],1,1
+        ///0,67880,Nomadic Warrior&apos;s Cookbook [8],1,1
+        ///0,67430,Nomadic Warrior&apos;s Cookbook [9],1,1
+        ///0,67030,Nomadic Warrior&apos;s Cookbook [10],1,1
+        ///0,67220,Nomadic Warrior&apos;s Cookbook [ [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Cookbooks {
+            get {
+                return ResourceManager.GetString("Cookbooks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 0,11004,Cerulean Crystal Tear,1,1
+        ///0,11005,Cerulean Crystal Tear,1,1
+        ///0,11025,Cerulean Hidden Tear,1,1
+        ///0,11007,Crimson Bubbletear,1,1
+        ///0,11002,Crimson Crystal Tear,1,1
+        ///0,11003,Crimson Crystal Tear,1,1
+        ///0,11009,Crimsonburst Crystal Tear,1,1
+        ///0,11000,Crimsonspill Crystal Tear,1,1
+        ///0,11020,Crimsonwhorl Bubbletear,1,1
+        ///0,11022,Dexterity-knot Crystal Tear,1,1
+        ///0,11024,Faith-knot Crystal Tear,1,1
+        ///0,11028,Flame-Shrouding Cracked Tear,1,1
+        ///0,11010,Greenburst Crystal Tear,1,1
+        ///0,11001,Greenspill Crystal Tear,1,1        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string CrystalTears {
+            get {
+                return ResourceManager.GetString("CrystalTears", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 50                      push   rax
         ///48 8b 41 10             mov    rax,QWORD PTR [rcx+0x10]
         ///48 3b 05 00 00 00 00    cmp    rax,QWORD PTR [rip+0x0]        # c &lt;_main+0xc&gt;
@@ -183,43 +177,6 @@ namespace SilkyRing.Properties {
         internal static string DisableAllExceptTarget {
             get {
                 return ResourceManager.GetString("DisableAllExceptTarget", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 68590,Greater Potentate&apos;s Cookbook [1]
-        ///68730,Greater Potentate&apos;s Cookbook [2]
-        ///68690,Greater Potentate&apos;s Cookbook [3]
-        ///68600,Greater Potentate&apos;s Cookbook [4]
-        ///68610,Greater Potentate&apos;s Cookbook [5]
-        ///68720,Greater Potentate&apos;s Cookbook [6]
-        ///68630,Greater Potentate&apos;s Cookbook [7]
-        ///68680,Greater Potentate&apos;s Cookbook [8]
-        ///68640,Greater Potentate&apos;s Cookbook [9]
-        ///68650,Greater Potentate&apos;s Cookbook [10]
-        ///68660,Greater Potentate&apos;s Cookbook [11]
-        ///68620,Greater Potentate&apos;s Cookbook [12]
-        ///68700,Greater Potentate&apos;s Coo [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string DLCCookbooks {
-            get {
-                return ResourceManager.GetString("DLCCookbooks", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 2011050,Bloodsucking Cracked Tear
-        ///2011030,Cerulean-Sapping Cracked Tear
-        ///2011010,Crimsonburst Dried Tear
-        ///2011020,Crimson-Sapping Cracked Tear
-        ///2011070,Deflecting Hardtear
-        ///2011060,Glovewort Crystal Tear
-        ///2011040,Oil-Soaked Tear
-        ///2011000,Viridian Hidden Tear.
-        /// </summary>
-        internal static string DLCCrystalTears {
-            get {
-                return ResourceManager.GetString("DLCCrystalTears", resourceCulture);
             }
         }
         
@@ -588,25 +545,21 @@ namespace SilkyRing.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 1000,Crimson Amber Medallion
-        ///1001,Crimson Amber Medallion +1
-        ///1002,Crimson Amber Medallion +2
-        ///1010,Cerulean Amber Medallion
-        ///1011,Cerulean Amber Medallion +1
-        ///1012,Cerulean Amber Medallion +2
-        ///1020,Viridian Amber Medallion
-        ///1021,Viridian Amber Medallion +1
-        ///1022,Viridian Amber Medallion +2
-        ///1030,Arsenal Charm
-        ///1031,Arsenal Charm +1
-        ///1032,Great-Jar&apos;s Arsenal
-        ///1040,Erdtree&apos;s Favor
-        ///1041,Erdtree&apos;s Favor +1
-        ///1042,Erdtree&apos;s Favor +2
-        ///1050,Radagon&apos;s Scarseal
-        ///1051,Radagon&apos;s Soreseal
-        ///1060,Starscourge Heirloom
-        /// [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to 0,1000,Crimson Amber Medallion,1,1
+        ///0,1001,Crimson Amber Medallion +1,1,1
+        ///0,1002,Crimson Amber Medallion +2,1,1
+        ///0,1010,Cerulean Amber Medallion,1,1
+        ///0,1011,Cerulean Amber Medallion +1,1,1
+        ///0,1012,Cerulean Amber Medallion +2,1,1
+        ///0,1020,Viridian Amber Medallion,1,1
+        ///0,1021,Viridian Amber Medallion +1,1,1
+        ///0,1022,Viridian Amber Medallion +2,1,1
+        ///0,1030,Arsenal Charm,1,1
+        ///0,1031,Arsenal Charm +1,1,1
+        ///0,1032,Great-Jar&apos;s Arsenal,1,1
+        ///0,1040,Erdtree&apos;s Favor,1,1
+        ///0,1041,Erdtree&apos;s Favor +1,1,1
+        ///0,1042,Erdtree&apos;s F [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Talismans {
             get {
@@ -684,19 +637,19 @@ namespace SilkyRing.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 65600,Upgrade - Standard
-        ///65610,Iron Whetblade (Heavy)
-        ///65620,Iron Whetblade (Keen)
-        ///65630,Iron Whetblade (Quality)
-        ///65640,Red-Hot Whetblade (Fire)
-        ///65650,Red-Hot Whetblade (Flame Art)
-        ///65660,Sanctified Whetblade (Lightning)
-        ///65670,Sanctified Whetblade (Sacred)
-        ///65680,Glintstone Whetblade (Magic)
-        ///65690,Glintstone Whetblade (Frost)
-        ///65700,Black Whetblade (Poison)
-        ///65710,Black Whetblade (Blood)
-        ///65720,Black Whetblade (Occult)
+        ///   Looks up a localized string similar to 0,65600,Upgrade - Standard,1,1
+        ///0,65610,Iron Whetblade (Heavy),1,1
+        ///0,65620,Iron Whetblade (Keen),1,1
+        ///0,65630,Iron Whetblade (Quality),1,1
+        ///0,65640,Red-Hot Whetblade (Fire),1,1
+        ///0,65650,Red-Hot Whetblade (Flame Art),1,1
+        ///0,65660,Sanctified Whetblade (Lightning),1,1
+        ///0,65670,Sanctified Whetblade (Sacred),1,1
+        ///0,65680,Glintstone Whetblade (Magic),1,1
+        ///0,65690,Glintstone Whetblade (Frost),1,1
+        ///0,65700,Black Whetblade (Poison),1,1
+        ///0,65710,Black Whetblade (Blood),1,1
+        ///0,65720,Black Whetblade (Occult),1,1
         ///.
         /// </summary>
         internal static string Whetblades {

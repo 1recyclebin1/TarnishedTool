@@ -244,6 +244,7 @@ namespace SilkyRing.Memory
         {
             public static IntPtr Base;
 
+            public const int ShouldQuitout = 0x10;
             public const int ForceSave = 0xb72;
         }
         

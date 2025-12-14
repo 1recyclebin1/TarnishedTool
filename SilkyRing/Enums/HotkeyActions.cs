@@ -22,7 +22,15 @@ public enum HotkeyActions
     Hidden,
     TogglePlayerSpeed,
     IncreasePlayerSpeed,
-    DecreasePlayerSpeed
+    DecreasePlayerSpeed,
+    
+    
+    
+    
+    
+    
+    Quitout,
+    ForceSave,
     
     
     

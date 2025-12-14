@@ -136,7 +136,7 @@ namespace SilkyRing.Utilities
             while ((line = reader.ReadLine()) != null)
             {
                 string[] parts = line.Split(',');
-                
+
                 weapons.Add(new Weapon
                 {
                     Id = int.Parse(parts[0]),
@@ -153,6 +153,39 @@ namespace SilkyRing.Utilities
             return weapons;
         }
 
+        public static List<Item> GetItems(string name)
+        {
+            List<Item> items = new List<Item>();
+
+            string csvData = Resources.ResourceManager.GetString(name);
+
+            if (string.IsNullOrEmpty(csvData)) return new List<Item>();
+
+            using (StringReader reader = new StringReader(csvData))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (string.IsNullOrWhiteSpace(line)) continue;
+
+                    string[] parts = line.Split(',');
+
+
+                    items.Add(new Item
+                    {
+                        IsDlc = byte.Parse(parts[0]) == 1,
+                        Id = int.Parse(parts[1]),
+                        Name = parts[2],
+                        StackSize = int.Parse(parts[3]),
+                        MaxStorage = int.Parse(parts[4]),
+                        CategoryName = name
+                    });
+                }
+            }
+
+            return items;
+        }
+
         public static List<AshOfWar> GetAshOfWars()
         {
             List<AshOfWar> aowList = new List<AshOfWar>();
@@ -164,7 +197,7 @@ namespace SilkyRing.Utilities
             while ((line = reader.ReadLine()) != null)
             {
                 string[] parts = line.Split(',');
-                
+
                 var affinityBytes = HexStringToByteArray(parts[2]);
                 var affinity = (Affinity)(affinityBytes[0] | (affinityBytes[1] << 8));
 

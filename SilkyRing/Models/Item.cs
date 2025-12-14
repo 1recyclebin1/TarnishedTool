@@ -4,6 +4,7 @@ namespace SilkyRing.Models;
 
 public class Item
 {
+    public bool IsDlc { get; set; }
     public int Id { get; set; }
     public string Name { get; set; }
     public int StackSize { get; set; } 

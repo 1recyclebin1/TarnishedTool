@@ -21,7 +21,7 @@ public class SettingsViewModel : BaseViewModel
     private Keys _currentKeys;
 
     public ObservableCollection<HotkeyBindingViewModel> PlayerHotkeys { get; }
-    public ObservableCollection<HotkeyBindingViewModel> EnemyHotkeys { get; }
+    public ObservableCollection<HotkeyBindingViewModel> EnemiesHotkeys { get; }
     public ObservableCollection<HotkeyBindingViewModel> TargetHotkeys { get; }
     public ObservableCollection<HotkeyBindingViewModel> UtilityHotkeys { get; }
 
@@ -51,7 +51,7 @@ public class SettingsViewModel : BaseViewModel
             new("Increase Speed", HotkeyActions.IncreasePlayerSpeed),
             new("Decrease Speed", HotkeyActions.DecreasePlayerSpeed),
         ];
-        EnemyHotkeys = new ObservableCollection<HotkeyBindingViewModel>
+        EnemiesHotkeys = new ObservableCollection<HotkeyBindingViewModel>
         {
             // Add enemy hotkeys
         };
@@ -63,18 +63,21 @@ public class SettingsViewModel : BaseViewModel
 
         UtilityHotkeys = new ObservableCollection<HotkeyBindingViewModel>
         {
-            // Add utility hotkeys
+            new("Quitout", HotkeyActions.Quitout),
+            new("Force Save", HotkeyActions.ForceSave),
         };
 
-        // Build lookup dictionary
+    
         _hotkeyLookup = PlayerHotkeys
-            .Concat(EnemyHotkeys)
+            .Concat(EnemiesHotkeys)
             .Concat(TargetHotkeys)
             .Concat(UtilityHotkeys)
             .ToDictionary(h => h.ActionId);
 
         LoadHotkeyDisplays();
+        RegisterHotkeys();
     }
+    
 
     #region Properties
 
@@ -283,6 +286,12 @@ public class SettingsViewModel : BaseViewModel
         {
             binding.HotkeyText = new Keys(currentKeys.Values.ToArray()).ToString();
         }
+    }
+    
+    private void RegisterHotkeys()
+    {
+        _hotkeyManager.RegisterAction(HotkeyActions.Quitout, () => _settingsService.Quitout());
+        _hotkeyManager.RegisterAction(HotkeyActions.ForceSave, () => _settingsService.ForceSave());
     }
     
     #endregion

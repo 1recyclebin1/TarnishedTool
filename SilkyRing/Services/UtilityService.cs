@@ -39,7 +39,6 @@ namespace SilkyRing.Services
                 hookManager.UninstallHook(updateCoordsCode.ToInt64());
 
                 playerService.EnableGravity();
-                //TODO set both player and torrent to gravity
             }
         }
 
@@ -138,10 +137,7 @@ namespace SilkyRing.Services
             var maxDist = CodeCaveOffsets.Base + (int)CodeCaveOffsets.TargetView.MaxDist;
             memoryService.WriteFloat(maxDist, reducedTargetViewDistance * reducedTargetViewDistance);
         }
-
-        public void ForceSave() =>
-            memoryService.WriteUInt8((IntPtr)memoryService.ReadInt64(GameMan.Base) + GameMan.ForceSave, 1);
-
+        
         public void ToggleDrawHitbox(bool isDrawHitboxEnabled) =>
             memoryService.WriteUInt8((IntPtr)memoryService.ReadInt64(DamageManager.Base) + DamageManager.HitboxView,
                 isDrawHitboxEnabled ? 1 : 0);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
 using SilkyRing.Core;
@@ -17,22 +18,26 @@ namespace SilkyRing.ViewModels
         private bool _customHpHasBeenSet;
 
         private ulong _currentTargetId;
+        
+        private float _targetDesiredSpeed = -1f;
+        private const float DefaultSpeed = 1f;
+        private const float Epsilon = 0.0001f;
 
         private AttackInfoWindow _attackInfoWindow;
         private AttackInfoViewModel _attackInfoViewModel;
 
         private ResistancesWindow _resistancesWindowWindow;
-        
+
         private DefensesWindow _defensesWindow;
 
         private readonly ITargetService _targetService;
         private readonly IEnemyService _enemyService;
         private readonly IAttackInfoService _attackInfoService;
 
-        // private readonly HotkeyManager _hotkeyManager;
+        private readonly HotkeyManager _hotkeyManager;
 
         public TargetViewModel(ITargetService targetService, IStateService stateService, IEnemyService enemyService,
-            IAttackInfoService attackInfoService)
+            IAttackInfoService attackInfoService, HotkeyManager hotkeyManager)
         {
             _targetService = targetService;
             _enemyService = enemyService;
@@ -40,7 +45,7 @@ namespace SilkyRing.ViewModels
 
             _attackInfoViewModel = new AttackInfoViewModel();
 
-            // _hotkeyManager = hotkeyManager;
+            _hotkeyManager = hotkeyManager;
             RegisterHotkeys();
 
             stateService.Subscribe(State.Loaded, OnGameLoaded);
@@ -119,7 +124,7 @@ namespace SilkyRing.ViewModels
                     ShowFrost = false;
                     ShowBleed = false;
                 }
-                
+
                 RefreshResistancesWindow();
             }
         }
@@ -329,10 +334,9 @@ namespace SilkyRing.ViewModels
             {
                 SetProperty(ref _showSleep, value);
                 RefreshResistancesWindow();
-             
             }
         }
-        
+
         private bool _isSleepImmune;
 
         public bool IsSleepImmune
@@ -362,7 +366,7 @@ namespace SilkyRing.ViewModels
             get => _standardDefense;
             set => SetProperty(ref _standardDefense, value);
         }
-        
+
         private float _slashDefense;
 
         public float SlashDefense
@@ -645,7 +649,7 @@ namespace SilkyRing.ViewModels
                 }
             }
         }
-        
+
         private float _dist;
 
         public float Dist
@@ -653,9 +657,9 @@ namespace SilkyRing.ViewModels
             get => _dist;
             set => SetProperty(ref _dist, value);
         }
-        
+
         private bool _isResistancesWindowOpen;
-        
+
         public bool IsResistancesWindowOpen
         {
             get => _isResistancesWindowOpen;
@@ -696,45 +700,98 @@ namespace SilkyRing.ViewModels
 
         private void RegisterHotkeys()
         {
-            // _hotkeyManager.RegisterAction("EnableTargetOptions",
-            //     () => { IsTargetOptionsEnabled = !IsTargetOptionsEnabled; });
-            // _hotkeyManager.RegisterAction("ShowAllResistances", () =>
-            // {
-            //     ShowAllResistances = !ShowAllResistances;
-            //     UpdateResistancesDisplay();
-            // });
-            // _hotkeyManager.RegisterAction("FreezeHp", () =>
-            // {
-            //     if (!IsValidTarget) return;
-            //     IsFreezeHealthEnabled = !IsFreezeHealthEnabled;
-            // });
-            // _hotkeyManager.RegisterAction("KillTarget", () => {
-            //     if (!IsValidTarget) return;
-            //     SetTargetHealth(0);
-            // });
-            // _hotkeyManager.RegisterAction("DisableTargetAi",
-            //     () =>
-            //     {
-            //         if (!IsValidTarget) return;
-            //         IsDisableTargetAiEnabled = !IsDisableTargetAiEnabled;
-            //     });
-            // _hotkeyManager.RegisterAction("IncreaseTargetSpeed", () =>
-            // {
-            //     if (!IsValidTarget) return;
-            //     SetSpeed(Math.Min(5, TargetSpeed + 0.25f));
-            // });
-            // _hotkeyManager.RegisterAction("DecreaseTargetSpeed", () =>
-            // {
-            //     if (!IsValidTarget) return;
-            //     SetSpeed(Math.Max(0, TargetSpeed - 0.25f));
-            // });
-            // _hotkeyManager.RegisterAction("TargetRepeatAct", () =>
-            // {
-            //     if (!IsValidTarget) return;
-            //     IsRepeatActEnabled = !IsRepeatActEnabled;
-            // });
-            // _hotkeyManager.RegisterAction("DisableAi", () => { IsAllDisableAiEnabled = !IsAllDisableAiEnabled; });
+            _hotkeyManager.RegisterAction(HotkeyActions.EnableTargetOptions,
+                () => { IsTargetOptionsEnabled = !IsTargetOptionsEnabled; });
+            _hotkeyManager.RegisterAction(HotkeyActions.KillTarget, () => 
+                ExecuteTargetAction(() => SetHp(0)));
+            _hotkeyManager.RegisterAction(HotkeyActions.SetTargetMaxHp, () => 
+                ExecuteTargetAction(() => SetHpPercentage(100)));
+            _hotkeyManager.RegisterAction(HotkeyActions.SetTargetCustomHp, () => 
+                ExecuteTargetAction(() => SetHpPercentage(CustomHp)));
+            _hotkeyManager.RegisterAction(HotkeyActions.ShowAllResistances, () =>
+            {
+                if (!IsTargetOptionsEnabled) IsTargetOptionsEnabled = true;
+                _showAllResistances = !_showAllResistances;
+                UpdateResistancesDisplay();
+            });
+            _hotkeyManager.RegisterAction(HotkeyActions.IncreaseTargetSpeed, () =>
+                ExecuteTargetAction(() => SetSpeed(Math.Min(5, TargetSpeed + 0.25f))));
+            _hotkeyManager.RegisterAction(HotkeyActions.DecreaseTargetSpeed, () =>
+                ExecuteTargetAction(() => SetSpeed(Math.Max(0, TargetSpeed - 0.25f))));
+            _hotkeyManager.RegisterAction(HotkeyActions.ToggleTargetSpeed, () =>
+                ExecuteTargetAction(ToggleTargetSpeed));
+            _hotkeyManager.RegisterAction(HotkeyActions.IncrementForceAct, () =>
+                ExecuteTargetAction(() =>
+                {
+                    if (ForceAct + 1 > 99) ForceAct = 0;
+                    else ForceAct += 1;
+                }));
+            _hotkeyManager.RegisterAction(HotkeyActions.DecrementForceAct, () =>
+                ExecuteTargetAction(() =>
+                {
+                    if (ForceAct - 1 < 0) ForceAct = 99;
+                    else ForceAct -= 1;
+                }));
+            
+            _hotkeyManager.RegisterAction(HotkeyActions.KillTarget, () => 
+                ExecuteTargetAction(() => ForceAct = 0));
+            _hotkeyManager.RegisterAction(HotkeyActions.DisableTargetAi,
+                () => ExecuteTargetAction(() => IsFreezeAiEnabled = !IsFreezeAiEnabled));
+            _hotkeyManager.RegisterAction(HotkeyActions.DisableAllExceptTargetAi,
+                () => ExecuteTargetAction(() => IsDisableAllExceptTargetEnabled = !IsDisableAllExceptTargetEnabled));
+            _hotkeyManager.RegisterAction(HotkeyActions.TargetNoStagger,
+                () => ExecuteTargetAction(() => IsNoStaggerEnabled = !IsNoStaggerEnabled));
+            _hotkeyManager.RegisterAction(HotkeyActions.TargetRepeatAct,
+                () => ExecuteTargetAction(() => IsRepeatActEnabled = !IsRepeatActEnabled));
+            _hotkeyManager.RegisterAction(HotkeyActions.TargetTargetingView,
+                () => ExecuteTargetAction(() => IsTargetingViewEnabled = !IsTargetingViewEnabled));
+            // _hotkeyManager.RegisterAction(HotkeyActions.ShowAttackInfo,
+            //     () => ExecuteTargetAction(() => IsShowAttackInfoEnabled = !IsTargetingViewEnabled));
+            // _hotkeyManager.RegisterAction(HotkeyActions.ShowDefenses,
+            //     () => ExecuteTargetAction(() =>  = !IsTargetingViewEnabled));
+            _hotkeyManager.RegisterAction(HotkeyActions.TargetNoMove,
+                () => ExecuteTargetAction(() =>  IsNoMoveEnabled = !IsTargetingViewEnabled));
+            _hotkeyManager.RegisterAction(HotkeyActions.ForceActSequence,
+                () => ExecuteTargetAction(ForceActSequence));
+            _hotkeyManager.RegisterAction(HotkeyActions.KillAllExceptTarget,
+                () => ExecuteTargetAction(KillAllBesidesTarget));
         }
+        
+        private void ExecuteTargetAction(Action action)
+        {
+            if (!IsTargetOptionsEnabled)
+            {
+                IsTargetOptionsEnabled = true;
+                Task.Run(async () =>
+                {
+                    await Task.Delay(100);
+                    if (EnsureValidTarget()) action();
+                });
+                return;
+            }
+
+            if (!IsValidTarget) return;
+            action();
+        }
+
+        private bool EnsureValidTarget() => IsValidTarget || IsTargetValid();
+        
+        private void ToggleTargetSpeed()
+        {
+            if (!AreOptionsEnabled) return;
+
+            if (!IsApproximately(TargetSpeed, DefaultSpeed))
+            {
+                _targetDesiredSpeed = TargetSpeed;
+                SetSpeed(DefaultSpeed);
+            }
+            else if (_targetDesiredSpeed >= 0)
+            {
+                SetSpeed(_targetDesiredSpeed);
+            }
+        }
+        
+        private bool IsApproximately(float a, float b) => Math.Abs(a - b) < Epsilon;
 
         private void SetHp(object parameter) =>
             _targetService.SetHp(Convert.ToInt32(parameter));
@@ -769,7 +826,7 @@ namespace SilkyRing.ViewModels
                 IsTargetingViewEnabled = _targetService.IsTargetViewEnabled();
                 IsNoMoveEnabled = _targetService.IsNoMoveEnabled();
                 IsNoAttackEnabled = _targetService.IsNoAttackEnabled();
-                
+
                 int forceActValue = _targetService.GetForceAct();
                 if (forceActValue != 0)
                 {
@@ -785,7 +842,7 @@ namespace SilkyRing.ViewModels
                 IsFreezeHealthEnabled = _targetService.IsNoDamageEnabled();
                 _currentTargetId = targetId;
                 MaxPoise = _targetService.GetMaxPoise();
-                
+
                 UpdateImmunities();
                 UpdateDefenses();
                 RefreshResistancesWindow();
@@ -799,7 +856,7 @@ namespace SilkyRing.ViewModels
             TargetSpeed = _targetService.GetSpeed();
             CurrentPoise = _targetService.GetCurrentPoise();
             PoiseTimer = _targetService.GetPoiseTimer();
-            
+
             Dist = _targetService.GetDist();
 
             CurrentPoison = _targetService.GetResistance((int)ChrIns.ChrResistOffsets.PoisonCurrent);
@@ -869,7 +926,7 @@ namespace SilkyRing.ViewModels
 
             return true;
         }
-        
+
         private void KillAllBesidesTarget() => _targetService.KillAllBesidesTarget();
 
         private void ForceActSequence()
@@ -935,7 +992,6 @@ namespace SilkyRing.ViewModels
 
         #endregion
 
-        
         private void UpdateResistancesDisplay()
         {
             if (!IsTargetOptionsEnabled) return;
@@ -957,9 +1013,10 @@ namespace SilkyRing.ViewModels
                 ShowFrost = false;
                 ShowBleed = false;
             }
+
             RefreshResistancesWindow();
         }
-        
+
         private void OpenResistancesWindow()
         {
             if (_resistancesWindowWindow != null && _resistancesWindowWindow.IsVisible) return;
@@ -970,22 +1027,21 @@ namespace SilkyRing.ViewModels
             _resistancesWindowWindow.Closed += (s, e) => _isResistancesWindowOpen = false;
             _resistancesWindowWindow.Show();
         }
-        
+
         private void CloseResistancesWindow()
         {
             if (_resistancesWindowWindow == null || !_resistancesWindowWindow.IsVisible) return;
             _resistancesWindowWindow.Close();
             _resistancesWindowWindow = null;
         }
-        
+
         private void RefreshResistancesWindow()
         {
             if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
             _resistancesWindowWindow.DataContext = null;
             _resistancesWindowWindow.DataContext = this;
         }
-        
-        
+
         public bool ShowSleepAndNotImmune => ShowSleep && !IsSleepImmune;
         public bool ShowPoisonAndNotImmune => ShowPoison && !IsPoisonImmune;
         public bool ShowRotAndNotImmune => ShowRot && !IsRotImmune;

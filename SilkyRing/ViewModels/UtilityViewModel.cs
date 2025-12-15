@@ -5,6 +5,7 @@ using SilkyRing.Enums;
 using SilkyRing.GameIds;
 using SilkyRing.Interfaces;
 using SilkyRing.Services;
+using SilkyRing.Utilities;
 using static SilkyRing.Memory.Offsets;
 
 namespace SilkyRing.ViewModels
@@ -12,12 +13,8 @@ namespace SilkyRing.ViewModels
     public class UtilityViewModel : BaseViewModel
     {
         private const float DefaultNoclipMultiplier = 1f;
-        private const uint BaseXSpeedHex = 0x3e4ccccd;
-        private const uint BaseYSpeedHex = 0x3e19999a;
-        private float _noClipSpeedMultiplier = DefaultNoclipMultiplier;
-        private bool _isNoClipEnabled;
-
-
+        private const uint BaseSpeed = 0x3e4ccccd;
+        
         private bool _isDrawHitboxEnabled;
         private bool _isDrawLowHitEnabled;
         private bool _isDrawHighHitEnabled;
@@ -27,19 +24,21 @@ namespace SilkyRing.ViewModels
         private readonly IUtilityService _utilityService;
         private readonly IEzStateService _ezStateService;
         private readonly IPlayerService _playerService;
+        private readonly HotkeyManager _hotkeyManager;
 
         public UtilityViewModel(IUtilityService utilityService, IStateService stateService,
-            IEzStateService ezStateService, IPlayerService playerService)
+            IEzStateService ezStateService, IPlayerService playerService, HotkeyManager hotkeyManager)
         {
             _utilityService = utilityService;
             _ezStateService = ezStateService;
             _playerService = playerService;
+            _hotkeyManager = hotkeyManager;
 
             stateService.Subscribe(State.Loaded, OnGameLoaded);
             stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);
 
             
-            // RegisterHotkeys();
+            RegisterHotkeys();
         }
 
        
@@ -53,7 +52,59 @@ namespace SilkyRing.ViewModels
 
         #region Properties
 
+        private bool _areOptionsEnabled;
+
+        public bool AreOptionsEnabled
+        {
+            get => _areOptionsEnabled;
+            set => SetProperty(ref _areOptionsEnabled, value);
+        }
         
+        private bool _isNoClipEnabled;
+        
+        public bool IsNoClipEnabled
+        {
+            get => _isNoClipEnabled;
+            set
+            {
+                if (!SetProperty(ref _isNoClipEnabled, value)) return;
+                _utilityService.ToggleNoClip(_isNoClipEnabled);
+            }
+        }
+        
+        private float _noClipSpeedMultiplier = DefaultNoclipMultiplier;
+
+        public float NoClipSpeed
+        {
+            get => _noClipSpeedMultiplier;
+            set
+            {
+                if (SetProperty(ref _noClipSpeedMultiplier, value))
+                {
+                    SetNoClipSpeed(value);
+                }
+            }
+        }
+
+        public void SetNoClipSpeed(float multiplier)
+        {
+            if (!IsNoClipEnabled) return;
+            // if (multiplier < 0.05f) multiplier = 0.05f;
+            // else if (multiplier > 5.0f) multiplier = 5.0f;
+            //
+            // SetProperty(ref _noClipSpeedMultiplier, multiplier);
+            //
+            // float baseXFloat = BitConverter.ToSingle(BitConverter.GetBytes(BaseXSpeedHex), 0);
+            // float baseYFloat = BitConverter.ToSingle(BitConverter.GetBytes(BaseYSpeedHex), 0);
+            //
+            // float newXFloat = baseXFloat * multiplier;
+            // float newYFloat = baseYFloat * multiplier;
+            //
+            // byte[] xBytes = BitConverter.GetBytes(newXFloat);
+            // byte[] yBytes = BitConverter.GetBytes(newYFloat);
+            //
+            // _utilityService.SetNoClipSpeed(xBytes, yBytes);
+        }
 
         #endregion
 
@@ -70,41 +121,33 @@ namespace SilkyRing.ViewModels
         {
             AreOptionsEnabled = false;
         }
+        
+        private void RegisterHotkeys()
+        {
+            
+            _hotkeyManager.RegisterAction(HotkeyActions.Noclip, () => { IsNoClipEnabled = !IsNoClipEnabled; });
+            // _hotkeyManager.RegisterAction("IncreaseNoClipSpeed", () =>
+            // {
+            //     if (IsNoClipEnabled)
+            //         NoClipSpeed = Math.Min(5, NoClipSpeed + 0.50f);
+            // });
+            //
+            // _hotkeyManager.RegisterAction("DecreaseNoClipSpeed", () =>
+            // {
+            //     if (IsNoClipEnabled)
+            //         NoClipSpeed = Math.Max(0.05f, NoClipSpeed - 0.50f);
+            // });
+            // _hotkeyManager.RegisterAction("ToggleGameSpeed", ToggleSpeed);
+            // _hotkeyManager.RegisterAction("IncreaseGameSpeed", () => SetSpeed(Math.Min(10, GameSpeed + 0.50f)));
+            // _hotkeyManager.RegisterAction("DecreaseGameSpeed", () => SetSpeed(Math.Max(0, GameSpeed - 0.50f)));
+        }
 
         #endregion
 
-        // private void RegisterHotkeys()
-        // {
-        //     _hotkeyManager.RegisterAction("ForceSave", () =>
-        //     {
-        //         if (!AreButtonsEnabled) return;
-        //         _utilityService.ForceSave();
-        //     });
-        //     _hotkeyManager.RegisterAction("NoClip", () => { IsNoClipEnabled = !IsNoClipEnabled; });
-        //     _hotkeyManager.RegisterAction("IncreaseNoClipSpeed", () =>
-        //     {
-        //         if (IsNoClipEnabled)
-        //             NoClipSpeed = Math.Min(5, NoClipSpeed + 0.50f);
-        //     });
-        //
-        //     _hotkeyManager.RegisterAction("DecreaseNoClipSpeed", () =>
-        //     {
-        //         if (IsNoClipEnabled)
-        //             NoClipSpeed = Math.Max(0.05f, NoClipSpeed - 0.50f);
-        //     });
-        //     _hotkeyManager.RegisterAction("ToggleGameSpeed", ToggleSpeed);
-        //     _hotkeyManager.RegisterAction("IncreaseGameSpeed", () => SetSpeed(Math.Min(10, GameSpeed + 0.50f)));
-        //     _hotkeyManager.RegisterAction("DecreaseGameSpeed", () => SetSpeed(Math.Max(0, GameSpeed - 0.50f)));
-        // }
+      
 
 
-        private bool _areOptionsEnabled;
-
-        public bool AreOptionsEnabled
-        {
-            get => _areOptionsEnabled;
-            set => SetProperty(ref _areOptionsEnabled, value);
-        }
+        
 
 
         // public bool IsDrawHitboxEnabled
@@ -341,54 +384,8 @@ namespace SilkyRing.ViewModels
         //         _utilityService.ToggleHideMap(_isHideMapEnabled);
         //     }
         // }
-
-        public bool IsNoClipEnabled
-        {
-            get => _isNoClipEnabled;
-            set
-            {
-                if (!SetProperty(ref _isNoClipEnabled, value)) return;
-                _utilityService.ToggleNoClip(_isNoClipEnabled);
-            }
-        }
-
-        public float NoClipSpeed
-        {
-            get => _noClipSpeedMultiplier;
-            set
-            {
-                if (SetProperty(ref _noClipSpeedMultiplier, value))
-                {
-                    SetNoClipSpeed(value);
-                }
-            }
-        }
-
-        public void SetNoClipSpeed(float multiplier)
-        {
-            // if (!IsNoClipEnabled) return;
-            // if (multiplier < 0.05f) multiplier = 0.05f;
-            // else if (multiplier > 5.0f) multiplier = 5.0f;
-            //
-            // SetProperty(ref _noClipSpeedMultiplier, multiplier);
-            //
-            // float baseXFloat = BitConverter.ToSingle(BitConverter.GetBytes(BaseXSpeedHex), 0);
-            // float baseYFloat = BitConverter.ToSingle(BitConverter.GetBytes(BaseYSpeedHex), 0);
-            //
-            // float newXFloat = baseXFloat * multiplier;
-            // float newYFloat = baseYFloat * multiplier;
-            //
-            // byte[] xBytes = BitConverter.GetBytes(newXFloat);
-            // byte[] yBytes = BitConverter.GetBytes(newYFloat);
-            //
-            // _utilityService.SetNoClipSpeed(xBytes, yBytes);
-        }
-
-        public void TryEnableFeatures()
-        {
-            AreOptionsEnabled = true;
-        }
-
+        
+        
         public void TryApplyOneTimeFeatures()
         {
             //

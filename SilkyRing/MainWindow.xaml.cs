@@ -28,7 +28,7 @@ namespace SilkyRing
         private readonly AoBScanner _aobScanner;
 
         private readonly DispatcherTimer _gameLoadedTimer;
-        
+
         // private readonly ItemViewModel _itemViewModel;
         // private readonly SettingsViewModel _settingsViewModel;
         //
@@ -40,18 +40,19 @@ namespace SilkyRing
             _memoryService.StartAutoAttach();
             InitializeComponent();
 
-            //
-            // if (SettingsManager.Default.WindowLeft != 0 || SettingsManager.Default.WindowTop != 0)
-            // {
-            //     Left = SettingsManager.Default.WindowLeft;
-            //     Top = SettingsManager.Default.WindowTop;
-            // }
-            // else WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
+            if (SettingsManager.Default.WindowLeft != 0 || SettingsManager.Default.WindowTop != 0)
+            {
+                Left = SettingsManager.Default.WindowLeft;
+                Top = SettingsManager.Default.WindowTop;
+            }
+            else WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
             //
             // GameLauncher.SetVersionOffsets();
             _aobScanner = new AoBScanner(_memoryService);
             _stateService = new StateService(_memoryService);
-        
+
             var hookManager = new HookManager(_memoryService, _stateService);
             var hotkeyManager = new HotkeyManager(_memoryService);
 
@@ -65,19 +66,21 @@ namespace SilkyRing
             ISettingsService settingsService = new SettingsService(_memoryService, hookManager);
             IEzStateService ezStateService = new EzStateService(_memoryService);
             IItemService itemService = new ItemService(_memoryService);
-            
+
             _dlcService = new DlcService(_memoryService);
 
 
             PlayerViewModel playerViewModel = new PlayerViewModel(playerService, _stateService, hotkeyManager);
             TravelViewModel travelViewModel = new TravelViewModel(travelService, eventService, _stateService);
-            EnemyViewModel enemyViewModel = new EnemyViewModel(enemyService, _stateService); 
-            TargetViewModel targetViewModel = new TargetViewModel(targetService, _stateService, enemyService, attackInfoService);
+            EnemyViewModel enemyViewModel = new EnemyViewModel(enemyService, _stateService);
+            TargetViewModel targetViewModel = new TargetViewModel(targetService, _stateService, enemyService,
+                attackInfoService, hotkeyManager);
             EventViewModel eventViewModel = new EventViewModel(eventService, _stateService);
-            UtilityViewModel utilityViewModel = new UtilityViewModel(utilityService, _stateService, ezStateService, playerService);
+            UtilityViewModel utilityViewModel = new UtilityViewModel(utilityService, _stateService, ezStateService,
+                playerService, hotkeyManager);
             ItemViewModel itemViewModel = new ItemViewModel(itemService, _dlcService, _stateService, eventService);
             SettingsViewModel settingsViewModel = new SettingsViewModel(settingsService, hotkeyManager);
-            
+
             var playerTab = new PlayerTab(playerViewModel);
             var travelTab = new TravelTab(travelViewModel);
             var enemyTab = new EnemyTab(enemyViewModel);
@@ -87,7 +90,7 @@ namespace SilkyRing
             var eventTab = new EventTab(eventViewModel);
             var settingsTab = new SettingsTab(settingsViewModel);
 
-            
+
             MainTabControl.Items.Add(new TabItem { Header = "Player", Content = playerTab });
             MainTabControl.Items.Add(new TabItem { Header = "Travel", Content = travelTab });
             MainTabControl.Items.Add(new TabItem { Header = "Enemies", Content = enemyTab });
@@ -98,7 +101,7 @@ namespace SilkyRing
             MainTabControl.Items.Add(new TabItem { Header = "Settings", Content = settingsTab });
             //
             // _settingsViewModel.ApplyStartUpOptions();
-            // Closing += MainWindow_Closing;
+            Closing += MainWindow_Closing;
 
             _gameLoadedTimer = new DispatcherTimer
             {
@@ -143,12 +146,10 @@ namespace SilkyRing
                     _memoryService.AllocCodeCave();
                     Console.WriteLine($"Code cave: 0x{CodeCaveOffsets.Base.ToInt64():X}");
                     _hasAllocatedMemory = true;
-
                 }
-                
+
                 if (_stateService.IsLoaded())
                 {
-                  
                     if (_loaded) return;
                     _loaded = true;
                     _dlcService.CheckDlc();
@@ -177,8 +178,7 @@ namespace SilkyRing
                 // LaunchGameButton.IsEnabled = true;
             }
         }
-        
-        
+
         private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ClickCount == 2)
@@ -199,9 +199,9 @@ namespace SilkyRing
 
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
-            // SettingsManager.Default.WindowLeft = Left;
-            // SettingsManager.Default.WindowTop = Top;
-            // SettingsManager.Default.Save();
+            SettingsManager.Default.WindowLeft = Left;
+            SettingsManager.Default.WindowTop = Top;
+            SettingsManager.Default.Save();
             // _itemService.SignalClose();
             // _hookManager.UninstallAllHooks();
             // _nopManager.RestoreAll();

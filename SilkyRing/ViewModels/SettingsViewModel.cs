@@ -56,16 +56,39 @@ public class SettingsViewModel : BaseViewModel
             // Add enemy hotkeys
         };
 
-        TargetHotkeys = new ObservableCollection<HotkeyBindingViewModel>
-        {
-            // Add target hotkeys
-        };
+        TargetHotkeys =
+        [
+            new("Enable Target Options", HotkeyActions.EnableTargetOptions),
+            new("Kill Target", HotkeyActions.KillTarget),
+            new("Set Max Hp", HotkeyActions.SetTargetMaxHp),
+            new("Set Custom Hp", HotkeyActions.SetTargetCustomHp),
+            new("Freeze Hp", HotkeyActions.FreezeTargetHp),
+            new("Show all resistances", HotkeyActions.ShowAllResistances),
+            new("Increase Speed", HotkeyActions.IncreaseTargetSpeed),
+            new("Decrease Speed", HotkeyActions.DecreaseTargetSpeed),
+            new("Toggle Speed", HotkeyActions.ToggleTargetSpeed),
+            new("Increment Force Act", HotkeyActions.IncrementForceAct),
+            new("Decrement Force Act", HotkeyActions.DecrementForceAct),
+            new("Set Force Act to 0", HotkeyActions.SetForceActToZero),
+            new("Disable Ai", HotkeyActions.DisableTargetAi),
+            new("Disable All Except Target", HotkeyActions.DisableAllExceptTargetAi),
+            new("No Stagger", HotkeyActions.TargetNoStagger),
+            new("Repeat Act", HotkeyActions.TargetRepeatAct),
+            new("Targeting View", HotkeyActions.TargetTargetingView),
+            new("Open Attack Info", HotkeyActions.ShowAttackInfo),
+            new("Open Defenses", HotkeyActions.ShowDefenses),
+            new("No Move", HotkeyActions.TargetNoMove),
+            new("Force Act Sequence", HotkeyActions.ForceActSequence),
+            new("Kill All Except Target", HotkeyActions.KillAllExceptTarget),
+            
+        ];
 
-        UtilityHotkeys = new ObservableCollection<HotkeyBindingViewModel>
-        {
+        UtilityHotkeys =
+        [
             new("Quitout", HotkeyActions.Quitout),
             new("Force Save", HotkeyActions.ForceSave),
-        };
+            new("Noclip", HotkeyActions.Noclip)
+        ];
 
     
         _hotkeyLookup = PlayerHotkeys

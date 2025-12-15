@@ -25,12 +25,36 @@ public enum HotkeyActions
     DecreasePlayerSpeed,
     
     
+    EnableTargetOptions,
+    KillTarget,
+    SetTargetMaxHp,
+    SetTargetCustomHp,
+    FreezeTargetHp,
+    ShowAllResistances,
+    IncreaseTargetSpeed,
+    DecreaseTargetSpeed,
+    ToggleTargetSpeed,
+    IncrementForceAct,
+    DecrementForceAct,
+    SetForceActToZero,
+    DisableTargetAi,
+    DisableAllExceptTargetAi,
+    TargetNoStagger,
+    TargetRepeatAct,
+    TargetTargetingView,
+    ShowAttackInfo,
+    ShowDefenses,
+    TargetNoMove,
+    ForceActSequence,
+    KillAllExceptTarget,
+    
     
     
     
     
     Quitout,
     ForceSave,
+    Noclip,
     
     
     

@@ -51,10 +51,17 @@ public class SettingsViewModel : BaseViewModel
             new("Increase Speed", HotkeyActions.IncreasePlayerSpeed),
             new("Decrease Speed", HotkeyActions.DecreasePlayerSpeed),
         ];
-        EnemiesHotkeys = new ObservableCollection<HotkeyBindingViewModel>
-        {
-            // Add enemy hotkeys
-        };
+        EnemiesHotkeys = [
+            new ("All No Death", HotkeyActions.AllNoDeath),
+            new ("All No Damage", HotkeyActions.AllNoDamage),
+            new ("All No Hit", HotkeyActions.AllNoHit),
+            new ("All No Attack", HotkeyActions.AllNoAttack),
+            new ("All No Move", HotkeyActions.AllNoMove),
+            new ("All Disable Ai", HotkeyActions.AllDisableAi),
+            new ("Targeting View", HotkeyActions.AllTargetingView),
+            new ("Force EB act sequence", HotkeyActions.ForceEbActSequence),
+            
+        ];
 
         TargetHotkeys =
         [

@@ -23,6 +23,14 @@ public enum HotkeyActions
     TogglePlayerSpeed,
     IncreasePlayerSpeed,
     DecreasePlayerSpeed,
+    AllNoDeath,
+    AllNoDamage,
+    AllNoHit,
+    AllNoAttack,
+    AllNoMove,
+    AllDisableAi,
+    AllTargetingView,
+    ForceEbActSequence,
     
     
     EnableTargetOptions,

@@ -183,17 +183,16 @@ namespace SilkyRing.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 0,40002134,Crafting Kit,1,1,60120
-        ///0,40002454,Nomadic Warrior&apos;s Cookbook [1],1,1,67000
-        ///0,4000245F,Nomadic Warrior&apos;s Cookbook [2],1,1,67110
-        ///0,40002455,Nomadic Warrior&apos;s Cookbook [3],1,1,67010
-        ///0,400024A4,Nomadic Warrior&apos;s Cookbook [4],1,1,67800
-        ///0,400024A7,Nomadic Warrior&apos;s Cookbook [5],1,1,67830
-        ///0,40002456,Nomadic Warrior&apos;s Cookbook [6],1,1,67020
-        ///0,40002459,Nomadic Warrior&apos;s Cookbook [7],1,1,67050
-        ///0,400024AC,Nomadic Warrior&apos;s Cookbook [8],1,1,67880
-        ///0,4000247F,Nomadic Warrior&apos;s Cookbook [9],1,1,67430
-        /// [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to 0,40002134,Crafting Kit,1,1,1,60120
+        ///0,40002454,Nomadic Warrior&apos;s Cookbook [1],1,1,1,67000
+        ///0,4000245F,Nomadic Warrior&apos;s Cookbook [2],1,1,1,67110
+        ///0,40002455,Nomadic Warrior&apos;s Cookbook [3],1,1,1,67010
+        ///0,400024A4,Nomadic Warrior&apos;s Cookbook [4],1,1,1,67800
+        ///0,400024A7,Nomadic Warrior&apos;s Cookbook [5],1,1,1,67830
+        ///0,40002456,Nomadic Warrior&apos;s Cookbook [6],1,1,1,67020
+        ///0,40002459,Nomadic Warrior&apos;s Cookbook [7],1,1,1,67050
+        ///0,400024AC,Nomadic Warrior&apos;s Cookbook [8],1,1,1,67880
+        ///0,4000247F,Nomadic Warrior&apos;s Cookbo [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Cookbooks {
             get {

@@ -368,7 +368,7 @@ public class ItemViewModel : BaseViewModel
             }
         }
 
-        if (SelectedItem is EventItem eventItem)
+        if (SelectedItem is EventItem eventItem && eventItem.NeedsEvent)
         {
             _eventService.SetEvent(eventItem.EventId, true);
         }

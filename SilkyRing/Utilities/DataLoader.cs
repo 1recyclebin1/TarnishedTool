@@ -211,7 +211,8 @@ namespace SilkyRing.Utilities
                         Name = parts[2],
                         StackSize = int.Parse(parts[3]),
                         MaxStorage = int.Parse(parts[4]),
-                        EventId = int.Parse(parts[5]),
+                        NeedsEvent = byte.Parse(parts[5]) == 1,
+                        EventId = int.Parse(parts[6]),
                         CategoryName = name
                     });
                 }

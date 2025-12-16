@@ -13,20 +13,26 @@ namespace SilkyRing.ViewModels;
 public class EnemyViewModel : BaseViewModel
 {
     private readonly IEnemyService _enemyService;
+    private readonly HotkeyManager _hotkeyManager;
 
     private const int EbNpcThinkParamId = 22000000;
+    private const int EldenStarsActIdx = 22;
     
-    public EnemyViewModel(IEnemyService enemyService, IStateService stateService)
+    public EnemyViewModel(IEnemyService enemyService, IStateService stateService, HotkeyManager hotkeyManager)
     {
         _enemyService = enemyService;
+        _hotkeyManager = hotkeyManager;
 
         stateService.Subscribe(State.Loaded, OnGameLoaded);
         stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);
+        stateService.Subscribe(State.FirstLoaded, OnGameFirstLoaded);
 
         EbForceActSequenceCommand = new DelegateCommand(ForceEbActSequence);
 
         _acts = new ObservableCollection<Act>(DataLoader.GetEbActs());
         SelectedAct = Acts.FirstOrDefault();
+
+        RegisterHotkeys();
     }
 
     #region Commands
@@ -146,10 +152,30 @@ public class EnemyViewModel : BaseViewModel
     {
         AreOptionsEnabled = false;
     }
+    
+    private void OnGameFirstLoaded()
+    {
+        if (IsNoDeathEnabled) _enemyService.ToggleNoDeath(true);
+        if (IsNoDamageEnabled) _enemyService.ToggleNoDamage(true);
+        if (IsNoHitEnabled) _enemyService.ToggleNoHit(true);
+        if (IsNoAttackEnabled) _enemyService.ToggleNoAttack(true);
+        if (IsNoMoveEnabled) _enemyService.ToggleNoMove(true);
+        if (IsDisableAiEnabled) _enemyService.ToggleDisableAi(true);
+    }
+    
+    private void RegisterHotkeys()
+    {
+        _hotkeyManager.RegisterAction(HotkeyActions.AllNoDeath, () => { IsNoDeathEnabled = !IsNoDeathEnabled; });
+        _hotkeyManager.RegisterAction(HotkeyActions.AllNoDamage, () => { IsNoDamageEnabled = !IsNoDamageEnabled; });
+        _hotkeyManager.RegisterAction(HotkeyActions.AllNoHit, () => { IsNoHitEnabled = !IsNoHitEnabled; });
+        _hotkeyManager.RegisterAction(HotkeyActions.AllNoAttack, () => { IsNoAttackEnabled = !IsNoAttackEnabled; });
+        _hotkeyManager.RegisterAction(HotkeyActions.AllNoMove, () => { IsNoMoveEnabled = !IsNoMoveEnabled; });
+        _hotkeyManager.RegisterAction(HotkeyActions.AllDisableAi, () => { IsDisableAiEnabled = !IsDisableAiEnabled; });
+    }
 
     private void ForceEbActSequence()
     {
-        int[] acts = [22, SelectedAct.ActIdx];
+        int[] acts = [EldenStarsActIdx, SelectedAct.ActIdx];
         _enemyService.ForceActSequence(acts, EbNpcThinkParamId);
     }
 

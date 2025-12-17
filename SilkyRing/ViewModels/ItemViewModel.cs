@@ -40,11 +40,13 @@ public class ItemViewModel : BaseViewModel
         LoadItems();
 
         SpawnItemCommand = new DelegateCommand(SpawnItem);
+        MassSpawnCommand = new DelegateCommand(MassSpawn);
     }
-    
+
     #region Commands
     
     public ICommand SpawnItemCommand { get; set; }
+    public ICommand MassSpawnCommand { get; set; }
 
     #endregion
 
@@ -258,6 +260,14 @@ public class ItemViewModel : BaseViewModel
         get => _selectedAffinity;
         set => SetProperty(ref _selectedAffinity, value);
     }
+    
+    private string _selectedMassSpawnCategory;
+
+    public string SelectedMassSpawnCategory
+    {
+        get => _selectedMassSpawnCategory;
+        set => SetProperty(ref _selectedMassSpawnCategory, value);
+    }
 
     #endregion
 
@@ -315,6 +325,7 @@ public class ItemViewModel : BaseViewModel
         Items = new ObservableCollection<Item>(
             _hasDlc ? items : items.Where(i => !i.IsDlc));
         SelectedItem = Items.FirstOrDefault();
+        SelectedMassSpawnCategory = SelectedCategory;
     }
 
     private void ApplyFilter()
@@ -381,6 +392,11 @@ public class ItemViewModel : BaseViewModel
         }
         
         _itemService.SpawnItem(itemId, quantity, aowId, shouldQuantityAdjust, maxQuantity);
+    }
+    
+    private void MassSpawn()
+    {
+        //TODO implement mass spawn logic
     }
 
 

@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
 using H.Hooks;
+using SilkyRing.Core;
 using SilkyRing.Enums;
 using SilkyRing.Interfaces;
 using SilkyRing.Utilities;
+using Key = H.Hooks.Key;
+using KeyboardEventArgs = H.Hooks.KeyboardEventArgs;
 
 namespace SilkyRing.ViewModels;
 
@@ -14,7 +18,7 @@ public class SettingsViewModel : BaseViewModel
     private readonly ISettingsService _settingsService;
     private readonly HotkeyManager _hotkeyManager;
     
-    private Dictionary<string, HotkeyBindingViewModel> _hotkeyLookup;
+    private readonly Dictionary<string, HotkeyBindingViewModel> _hotkeyLookup;
 
     private string _currentSettingHotkeyId;
     private LowLevelKeyboardHook _tempHook;
@@ -60,7 +64,6 @@ public class SettingsViewModel : BaseViewModel
             new ("All Disable Ai", HotkeyActions.AllDisableAi),
             new ("Targeting View", HotkeyActions.AllTargetingView),
             new ("Force EB act sequence", HotkeyActions.ForceEbActSequence),
-            
         ];
 
         TargetHotkeys =
@@ -87,7 +90,6 @@ public class SettingsViewModel : BaseViewModel
             new("No Move", HotkeyActions.TargetNoMove),
             new("Force Act Sequence", HotkeyActions.ForceActSequence),
             new("Kill All Except Target", HotkeyActions.KillAllExceptTarget),
-            
         ];
 
         UtilityHotkeys =
@@ -106,7 +108,15 @@ public class SettingsViewModel : BaseViewModel
 
         LoadHotkeyDisplays();
         RegisterHotkeys();
+
+        ClearHotkeysCommand = new DelegateCommand(ClearHotkeys);
     }
+    
+    #region Commands
+
+    public ICommand ClearHotkeysCommand { get; set; }
+
+    #endregion
     
 
     #region Properties
@@ -323,6 +333,12 @@ public class SettingsViewModel : BaseViewModel
         _hotkeyManager.RegisterAction(HotkeyActions.Quitout, () => _settingsService.Quitout());
         _hotkeyManager.RegisterAction(HotkeyActions.ForceSave, () => _settingsService.ForceSave());
     }
-    
+
+    private void ClearHotkeys()
+    {
+        _hotkeyManager.ClearAll();
+        LoadHotkeyDisplays();
+    } 
+
     #endregion
 }

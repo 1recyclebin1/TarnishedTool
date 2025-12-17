@@ -88,7 +88,16 @@
             </StackPanel>
 
             <Separator Margin="0,0,0,10" />
-            <TextBlock Text="Hotkey Bindings" FontWeight="Bold" Margin="0,0,0,10" />
+            
+            <Grid>
+                <TextBlock Text="Hotkey Bindings" FontWeight="Bold" Margin="10,0,0,10" HorizontalAlignment="Left" />
+                <Button 
+                    Content="Clear All Bindings" 
+                    Margin="0,0,20,10"
+                    Command="{Binding ClearHotkeysCommand}"
+                    HorizontalAlignment="Right" />
+            </Grid>
+            
 
             <TabControl x:Name="HotkeyCategoriesTabControl" Margin="0,5,0,0">
                 <TabItem Header="Player">

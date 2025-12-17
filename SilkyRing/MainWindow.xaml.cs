@@ -28,12 +28,7 @@ namespace SilkyRing
         private readonly AoBScanner _aobScanner;
 
         private readonly DispatcherTimer _gameLoadedTimer;
-
-        // private readonly ItemViewModel _itemViewModel;
-        // private readonly SettingsViewModel _settingsViewModel;
-        //
-        // private readonly DebugDrawService _debugDrawService;
-
+        
         public MainWindow()
         {
             _memoryService = new MemoryService();
@@ -99,8 +94,7 @@ namespace SilkyRing
             MainTabControl.Items.Add(new TabItem { Header = "Event", Content = eventTab });
             MainTabControl.Items.Add(new TabItem { Header = "Items", Content = itemTab });
             MainTabControl.Items.Add(new TabItem { Header = "Settings", Content = settingsTab });
-            //
-            // _settingsViewModel.ApplyStartUpOptions();
+
             Closing += MainWindow_Closing;
 
             _gameLoadedTimer = new DispatcherTimer

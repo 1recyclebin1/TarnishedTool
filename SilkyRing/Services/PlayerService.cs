@@ -351,13 +351,13 @@ namespace SilkyRing.Services
         {
             var gameData = GetGameDataPtr();
             var currentStatVal = memoryService.ReadInt32(gameData + offset);
-    
+
             if (currentStatVal == newValue) return;
-    
+
             var diff = newValue - currentStatVal;
             var levelPtr = gameData + (int)GameDataMan.PlayerGameDataOffsets.RuneLevel;
             var currentLevel = memoryService.ReadInt32(levelPtr);
-            
+
             if (newValue > currentStatVal)
             {
                 long runeCost = 0;
@@ -371,6 +371,7 @@ namespace SilkyRing.Services
                 var newRuneMem = Math.Min(currentRuneMem + (ulong)runeCost, 0xFFFFFFFF);
                 memoryService.WriteUInt32(runeMemPtr, (uint)newRuneMem);
             }
+
             memoryService.WriteInt32(levelPtr, currentLevel + diff);
             memoryService.WriteInt32(gameData + offset, newValue);
         }
@@ -388,6 +389,24 @@ namespace SilkyRing.Services
             var torrentPhysicsPtr = GetTorrentPhysicsPtr(chrRideModule);
             memoryService.WriteUInt8(torrentPhysicsPtr + (int)ChrIns.ChrPhysicsOffsets.NoGravity, 0);
             memoryService.WriteUInt8(GetChrPhysicsPtr() + (int)ChrIns.ChrPhysicsOffsets.NoGravity, 0);
+        }
+
+        public void ToggleTorrentNoDeath(bool isEnabled)
+        {
+            var torrentChrIns = GetTorrentChrIns();
+            var chrDataFlags = memoryService.FollowPointers(torrentChrIns,
+                [..ChrIns.ChrDataModule, (int)ChrIns.ChrDataOffsets.Flags],
+                false);
+            memoryService.SetBitValue(chrDataFlags, (int)ChrIns.ChrDataBitFlags.NoDeath, isEnabled);
+        }
+
+        public void ToggleTorrentNoDamage(bool isEnabled)
+        {
+            var torrentChrIns = GetTorrentChrIns();
+            var chrDataFlags = memoryService.FollowPointers(torrentChrIns,
+                [..ChrIns.ChrDataModule, (int)ChrIns.ChrDataOffsets.Flags],
+                false);
+            memoryService.SetBitValue(chrDataFlags, (int)ChrIns.ChrDataBitFlags.NoDamage, isEnabled);
         }
 
         private int CalculateLevelUpCost(int nextLevel)
@@ -415,6 +434,14 @@ namespace SilkyRing.Services
 
         private IntPtr GetChrRidePtr() =>
             memoryService.FollowPointers(WorldChrMan.Base, [WorldChrMan.PlayerIns, ..ChrIns.ChrRideModule], true);
+
+        private IntPtr GetTorrentChrIns()
+        {
+            var chrRideModule = GetChrRidePtr();
+            var rideNode = memoryService.ReadInt64(chrRideModule + (int)ChrIns.ChrRideOffsets.RideNode);
+            var handle = memoryService.ReadInt32((IntPtr)rideNode + (int)ChrIns.RideNodeOffsets.HorseHandle);
+            return ChrInsLookup(handle);
+        }
 
         private Vector3 ReadVector3(IntPtr address)
         {

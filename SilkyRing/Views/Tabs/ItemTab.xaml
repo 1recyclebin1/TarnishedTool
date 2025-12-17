@@ -28,7 +28,7 @@
         <Grid Grid.Column="0" Grid.RowSpan="3">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="200" />
+                <RowDefinition Height="300" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />

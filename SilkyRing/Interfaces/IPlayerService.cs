@@ -38,4 +38,6 @@ public interface IPlayerService
     void SetStat(int offset, int newValue);
     long GetHandle();
     void EnableGravity();
+    void ToggleTorrentNoDeath(bool isEnabled);
+    void ToggleTorrentNoDamage(bool isEnabled);
 }

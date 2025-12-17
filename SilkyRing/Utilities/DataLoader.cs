@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Text;
 using SilkyRing.Enums;
 using SilkyRing.Models;
 using SilkyRing.Properties;
@@ -153,11 +154,11 @@ namespace SilkyRing.Utilities
             return weapons;
         }
 
-        public static List<Item> GetItems(string name)
+        public static List<Item> GetItems(string resourceName, string category)
         {
             List<Item> items = new List<Item>();
 
-            string csvData = Resources.ResourceManager.GetString(name);
+            string csvData = Resources.ResourceManager.GetString(resourceName);
 
             if (string.IsNullOrEmpty(csvData)) return new List<Item>();
 
@@ -168,7 +169,7 @@ namespace SilkyRing.Utilities
                 {
                     if (string.IsNullOrWhiteSpace(line)) continue;
 
-                    string[] parts = line.Split(',');
+                    string[] parts = ParseCsvLine(line);
 
 
                     items.Add(new Item
@@ -178,7 +179,7 @@ namespace SilkyRing.Utilities
                         Name = parts[2],
                         StackSize = int.Parse(parts[3]),
                         MaxStorage = int.Parse(parts[4]),
-                        CategoryName = name
+                        CategoryName = category
                     });
                 }
             }
@@ -186,11 +187,11 @@ namespace SilkyRing.Utilities
             return items;
         }
 
-        public static List<EventItem> GetEventItems(string name)
+        public static List<EventItem> GetEventItems(string resourceName, string category)
         {
             List<EventItem> items = new List<EventItem>();
 
-            string csvData = Resources.ResourceManager.GetString(name);
+            string csvData = Resources.ResourceManager.GetString(resourceName);
 
             if (string.IsNullOrEmpty(csvData)) return new List<EventItem>();
 
@@ -213,7 +214,7 @@ namespace SilkyRing.Utilities
                         MaxStorage = int.Parse(parts[4]),
                         NeedsEvent = byte.Parse(parts[5]) == 1,
                         EventId = int.Parse(parts[6]),
-                        CategoryName = name
+                        CategoryName = category
                     });
                 }
             }
@@ -257,6 +258,33 @@ namespace SilkyRing.Utilities
             }
 
             return bytes;
+        }
+        
+        private static string[] ParseCsvLine(string line)
+        {
+            var parts = new List<string>();
+            var current = new StringBuilder();
+            bool inQuotes = false;
+
+            foreach (char c in line)
+            {
+                if (c == '"')
+                {
+                    inQuotes = !inQuotes;
+                }
+                else if (c == ',' && !inQuotes)
+                {
+                    parts.Add(current.ToString());
+                    current.Clear();
+                }
+                else
+                {
+                    current.Append(c);
+                }
+            }
+            parts.Add(current.ToString());
+
+            return parts.ToArray();
         }
 
         public static List<BossRevive> GetBossRevives()

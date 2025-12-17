@@ -278,19 +278,24 @@ public class ItemViewModel : BaseViewModel
     
     private void LoadItems()
     {
+        _itemsByCategory["Armor"] = DataLoader.GetItems("Armor", "Armor");
+        _itemsByCategory["Arrows"] = DataLoader.GetItems("Arrows", "Arrows");
+        _itemsByCategory["Ash of War"] = DataLoader.GetItems("AshOfWarSpawn", "Ash of War");
+        _itemsByCategory["Bell Bearings"] = DataLoader.GetItems("BellBearings", "Bell Bearings");
+        _itemsByCategory["Consumables"] = DataLoader.GetItems("Consumables", "Consumables");
+        _itemsByCategory["Cookbooks"] = DataLoader.GetEventItems("Cookbooks", "Cookbooks").Cast<Item>().ToList();
+        _itemsByCategory["Crafting Materials"] = DataLoader.GetItems("CraftingMaterials", "Crafting Materials");
+        _itemsByCategory["Crystal Tears"] = DataLoader.GetItems("CrystalTears", "Crystal Tears");
+        _itemsByCategory["Incantations"] = DataLoader.GetItems("Incantations", "Incantations");
+        _itemsByCategory["Key Items"] = DataLoader.GetEventItems("KeyItems", "Key Items").Cast<Item>().ToList();
+        _itemsByCategory["Prattling Pate"] = DataLoader.GetItems("PrattlingPate", "Prattling Pate");
+        _itemsByCategory["Sorceries"] = DataLoader.GetItems("Sorceries", "Sorceries");
+        _itemsByCategory["Spirit Ashes"] = DataLoader.GetItems("SpiritAshes", "Spirit Ashes");
+        _itemsByCategory["Talismans"] = DataLoader.GetItems("Talismans", "Talismans");
+        _itemsByCategory["Upgrade Materials"] = DataLoader.GetItems("UpgradeMaterials", "Upgrade Materials");
         _itemsByCategory["Weapons"] = DataLoader.GetWeapons().Cast<Item>().ToList();
-        _itemsByCategory["Talismans"] = DataLoader.GetItems("Talismans");
-        _itemsByCategory["Crafting Materials"] = DataLoader.GetItems("CraftingMaterials");
-        _itemsByCategory["Arrows"] = DataLoader.GetItems("Arrows");
-        _itemsByCategory["Consumables"] = DataLoader.GetItems("Consumables");
-        _itemsByCategory["Armor"] = DataLoader.GetItems("Armor");
-        _itemsByCategory["UpgradeMaterials"] = DataLoader.GetItems("UpgradeMaterials");
-        _itemsByCategory["Cookbooks"] = DataLoader.GetEventItems("Cookbooks").Cast<Item>().ToList();
-        _itemsByCategory["KeyItems"] = DataLoader.GetEventItems("KeyItems").Cast<Item>().ToList();
-        _itemsByCategory["AshOfWarSpawn"] = DataLoader.GetItems("AshOfWarSpawn");
-     
-        
-        
+
+
         _allItems.AddRange(_itemsByCategory.Values.SelectMany(x => x));
         _allAshesOfWar = DataLoader.GetAshOfWars();
         

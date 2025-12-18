@@ -14,7 +14,7 @@ namespace SilkyRing.ViewModels
     {
         private const float DefaultNoclipMultiplier = 1f;
         private const uint BaseSpeed = 0x3e4ccccd;
-        
+
         private bool _isDrawHitboxEnabled;
         private bool _isDrawLowHitEnabled;
         private bool _isDrawHighHitEnabled;
@@ -36,19 +36,15 @@ namespace SilkyRing.ViewModels
 
             stateService.Subscribe(State.Loaded, OnGameLoaded);
             stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);
+            stateService.Subscribe(State.FirstLoaded, OnGameFirstLoaded);
 
-            
+
             RegisterHotkeys();
         }
 
-       
+        #region Commands
 
-        #region Commands 
-        
-      
-        
         #endregion
-
 
         #region Properties
 
@@ -59,9 +55,9 @@ namespace SilkyRing.ViewModels
             get => _areOptionsEnabled;
             set => SetProperty(ref _areOptionsEnabled, value);
         }
-        
+
         private bool _isNoClipEnabled;
-        
+
         public bool IsNoClipEnabled
         {
             get => _isNoClipEnabled;
@@ -71,7 +67,7 @@ namespace SilkyRing.ViewModels
                 _utilityService.ToggleNoClip(_isNoClipEnabled);
             }
         }
-        
+
         private float _noClipSpeedMultiplier = DefaultNoclipMultiplier;
 
         public float NoClipSpeed
@@ -106,12 +102,34 @@ namespace SilkyRing.ViewModels
             // _utilityService.SetNoClipSpeed(xBytes, yBytes);
         }
 
-        #endregion
+        private bool _isCombatMapEnabled;
 
+        public bool IsCombatMapEnabled
+        {
+            get => _isCombatMapEnabled;
+            set
+            {
+                if (!SetProperty(ref _isCombatMapEnabled, value)) return;
+                _utilityService.ToggleCombatMap(_isCombatMapEnabled);
+            }
+        }
+
+        private bool _isDungeonMapEnabled;
+
+        public bool IsDungeonMapEnabled
+        {
+            get => _isDungeonMapEnabled;
+            set
+            {
+                if (!SetProperty(ref _isDungeonMapEnabled, value)) return;
+                _utilityService.ToggleDungeonMap(_isDungeonMapEnabled);
+            }
+        }
+
+        #endregion
 
         #region Private Methods
 
-         
         private void OnGameLoaded()
         {
             AreOptionsEnabled = true;
@@ -121,10 +139,15 @@ namespace SilkyRing.ViewModels
         {
             AreOptionsEnabled = false;
         }
-        
+
+        private void OnGameFirstLoaded()
+        {
+            if (IsCombatMapEnabled) _utilityService.ToggleCombatMap(true);
+            if (IsDungeonMapEnabled) _utilityService.ToggleDungeonMap(true);
+        }
+
         private void RegisterHotkeys()
         {
-            
             _hotkeyManager.RegisterAction(HotkeyActions.Noclip, () => { IsNoClipEnabled = !IsNoClipEnabled; });
             // _hotkeyManager.RegisterAction("IncreaseNoClipSpeed", () =>
             // {
@@ -143,12 +166,6 @@ namespace SilkyRing.ViewModels
         }
 
         #endregion
-
-      
-
-
-        
-
 
         // public bool IsDrawHitboxEnabled
         // {
@@ -384,8 +401,7 @@ namespace SilkyRing.ViewModels
         //         _utilityService.ToggleHideMap(_isHideMapEnabled);
         //     }
         // }
-        
-        
+
         public void TryApplyOneTimeFeatures()
         {
             //

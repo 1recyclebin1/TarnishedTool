@@ -6,8 +6,18 @@ using static SilkyRing.Memory.Offsets;
 
 namespace SilkyRing.Services
 {
-    public class UtilityService(MemoryService memoryService, HookManager hookManager, IPlayerService playerService) : IUtilityService
+    public class UtilityService(MemoryService memoryService, HookManager hookManager, IPlayerService playerService)
+        : IUtilityService
     {
+        public void ToggleCombatMap(bool isEnabled)
+        {
+            memoryService.WriteUInt8(Patches.OpenMap, isEnabled ? 0xEB : 0x74);
+            memoryService.WriteBytes(Patches.CloseMap, isEnabled ? [0x90, 0x90, 0x90] : [0xff, 0x50, 0x60]);
+        }
+
+        public void ToggleDungeonMap(bool isEnabled) =>
+            memoryService.WriteUInt8(Patches.DungeonWarp, isEnabled ? 0xEB : 0x74);
+
         public void ToggleNoClip(bool isNoClipEnabled)
         {
             var inAirTimerCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.InAirTimer;
@@ -87,7 +97,7 @@ namespace SilkyRing.Services
         {
             var codeBytes = AsmLoader.GetAsmBytes("NoClip_UpdateCoords");
             var zDirection = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.ZDirection;
-            
+
             AsmHelper.WriteRelativeOffsets(codeBytes, new[]
             {
                 (updateCoordsCode.ToInt64() + 0x7, WorldChrMan.Base.ToInt64(), 7, 0x7 + 3),
@@ -137,7 +147,7 @@ namespace SilkyRing.Services
             var maxDist = CodeCaveOffsets.Base + (int)CodeCaveOffsets.TargetView.MaxDist;
             memoryService.WriteFloat(maxDist, reducedTargetViewDistance * reducedTargetViewDistance);
         }
-        
+
         public void ToggleDrawHitbox(bool isDrawHitboxEnabled) =>
             memoryService.WriteUInt8((IntPtr)memoryService.ReadInt64(DamageManager.Base) + DamageManager.HitboxView,
                 isDrawHitboxEnabled ? 1 : 0);

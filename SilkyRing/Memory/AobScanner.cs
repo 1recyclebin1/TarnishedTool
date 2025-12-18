@@ -49,6 +49,10 @@ namespace SilkyRing.Memory
             TryPatternWithFallback("NoRuneArcLoss", Pattern.NoRuneArcLoss, addr => Patches.NoRuneArcLoss = addr, saved);
             TryPatternWithFallback("NoRuneLossOnDeath", Pattern.NoRuneLossOnDeath,
                 addr => Patches.NoRuneLossOnDeath = addr, saved);
+            TryPatternWithFallback("OpenMap", Pattern.OpenMap,
+                addr => Patches.OpenMap = addr, saved);
+            TryPatternWithFallback("CloseMap", Pattern.CloseMap,
+                addr => Patches.CloseMap = addr, saved);
   
             TryPatternWithFallback("UpdateCoords", Pattern.UpdateCoords,
                 addr => Hooks.UpdateCoords = addr.ToInt64(), saved);
@@ -123,6 +127,8 @@ namespace SilkyRing.Memory
             Console.WriteLine($"Patches.NoRuneArcLoss: 0x{Patches.NoRuneArcLoss.ToInt64():X}");
             Console.WriteLine($"Patches.NoRuneLossOnDeath: 0x{Patches.NoRuneLossOnDeath.ToInt64():X}");
             Console.WriteLine($"Patches.DungeonWarp: 0x{Patches.DungeonWarp.ToInt64():X}");
+            Console.WriteLine($"Patches.OpenMap: 0x{Patches.OpenMap.ToInt64():X}");
+            Console.WriteLine($"Patches.CloseMap: 0x{Patches.CloseMap.ToInt64():X}");
 
             Console.WriteLine($"Hooks.UpdateCoords: 0x{Hooks.UpdateCoords:X}");
             Console.WriteLine($"Hooks.InAirTimer: 0x{Hooks.InAirTimer:X}");

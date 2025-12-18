@@ -392,6 +392,20 @@
             0xB,
             AddressingMode.Absolute
         );
+
+        public static readonly Pattern OpenMap = new Pattern(
+            new byte[] { 0x84, 0xC0, 0x74, 0x2E, 0xC7 },
+            "xxxxx",
+            2,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern CloseMap = new Pattern(
+            new byte[] { 0x75, 0x11, 0x38, 0x83, 0xC2 },
+            "xxxxx",
+            0x3C,
+            AddressingMode.Absolute
+        );
     }
 
     public enum AddressingMode

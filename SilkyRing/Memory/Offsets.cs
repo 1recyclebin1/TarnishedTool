@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SilkyRing.Memory
 {
@@ -337,6 +336,8 @@ namespace SilkyRing.Memory
             public static IntPtr NoRunesFromEnemies;
             public static IntPtr NoRuneArcLoss;
             public static IntPtr NoRuneLossOnDeath;
+            public static IntPtr OpenMap;
+            public static IntPtr CloseMap;
         }
     }
 }

@@ -2,6 +2,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Numerics;
 
 namespace SilkyRing.Interfaces;
 
@@ -21,6 +22,7 @@ public interface IMemoryService
     float ReadFloat(nint addr);
     double ReadDouble(nint addr);
     string ReadString(nint addr, int maxLength = 32);
+    Vector3 ReadVector3(IntPtr address);
     byte[] ReadBytes(nint addr, int size);
 
     void WriteUInt8(nint addr, int val);
@@ -30,6 +32,7 @@ public interface IMemoryService
     void WriteFloat(nint addr, float val);
     void WriteDouble(nint addr, double val);
     void WriteString(nint addr, string value, int maxLength = 32);
+    void WriteVector3(IntPtr address, Vector3 value);
     void WriteBytes(IntPtr addr, byte[] val);
 
     void SetBitValue(nint addr, int flagMask, bool setValue);

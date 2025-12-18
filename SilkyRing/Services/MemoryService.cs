@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Numerics;
 using System.Text;
 using System.Timers;
 using SilkyRing.Interfaces;
@@ -90,7 +91,18 @@ namespace SilkyRing.Services
 
             return Encoding.Unicode.GetString(bytes, 0, stringLength);
         }
+        
+        public Vector3 ReadVector3(IntPtr address)
+        {
+            byte[] coordBytes = ReadBytes(address, 12);
+            return new Vector3(
+                BitConverter.ToSingle(coordBytes, 0),
+                BitConverter.ToSingle(coordBytes, 4),
+                BitConverter.ToSingle(coordBytes, 8)
+            );
+        }
 
+        
         public byte[] ReadBytes(IntPtr addr, int size)
         {
             var array = new byte[size];
@@ -136,6 +148,15 @@ namespace SilkyRing.Services
             var stringBytes = Encoding.Unicode.GetBytes(value);
             Array.Copy(stringBytes, bytes, Math.Min(stringBytes.Length, maxLength));
             WriteBytes(addr, bytes);
+        }
+        
+        public void WriteVector3(IntPtr address, Vector3 value)
+        {
+            byte[] coordBytes = new byte[12];
+            Buffer.BlockCopy(BitConverter.GetBytes(value.X), 0, coordBytes, 0, 4);
+            Buffer.BlockCopy(BitConverter.GetBytes(value.Y), 0, coordBytes, 4, 4);
+            Buffer.BlockCopy(BitConverter.GetBytes(value.Z), 0, coordBytes, 8, 4);
+            WriteBytes(address, coordBytes);
         }
 
         public void WriteBytes(IntPtr addr, byte[] val)

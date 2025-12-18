@@ -51,13 +51,13 @@ namespace SilkyRing
             var hookManager = new HookManager(_memoryService, _stateService);
             var hotkeyManager = new HotkeyManager(_memoryService);
 
-            IPlayerService playerService = new PlayerService(_memoryService, hookManager);
+            ITravelService travelService = new TravelService(_memoryService, hookManager);
+            IPlayerService playerService = new PlayerService(_memoryService, hookManager, travelService);
             IUtilityService utilityService = new UtilityService(_memoryService, hookManager, playerService);
             IEventService eventService = new EventService(_memoryService, hookManager);
             IAttackInfoService attackInfoService = new AttackInfoService(_memoryService, hookManager);
             ITargetService targetService = new TargetService(_memoryService, hookManager, playerService);
             IEnemyService enemyService = new EnemyService(_memoryService, hookManager);
-            ITravelService travelService = new TravelService(_memoryService, hookManager);
             ISettingsService settingsService = new SettingsService(_memoryService, hookManager);
             IEzStateService ezStateService = new EzStateService(_memoryService);
             IItemService itemService = new ItemService(_memoryService);

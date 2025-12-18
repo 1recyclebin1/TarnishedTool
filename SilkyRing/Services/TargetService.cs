@@ -299,19 +299,9 @@ namespace SilkyRing.Services
         private PosWithHurtbox GetPosWithHurtbox()
         {
             var physPtr = GetChrPhysPtr();
-            var position = ReadVector3(physPtr + (int)ChrIns.ChrPhysicsOffsets.Coords);
+            var position = memoryService.ReadVector3(physPtr + (int)ChrIns.ChrPhysicsOffsets.Coords);
             var capsuleRadius = memoryService.ReadFloat(physPtr + (int)ChrIns.ChrPhysicsOffsets.HurtCapsuleRadius);
             return new PosWithHurtbox(position, capsuleRadius);
-        }
-
-        private Vector3 ReadVector3(IntPtr address)
-        {
-            byte[] coordBytes = memoryService.ReadBytes(address, 12);
-            return new Vector3(
-                BitConverter.ToSingle(coordBytes, 0),
-                BitConverter.ToSingle(coordBytes, 4),
-                BitConverter.ToSingle(coordBytes, 8)
-            );
         }
     }
 }

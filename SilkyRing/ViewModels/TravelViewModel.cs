@@ -3,7 +3,6 @@ using SilkyRing.Core;
 using SilkyRing.Enums;
 using SilkyRing.Interfaces;
 using SilkyRing.Models;
-using SilkyRing.Services;
 using SilkyRing.Utilities;
 
 namespace SilkyRing.ViewModels
@@ -23,7 +22,7 @@ namespace SilkyRing.ViewModels
 
             stateService.Subscribe(State.Loaded, OnGameLoaded);
             stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);
-            
+
             Graces = new SearchableGroupedCollection<string, Grace>(
                 DataLoader.GetGraces(),
                 (grace, search) => grace.Name.ToLower().Contains(search) ||
@@ -33,17 +32,19 @@ namespace SilkyRing.ViewModels
                 (bossWarp, search) => bossWarp.Name.ToLower().Contains(search) ||
                                       bossWarp.MainArea.ToLower().Contains(search));
 
-            WarpCommand = new DelegateCommand(Warp);
+            GraceWarpCommand = new DelegateCommand(GraceWarp);
             UnlockMainGameGracesCommand = new DelegateCommand(UnlockMainGameGraces);
             UnlockDlcGracesCommand = new DelegateCommand(UnlockDlcGraces);
+            BossWarpCommand = new DelegateCommand(BossWarp);
         }
-
+        
         #region Commands
 
-        public ICommand WarpCommand { get; set; }
+        public ICommand GraceWarpCommand { get; set; }
+        public ICommand BossWarpCommand { get; set; }
         public ICommand UnlockMainGameGracesCommand { get; set; }
         public ICommand UnlockDlcGracesCommand { get; set; }
-        
+
         #endregion
 
         #region Properties
@@ -58,9 +59,8 @@ namespace SilkyRing.ViewModels
 
         #endregion
 
-
         #region Private Methods
-        
+
         private void OnGameLoaded()
         {
             AreOptionsEnabled = true;
@@ -71,7 +71,8 @@ namespace SilkyRing.ViewModels
             AreOptionsEnabled = false;
         }
 
-        private void Warp() => _travelService.Warp(Graces.SelectedItem);
+        private void GraceWarp() => _travelService.Warp(Graces.SelectedItem);
+        private void BossWarp() => _travelService.WarpToBlockId(Bosses.SelectedItem.Position);
 
         private void UnlockMainGameGraces()
         {
@@ -92,7 +93,5 @@ namespace SilkyRing.ViewModels
         }
 
         #endregion
-
-        
     }
 }

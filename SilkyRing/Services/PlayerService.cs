@@ -10,7 +10,7 @@ using static SilkyRing.Memory.Offsets;
 
 namespace SilkyRing.Services
 {
-    public class PlayerService(MemoryService memoryService, HookManager hookManager) : IPlayerService
+    public class PlayerService(MemoryService memoryService, HookManager hookManager, ITravelService travelService) : IPlayerService
     {
         private const float LongDistanceRestore = 500f;
 
@@ -27,7 +27,7 @@ namespace SilkyRing.Services
         ];
 
         public Vector3 GetPlayerPos() =>
-            ReadVector3(GetChrPhysicsPtr() + (int)ChrIns.ChrPhysicsOffsets.Coords);
+            memoryService.ReadVector3(GetChrPhysicsPtr() + (int)ChrIns.ChrPhysicsOffsets.Coords);
 
         public void SavePos(int index)
         {
@@ -35,7 +35,7 @@ namespace SilkyRing.Services
             var worldChrMan = memoryService.ReadInt64(WorldChrMan.Base);
             var playerIns = (IntPtr)memoryService.ReadInt64((IntPtr)worldChrMan + WorldChrMan.PlayerIns);
             posToSave.BlockId = memoryService.ReadUInt32(playerIns + (int)WorldChrMan.PlayerInsOffsets.CurrentBlockId);
-            posToSave.Coords = ReadVector3(playerIns + (int)WorldChrMan.PlayerInsOffsets.CurrentGlobalCoords);
+            posToSave.Coords = memoryService.ReadVector3(playerIns + (int)WorldChrMan.PlayerInsOffsets.CurrentGlobalCoords);
             posToSave.Angle =
                 memoryService.ReadFloat(playerIns + (int)WorldChrMan.PlayerInsOffsets.CurrentGlobalAngle);
         }
@@ -54,7 +54,7 @@ namespace SilkyRing.Services
 
             if (currentArea == savedArea)
             {
-                var currentCoords = ReadVector3(playerIns + (int)WorldChrMan.PlayerInsOffsets.CurrentGlobalCoords);
+                var currentCoords = memoryService.ReadVector3(playerIns + (int)WorldChrMan.PlayerInsOffsets.CurrentGlobalCoords);
                 var currentAbsolute = GetAbsoluteCoords(currentCoords, currentBlockId);
                 var savedAbsolute = GetAbsoluteCoords(savedPos.Coords, savedPos.BlockId);
                 var delta = savedAbsolute - currentAbsolute;
@@ -68,7 +68,7 @@ namespace SilkyRing.Services
                 if (isLongDistance)
                     memoryService.WriteUInt8(physicsPtr + (int)ChrIns.ChrPhysicsOffsets.NoGravity, 1);
 
-                WriteVector3(coordsPtr, ReadVector3(coordsPtr) + delta);
+                memoryService.WriteVector3(coordsPtr, memoryService.ReadVector3(coordsPtr) + delta);
                 memoryService.WriteFloat(playerIns + (int)WorldChrMan.PlayerInsOffsets.CurrentGlobalAngle,
                     savedPos.Angle);
 
@@ -84,7 +84,7 @@ namespace SilkyRing.Services
 
             else
             {
-                _ = Task.Run(() => WarpToBlockId(savedPos));
+                _ = Task.Run(() => travelService.WarpToBlockId(savedPos));
             }
         }
 
@@ -120,86 +120,11 @@ namespace SilkyRing.Services
 
             return globalCoords;
         }
-
-        private void WarpToBlockId(Position savedPos)
-        {
-            int area = (int)(savedPos.BlockId >> 24) & 0xFF;
-            int block = (int)(savedPos.BlockId >> 16) & 0xFF;
-            int map = (int)(savedPos.BlockId >> 8) & 0xFF;
-            int altNo = (int)savedPos.BlockId & 0xFF;
-
-            var bytes = AsmLoader.GetAsmBytes("WarpToBlock");
-            AsmHelper.WriteAbsoluteAddress(bytes, Functions.WarpToBlock, 0x16 + 2);
-            AsmHelper.WriteImmediateDwords(bytes, new[]
-            {
-                (area, 0x0 + 1),
-                (block, 0x5 + 1),
-                (map, 0xA + 2),
-                (altNo, 0x10 + 2),
-            });
-
-            memoryService.AllocateAndExecute(bytes);
-
-            HookWarpCoordWrites(savedPos);
-        }
-
-        private void HookWarpCoordWrites(Position savedPos)
-        {
-            int angleOffset = 0xAB0;
-
-            var coordHook = Hooks.WarpCoordWrite;
-            var angleHook = Hooks.WarpAngleWrite;
-
-            var targetCoords = CodeCaveOffsets.Base + CodeCaveOffsets.WarpCoords;
-            var targetAngle = CodeCaveOffsets.Base + CodeCaveOffsets.Angle;
-            var warpCode = CodeCaveOffsets.Base + CodeCaveOffsets.WarpCode;
-            var angleCode = CodeCaveOffsets.Base + CodeCaveOffsets.AngleCode;
-            WriteVector3(targetCoords, savedPos.Coords);
-            memoryService.WriteFloat(targetCoords + 0xC, 1f);
-            memoryService.WriteFloat(targetAngle + 0x4, savedPos.Angle);
-
-            var bytes = AsmLoader.GetAsmBytes("WarpCoordWrite");
-            AsmHelper.WriteRelativeOffsets(bytes, new[]
-            {
-                (warpCode.ToInt64(), targetCoords.ToInt64(), 7, 0x0 + 3),
-                (warpCode.ToInt64() + 0xE, coordHook + 7, 5, 0xE + 1)
-            });
-            memoryService.WriteBytes(warpCode, bytes);
-
-            AsmHelper.WriteRelativeOffsets(bytes, new[]
-            {
-                (angleCode.ToInt64(), targetAngle.ToInt64(), 7, 0x0 + 3),
-                (angleCode.ToInt64() + 0xE, angleHook + 7, 5, 0xE + 1)
-            });
-            memoryService.WriteBytes(angleCode, bytes);
-            memoryService.WriteInt32(angleCode + 0x7 + 3, angleOffset);
-
-            hookManager.InstallHook(warpCode.ToInt64(), coordHook, [0x0F, 0x11, 0x80, 0xA0, 0x0A, 0x00, 0x00]);
-            hookManager.InstallHook(angleCode.ToInt64(), angleHook, [0x0F, 0x11, 0x80, 0xB0, 0x0A, 0x00, 0x00]);
-
-            var isFadedPtr = (IntPtr)memoryService.ReadInt64(MenuMan.Base) + MenuMan.FadeFlags;
-            var fadeBit = (byte)MenuMan.FadeBitFlags.IsFadeScreen;
-
-            WaitForCondition(() => memoryService.IsBitSet(isFadedPtr, fadeBit));
-            WaitForCondition(() => !memoryService.IsBitSet(isFadedPtr, fadeBit));
-
-            hookManager.UninstallHook(warpCode.ToInt64());
-            hookManager.UninstallHook(angleCode.ToInt64());
-        }
-
-        private void WaitForCondition(Func<bool> condition, int timeoutMs = 10000, int pollMs = 50)
-        {
-            int start = Environment.TickCount;
-            while (!condition() && Environment.TickCount < start + timeoutMs)
-            {
-                Thread.Sleep(pollMs);
-            }
-        }
-
+        
         public PosWithHurtbox GetPosWithHurtbox()
         {
             var physPtr = GetChrPhysicsPtr();
-            var position = ReadVector3(physPtr + (int)ChrIns.ChrPhysicsOffsets.Coords);
+            var position = memoryService.ReadVector3(physPtr + (int)ChrIns.ChrPhysicsOffsets.Coords);
             var capsuleRadius = memoryService.ReadFloat(physPtr + (int)ChrIns.ChrPhysicsOffsets.HurtCapsuleRadius);
             return new PosWithHurtbox(position, capsuleRadius);
         }
@@ -428,25 +353,7 @@ namespace SilkyRing.Services
         private IntPtr GetChrRidePtr() =>
             memoryService.FollowPointers(WorldChrMan.Base, [WorldChrMan.PlayerIns, ..ChrIns.ChrRideModule], true);
 
-        private Vector3 ReadVector3(IntPtr address)
-        {
-            byte[] coordBytes = memoryService.ReadBytes(address, 12);
-            return new Vector3(
-                BitConverter.ToSingle(coordBytes, 0),
-                BitConverter.ToSingle(coordBytes, 4),
-                BitConverter.ToSingle(coordBytes, 8)
-            );
-        }
-
-        private void WriteVector3(IntPtr address, Vector3 value)
-        {
-            byte[] coordBytes = new byte[12];
-            Buffer.BlockCopy(BitConverter.GetBytes(value.X), 0, coordBytes, 0, 4);
-            Buffer.BlockCopy(BitConverter.GetBytes(value.Y), 0, coordBytes, 4, 4);
-            Buffer.BlockCopy(BitConverter.GetBytes(value.Z), 0, coordBytes, 8, 4);
-            memoryService.WriteBytes(address, coordBytes);
-        }
-
+        
         private IntPtr ChrInsLookup(int handle)
         {
             int poolIndex = (handle >> 20) & 0xFF;

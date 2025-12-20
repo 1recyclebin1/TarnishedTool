@@ -59,6 +59,8 @@ namespace SilkyRing.ViewModels
             GiveRunesCommand = new DelegateCommand(GiveRunes);
             ApplyRuneArcCommand = new DelegateCommand(ApplyRuneArc);
 
+            ApplySpEffectCommand = new DelegateCommand(ApplySpEffect);
+            RemoveSpEffectCommand = new DelegateCommand(RemoveSpEffect);
 
             _playerTick = new DispatcherTimer
             {
@@ -66,7 +68,6 @@ namespace SilkyRing.ViewModels
             };
             _playerTick.Tick += PlayerTick;
         }
-
         
         #region Commands
 
@@ -78,6 +79,9 @@ namespace SilkyRing.ViewModels
 
         public ICommand GiveRunesCommand { get; set; }
         public ICommand ApplyRuneArcCommand { get; set; }
+        
+        public ICommand ApplySpEffectCommand { get; set; }
+        public ICommand RemoveSpEffectCommand { get; set; }
 
         #endregion
 
@@ -487,6 +491,22 @@ namespace SilkyRing.ViewModels
                 }
             }
         }
+        
+        private string _applySpEffectId;
+
+        public string ApplySpEffectId
+        {
+            get => _applySpEffectId;
+            set => SetProperty(ref _applySpEffectId, value);
+        }
+
+        private string _removeSpEffectId;
+
+        public string RemoveSpEffectId
+        {
+            get => _removeSpEffectId;
+            set => SetProperty(ref _removeSpEffectId, value);
+        }
 
         #endregion
 
@@ -672,6 +692,20 @@ namespace SilkyRing.ViewModels
         private bool IsApproximately(float a, float b)
         {
             return Math.Abs(a - b) < Epsilon;
+        }
+        
+        private void ApplySpEffect()
+        {
+            if (!uint.TryParse(ApplySpEffectId, out uint spEffectId)) return;
+            var playerIns = _playerService.GetPlayerIns();
+            _spEffectService.ApplySpEffect(playerIns, spEffectId);
+        }
+
+        private void RemoveSpEffect()
+        {
+            if (!uint.TryParse(RemoveSpEffectId, out uint spEffectId)) return;
+            var playerIns = _playerService.GetPlayerIns();
+            _spEffectService.RemoveSpEffect(playerIns, spEffectId);
         }
 
         #endregion

@@ -5,7 +5,7 @@ using SilkyRing.ViewModels;
 
 namespace SilkyRing.Views.Tabs;
 
-public partial class ItemTab : UserControl
+public partial class ItemTab
 {
     public ItemTab(ItemViewModel itemViewModel)
     {

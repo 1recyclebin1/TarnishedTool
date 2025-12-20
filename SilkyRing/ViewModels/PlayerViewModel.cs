@@ -16,12 +16,8 @@ namespace SilkyRing.ViewModels
     {
         
         
-        // private int _soulMemory;
-
-        
         private Vector3 _coords;
         private int _currentRuneLevel;
-
         
         private float _playerDesiredSpeed = -1f;
         private const float DefaultSpeed = 1f;
@@ -37,11 +33,16 @@ namespace SilkyRing.ViewModels
         private readonly CharacterState _saveState2 = new();
 
         private readonly HotkeyManager _hotkeyManager;
+        private readonly IEventService _eventService;
 
-        public PlayerViewModel(IPlayerService playerService, IStateService stateService, HotkeyManager hotkeyManager)
+        public static readonly long[] NewGameEventIds = [50, 51, 52, 53, 54, 55, 56, 57];
+
+        public PlayerViewModel(IPlayerService playerService, IStateService stateService, HotkeyManager hotkeyManager,
+            IEventService eventService)
         {
             _playerService = playerService;
             _hotkeyManager = hotkeyManager;
+            _eventService = eventService;
 
             RegisterHotkeys();
 
@@ -463,6 +464,11 @@ namespace SilkyRing.ViewModels
                 if (SetProperty(ref _newGame, value))
                 {
                     _playerService.SetNewGame(value);
+                    var activeIndex = Math.Min(_newGame, NewGameEventIds.Length - 1);
+                    for (var i = 0; i < NewGameEventIds.Length; i++)
+                    {
+                        _eventService.SetEvent(NewGameEventIds[i], i == activeIndex);
+                    }
                 }
             }
         }
@@ -584,10 +590,8 @@ namespace SilkyRing.ViewModels
             Intelligence = stats.Intelligence;
             Faith = stats.Faith;
             Arcane = stats.Arcane;
-
             RuneLevel = _playerService.GetRuneLevel();
             NewGame = _playerService.GetNewGame();
-            // PlayerSpeed = _playerService.GetPlayerSpeed();
         }
 
         private void SetRfbs() => _playerService.SetRfbs();

@@ -13,6 +13,7 @@ public class EmevdService(MemoryService memoryService) : IEmevdService
     public void ExecuteEmevdCommand(EmevdCommand command)
     {
         var args = CodeCaveOffsets.Base + CodeCaveOffsets.EmevdArgs;
+        memoryService.WriteBytes(args, command.ParamData);
         
         var bytes = AsmLoader.GetAsmBytes("ExecuteEmevdCommand");
         AsmHelper.WriteAbsoluteAddresses(bytes, new []
@@ -29,5 +30,7 @@ public class EmevdService(MemoryService memoryService) : IEmevdService
             (command.CommandId, 0x80 + 3)
         });
         memoryService.AllocateAndExecute(bytes);
+        
+        memoryService.WriteBytes(args, new byte[command.ParamData.Length]);
     }
 }

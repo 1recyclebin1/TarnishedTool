@@ -6,9 +6,10 @@ namespace SilkyRing.Memory
     {
         public static IntPtr Base;
 
+        public const int SaveCurrentTime = 0x0;
+
         public enum NoClip
         {
-            InAirTimer = 0x0,
             ZDirection = 0x50,
             Kb = 0x60,
             Triggers = 0xB0,

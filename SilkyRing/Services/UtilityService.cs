@@ -20,20 +20,16 @@ namespace SilkyRing.Services
 
         public void ToggleNoClip(bool isNoClipEnabled)
         {
-            var inAirTimerCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.InAirTimer;
             var kbCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.Kb;
             var triggersCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.Triggers;
             var updateCoordsCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.UpdateCoords;
 
             if (isNoClipEnabled)
             {
-                WriteInAirTimer(inAirTimerCode);
                 WriteKbCode(kbCode);
                 WriteTriggerCode(triggersCode);
                 WriteUpdateCoords(updateCoordsCode);
-
-                hookManager.InstallHook(inAirTimerCode.ToInt64(), Hooks.InAirTimer, new byte[]
-                    { 0xF3, 0x0F, 0x11, 0x43, 0x18 });
+                
                 hookManager.InstallHook(kbCode.ToInt64(), Hooks.NoClipKb, new byte[]
                     { 0xF6, 0x84, 0x08, 0xE8, 0x07, 0x00, 0x00, 0x80 });
                 hookManager.InstallHook(triggersCode.ToInt64(), Hooks.NoClipTriggers, new byte[]
@@ -43,7 +39,6 @@ namespace SilkyRing.Services
             }
             else
             {
-                hookManager.UninstallHook(inAirTimerCode.ToInt64());
                 hookManager.UninstallHook(kbCode.ToInt64());
                 hookManager.UninstallHook(triggersCode.ToInt64());
                 hookManager.UninstallHook(updateCoordsCode.ToInt64());
@@ -51,19 +46,7 @@ namespace SilkyRing.Services
                 playerService.EnableGravity();
             }
         }
-
-        private void WriteInAirTimer(IntPtr inAirTimerCode)
-        {
-            var codeBytes = AsmLoader.GetAsmBytes("NoClip_InAirTimer");
-            var bytes = BitConverter.GetBytes(WorldChrMan.Base.ToInt64());
-            Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
-            AsmHelper.WriteJumpOffsets(codeBytes, new[]
-            {
-                (Hooks.InAirTimer, 5, inAirTimerCode + 0x28, 0x28 + 1),
-            });
-            memoryService.WriteBytes(inAirTimerCode, codeBytes);
-        }
-
+        
         private void WriteKbCode(IntPtr kbCode)
         {
             var codeBytes = AsmLoader.GetAsmBytes("NoClip_Keyboard");

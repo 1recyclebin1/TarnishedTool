@@ -877,6 +877,24 @@ namespace SilkyRing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 44 89 6c 24 2c          mov    DWORD PTR [rsp+0x2c],r13d
+        ///50                      push   rax
+        ///51                      push   rcx
+        ///52                      push   rdx
+        ///48 8b 05 00 00 00 00    mov    rax,QWORD PTR [rip+0x0]        # f &lt;_main+0xf&gt;
+        ///48 8b 15 00 00 00 00    mov    rdx,QWORD PTR [rip+0x0]        # 16 &lt;_main+0x16&gt;
+        ///48 8b 08                mov    rcx,QWORD PTR [rax]
+        ///48 89 4a 20             mov    QWORD PTR [rdx+0x20],rcx
+        ///48 8b 48 08             mov    rcx,QWORD PTR [rax+0x8]
+        ///48 89 4a 28           [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string NoTimePassOnDeath {
+            get {
+                return ResourceManager.GetString("NoTimePassOnDeath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 0,40000295,Academy Magic Pot,10,600
         ///0,40000262,Albinauric Pot,10,600
         ///0,40000186,Alluring Pot,10,600

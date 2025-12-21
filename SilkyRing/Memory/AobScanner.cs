@@ -42,6 +42,7 @@ namespace SilkyRing.Memory
             MapItemManImpl.Base = FindAddressByPattern(Pattern.MapItemManImpl);
             InputManager.Base = FindAddressByPattern(Pattern.InputManager);
             CSEmkSystem.Base = FindAddressByPattern(Pattern.CSEmkSystem);
+            WorldAreaTimeImpl.Base = FindAddressByPattern(Pattern.WorldAreaTimeImpl);
 
 
             TryPatternWithFallback("DungeonWarp", Pattern.DungeonWarp, addr => Patches.DungeonWarp = addr, saved);
@@ -57,14 +58,10 @@ namespace SilkyRing.Memory
   
             TryPatternWithFallback("UpdateCoords", Pattern.UpdateCoords,
                 addr => Hooks.UpdateCoords = addr.ToInt64(), saved);
-            TryPatternWithFallback("InAirTimer", Pattern.InAirTimer,
-                addr => Hooks.InAirTimer = addr.ToInt64(), saved);
             TryPatternWithFallback("NoClipKb", Pattern.NoClipKb,
                 addr => Hooks.NoClipKb = addr.ToInt64(), saved);
             TryPatternWithFallback("NoClipTriggers", Pattern.NoClipTriggers,
                 addr => Hooks.NoClipTriggers = addr.ToInt64(), saved);
-            TryPatternWithFallback("AddSubGoal", Pattern.CreateGoalObj,
-                addr => Hooks.CreateGoalObj = addr.ToInt64(), saved);
             TryPatternWithFallback("HasSpEffect", Pattern.HasSpEffect,
                 addr => Hooks.HasSpEffect = addr.ToInt64(), saved);
             TryPatternWithFallback("BlueTargetView", Pattern.BlueTargetViewHook,
@@ -91,6 +88,8 @@ namespace SilkyRing.Memory
                 foreach (var pair in saved)
                     writer.WriteLine($"{pair.Key}={pair.Value:X}");
             }
+
+            Hooks.HookedDeathFunction = Patches.NoRuneLossOnDeath - 7;
 
             Functions.GraceWarp = FindAddressByPattern(Pattern.GraceWarp).ToInt64();
             Functions.SetEvent = FindAddressByPattern(Pattern.SetEvent).ToInt64();
@@ -126,6 +125,7 @@ namespace SilkyRing.Memory
             Console.WriteLine($@"MapItemManImpl.Base: 0x{MapItemManImpl.Base.ToInt64():X}");
             Console.WriteLine($@"InputManager.Base: 0x{InputManager.Base.ToInt64():X}");
             Console.WriteLine($@"CSEmkSystem.Base: 0x{CSEmkSystem.Base.ToInt64():X}");
+            Console.WriteLine($@"WorldAreaTimeImpl.Base: 0x{WorldAreaTimeImpl.Base.ToInt64():X}");
 
             Console.WriteLine($@"Patches.NoLogo: 0x{Patches.DungeonWarp.ToInt64():X}");
             Console.WriteLine($@"Patches.NoRunesFromEnemies: 0x{Patches.NoRunesFromEnemies.ToInt64():X}");
@@ -136,10 +136,8 @@ namespace SilkyRing.Memory
             Console.WriteLine($@"Patches.CloseMap: 0x{Patches.CloseMap.ToInt64():X}");
 
             Console.WriteLine($@"Hooks.UpdateCoords: 0x{Hooks.UpdateCoords:X}");
-            Console.WriteLine($@"Hooks.InAirTimer: 0x{Hooks.InAirTimer:X}");
             Console.WriteLine($@"Hooks.NoClipKb: 0x{Hooks.NoClipKb:X}");
             Console.WriteLine($@"Hooks.NoClipTriggers: 0x{Hooks.NoClipTriggers:X}");
-            Console.WriteLine($@"Hooks.AddSubGoal: 0x{Hooks.CreateGoalObj:X}");
             Console.WriteLine($@"Hooks.HasSpEffect: 0x{Hooks.HasSpEffect:X}");
             Console.WriteLine($@"Hooks.BlueTargetView: 0x{Hooks.BlueTargetView:X}");
             Console.WriteLine($@"Hooks.LockedTargetPtr: 0x{Hooks.LockedTargetPtr:X}");
@@ -150,6 +148,7 @@ namespace SilkyRing.Memory
             Console.WriteLine($@"Hooks.AttackInfo: 0x{Hooks.AttackInfo:X}");
             Console.WriteLine($@"Hooks.WarpCoordWrite: 0x{Hooks.WarpCoordWrite:X}");
             Console.WriteLine($@"Hooks.WarpAngleWrite: 0x{Hooks.WarpAngleWrite:X}");
+            Console.WriteLine($@"Hooks.HookedDeathFunction: 0x{Hooks.HookedDeathFunction.ToInt64():X}");
 
             Console.WriteLine($@"Funcs.GraceWarp: 0x{Functions.GraceWarp:X}");
             Console.WriteLine($@"Funcs.SetEvent: 0x{Functions.SetEvent:X}");

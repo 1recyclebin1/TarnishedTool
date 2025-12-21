@@ -140,6 +140,24 @@
             3,
             7
         );
+        
+        public static readonly Pattern CSEmkSystem = new Pattern(
+            new byte[] { 0x0F, 0x11, 0x80, 0x8C },
+            "xxxx",
+            0x7,
+            AddressingMode.Relative,
+            3,
+            7
+        );
+
+        public static readonly Pattern WorldAreaTimeImpl = new Pattern(
+            new byte[] { 0x48, 0x8B, 0x2D, 0x00, 0x00, 0x00, 0x00, 0x48, 0xC1 },
+            "xxx????xx",
+            0,
+            AddressingMode.Relative,
+            3,
+            7
+        );
 
         //Hooks
         public static readonly Pattern UpdateCoords = new Pattern(
@@ -148,14 +166,7 @@
             0,
             AddressingMode.Absolute
         );
-
-        public static readonly Pattern InAirTimer = new Pattern(
-            new byte[] { 0xF3, 0x0F, 0x11, 0x43, 0x18, 0xC6 },
-            "xxxxxx",
-            0,
-            AddressingMode.Absolute
-        );
-
+        
         public static readonly Pattern NoClipKb = new Pattern(
             new byte[] { 0xF6, 0x84, 0x08, 0xE8 },
             "xxxx",
@@ -169,13 +180,7 @@
             0,
             AddressingMode.Absolute
         );
-
-        public static readonly Pattern CreateGoalObj = new Pattern(
-            new byte[] { 0x48, 0x8B, 0xF1, 0x85, 0xD2, 0x0F, 0x88, 0x78 },
-            "xxxxxxxx",
-            0,
-            AddressingMode.Absolute
-        );
+        
 
         public static readonly Pattern HasSpEffect = new Pattern(
             new byte[] { 0x39, 0x51, 0x08, 0x74, 0x0C, 0x48, 0x8B },
@@ -383,15 +388,6 @@
             AddressingMode.Relative,
             1,
             5
-        );
-
-        public static readonly Pattern CSEmkSystem = new Pattern(
-            new byte[] { 0x0F, 0x11, 0x80, 0x8C },
-            "xxxx",
-            0x7,
-            AddressingMode.Relative,
-            3,
-            7
         );
 
         //Patches

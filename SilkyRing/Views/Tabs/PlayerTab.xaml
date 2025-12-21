@@ -217,6 +217,9 @@
                     <CheckBox Content="No Rune Loss on Death"
                               IsChecked="{Binding IsNoRuneLossEnabled}"
                               Margin="0,2" />
+                    <CheckBox Content="No Time Pass on Death"
+                              IsChecked="{Binding IsNoTimePassOnDeathEnabled}"
+                              Margin="0,2" />
                 </StackPanel>
             </Grid>
 

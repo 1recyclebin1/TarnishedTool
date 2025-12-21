@@ -279,6 +279,11 @@ namespace SilkyRing.Memory
             public static IntPtr Base;
         }
         
+        public static class WorldAreaTimeImpl
+        {
+            public static IntPtr Base;
+        }
+        
         public static class WorldChrManDbg
         {
             public static IntPtr Base;
@@ -316,10 +321,8 @@ namespace SilkyRing.Memory
         public static class Hooks
         {
             public static long UpdateCoords;
-            public static long InAirTimer;
             public static long NoClipKb;
             public static long NoClipTriggers;
-            public static long CreateGoalObj;
             public static long HasSpEffect;
             public static long BlueTargetView;
             public static long LockedTargetPtr;
@@ -330,6 +333,7 @@ namespace SilkyRing.Memory
             public static long AttackInfo;
             public static long WarpCoordWrite;
             public static long WarpAngleWrite;
+            public static IntPtr HookedDeathFunction;
             
         }
 

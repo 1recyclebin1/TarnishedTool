@@ -222,6 +222,28 @@ namespace SilkyRing.Services
                     ? [0x90, 0x90, 0x90]
                     : [0x89, 0x45, 0x6C]);
 
+        public void ToggleNoTimePassOnDeath(bool isNoTimePassOnDeathEnabled)
+        {
+            var code = CodeCaveOffsets.Base + CodeCaveOffsets.SaveCurrentTime;
+            if (isNoTimePassOnDeathEnabled)
+            {
+                var hook = Hooks.HookedDeathFunction.ToInt64();
+                var bytes = AsmLoader.GetAsmBytes("NoTimePassOnDeath");
+                AsmHelper.WriteRelativeOffsets(bytes, new []
+                {
+                    (code.ToInt64() + 0x8, WorldAreaTimeImpl.Base.ToInt64(), 7, 0x8 + 3),
+                    (code.ToInt64() + 0xF, GameMan.Base.ToInt64(), 7, 0xF + 3),
+                    (code.ToInt64() + 0x28, hook + 5, 5, 0x28 + 1)
+                });
+                memoryService.WriteBytes(code, bytes);
+                hookManager.InstallHook(code.ToInt64(), hook, [0x44, 0x89, 0x6C, 0x24, 0x2C]);
+            }
+            else
+            {
+                hookManager.UninstallHook(code.ToInt64());
+            }
+        }
+
         public void SetNewGame(int value) =>
             memoryService.WriteInt32((IntPtr)memoryService.ReadInt64(GameDataMan.Base) + GameDataMan.NewGame, value);
 

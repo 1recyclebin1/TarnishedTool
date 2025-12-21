@@ -29,6 +29,7 @@ public interface IPlayerService
     void ToggleNoRuneGain(bool isNoRuneGainEnabled);
     void ToggleNoRuneArcLoss(bool isNoRuneArcLossEnabled);
     void ToggleNoRuneLoss(bool isNoRuneLossEnabled);
+    void ToggleNoTimePassOnDeath(bool isNoTimePassOnDeathEnabled);
     void SetNewGame(int value);
     int GetNewGame();
     void GiveRunes(int runes);

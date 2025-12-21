@@ -388,6 +388,20 @@ namespace SilkyRing.ViewModels
                 }
             }
         }
+        
+        private bool _isNoTimePassOnDeathEnabled;
+
+        public bool IsNoTimePassOnDeathEnabled
+        {
+            get => _isNoTimePassOnDeathEnabled;
+            set
+            {
+                if (SetProperty(ref _isNoTimePassOnDeathEnabled, value))
+                {
+                    _playerService.ToggleNoTimePassOnDeath(_isNoTimePassOnDeathEnabled);
+                }
+            }
+        }
 
         private int _runeLevel;
 
@@ -599,6 +613,7 @@ namespace SilkyRing.ViewModels
             if (IsNoRuneGainEnabled) _playerService.ToggleNoRuneGain(true);
             if (IsNoRuneArcLossEnabled) _playerService.ToggleNoRuneArcLoss(true);
             if (IsNoRuneLossEnabled) _playerService.ToggleNoRuneLoss(true);
+            if (IsNoTimePassOnDeathEnabled) _playerService.ToggleNoTimePassOnDeath(true);
             _pauseUpdates = false;
         }
 

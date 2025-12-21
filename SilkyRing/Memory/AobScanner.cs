@@ -41,6 +41,7 @@ namespace SilkyRing.Memory
             CsDlcImp.Base = FindAddressByPattern(Pattern.CsDlcImp);
             MapItemManImpl.Base = FindAddressByPattern(Pattern.MapItemManImpl);
             InputManager.Base = FindAddressByPattern(Pattern.InputManager);
+            CSEmkSystem.Base = FindAddressByPattern(Pattern.CSEmkSystem);
 
 
             TryPatternWithFallback("DungeonWarp", Pattern.DungeonWarp, addr => Patches.DungeonWarp = addr, saved);
@@ -105,60 +106,65 @@ namespace SilkyRing.Memory
             Functions.MatrixVectorProduct = FindAddressByPattern(Pattern.MatrixVectorProduct).ToInt64();
             Functions.ChrInsByHandle = FindAddressByPattern(Pattern.ChrInsByHandle).ToInt64();
             Functions.FindAndRemoveSpEffect = FindAddressByPattern(Pattern.FindAndRemoveSpEffect).ToInt64();
+            Functions.EmevdSwitch = FindAddressByPattern(Pattern.EmevdSwitch).ToInt64();
+            Functions.EmkEventInsCtor = FindAddressByPattern(Pattern.EmkEventInsCtor).ToInt64();
 
 
 #if DEBUG
-            Console.WriteLine($"WorldChrMan.Base: 0x{WorldChrMan.Base.ToInt64():X}");
-            Console.WriteLine($"FieldArea.Base: 0x{FieldArea.Base.ToInt64():X}");
-            Console.WriteLine($"LuaEventMan.Base: 0x{LuaEventMan.Base.ToInt64():X}");
-            Console.WriteLine($"VirtualMemFlag.Base: 0x{VirtualMemFlag.Base.ToInt64():X}");
-            Console.WriteLine($"DamageManager.Base: 0x{DamageManager.Base.ToInt64():X}");
-            Console.WriteLine($"MenuMan.Base: 0x{MenuMan.Base.ToInt64():X}");
-            Console.WriteLine($"TargetView.Base: 0x{TargetView.Base.ToInt64():X}");
-            Console.WriteLine($"GameMan.Base: 0x{GameMan.Base.ToInt64():X}");
-            Console.WriteLine($"WorldHitMan.Base: 0x{WorldHitMan.Base.ToInt64():X}");
-            Console.WriteLine($"WorldChrManDbg.Base: 0x{WorldChrManDbg.Base.ToInt64():X}");
-            Console.WriteLine($"GameDataMan.Base: 0x{GameDataMan.Base.ToInt64():X}");
-            Console.WriteLine($"CsDlcImp.Base: 0x{CsDlcImp.Base.ToInt64():X}");
-            Console.WriteLine($"MapItemManImpl.Base: 0x{MapItemManImpl.Base.ToInt64():X}");
-            Console.WriteLine($"InputManager.Base: 0x{InputManager.Base.ToInt64():X}");
+            Console.WriteLine($@"WorldChrMan.Base: 0x{WorldChrMan.Base.ToInt64():X}");
+            Console.WriteLine($@"FieldArea.Base: 0x{FieldArea.Base.ToInt64():X}");
+            Console.WriteLine($@"LuaEventMan.Base: 0x{LuaEventMan.Base.ToInt64():X}");
+            Console.WriteLine($@"VirtualMemFlag.Base: 0x{VirtualMemFlag.Base.ToInt64():X}");
+            Console.WriteLine($@"DamageManager.Base: 0x{DamageManager.Base.ToInt64():X}");
+            Console.WriteLine($@"MenuMan.Base: 0x{MenuMan.Base.ToInt64():X}");
+            Console.WriteLine($@"TargetView.Base: 0x{TargetView.Base.ToInt64():X}");
+            Console.WriteLine($@"GameMan.Base: 0x{GameMan.Base.ToInt64():X}");
+            Console.WriteLine($@"WorldHitMan.Base: 0x{WorldHitMan.Base.ToInt64():X}");
+            Console.WriteLine($@"WorldChrManDbg.Base: 0x{WorldChrManDbg.Base.ToInt64():X}");
+            Console.WriteLine($@"GameDataMan.Base: 0x{GameDataMan.Base.ToInt64():X}");
+            Console.WriteLine($@"CsDlcImp.Base: 0x{CsDlcImp.Base.ToInt64():X}");
+            Console.WriteLine($@"MapItemManImpl.Base: 0x{MapItemManImpl.Base.ToInt64():X}");
+            Console.WriteLine($@"InputManager.Base: 0x{InputManager.Base.ToInt64():X}");
+            Console.WriteLine($@"CSEmkSystem.Base: 0x{CSEmkSystem.Base.ToInt64():X}");
 
-            Console.WriteLine($"Patches.NoLogo: 0x{Patches.DungeonWarp.ToInt64():X}");
-            Console.WriteLine($"Patches.NoRunesFromEnemies: 0x{Patches.NoRunesFromEnemies.ToInt64():X}");
-            Console.WriteLine($"Patches.NoRuneArcLoss: 0x{Patches.NoRuneArcLoss.ToInt64():X}");
-            Console.WriteLine($"Patches.NoRuneLossOnDeath: 0x{Patches.NoRuneLossOnDeath.ToInt64():X}");
-            Console.WriteLine($"Patches.DungeonWarp: 0x{Patches.DungeonWarp.ToInt64():X}");
-            Console.WriteLine($"Patches.OpenMap: 0x{Patches.OpenMap.ToInt64():X}");
-            Console.WriteLine($"Patches.CloseMap: 0x{Patches.CloseMap.ToInt64():X}");
+            Console.WriteLine($@"Patches.NoLogo: 0x{Patches.DungeonWarp.ToInt64():X}");
+            Console.WriteLine($@"Patches.NoRunesFromEnemies: 0x{Patches.NoRunesFromEnemies.ToInt64():X}");
+            Console.WriteLine($@"Patches.NoRuneArcLoss: 0x{Patches.NoRuneArcLoss.ToInt64():X}");
+            Console.WriteLine($@"Patches.NoRuneLossOnDeath: 0x{Patches.NoRuneLossOnDeath.ToInt64():X}");
+            Console.WriteLine($@"Patches.DungeonWarp: 0x{Patches.DungeonWarp.ToInt64():X}");
+            Console.WriteLine($@"Patches.OpenMap: 0x{Patches.OpenMap.ToInt64():X}");
+            Console.WriteLine($@"Patches.CloseMap: 0x{Patches.CloseMap.ToInt64():X}");
 
-            Console.WriteLine($"Hooks.UpdateCoords: 0x{Hooks.UpdateCoords:X}");
-            Console.WriteLine($"Hooks.InAirTimer: 0x{Hooks.InAirTimer:X}");
-            Console.WriteLine($"Hooks.NoClipKb: 0x{Hooks.NoClipKb:X}");
-            Console.WriteLine($"Hooks.NoClipTriggers: 0x{Hooks.NoClipTriggers:X}");
-            Console.WriteLine($"Hooks.AddSubGoal: 0x{Hooks.CreateGoalObj:X}");
-            Console.WriteLine($"Hooks.HasSpEffect: 0x{Hooks.HasSpEffect:X}");
-            Console.WriteLine($"Hooks.BlueTargetView: 0x{Hooks.BlueTargetView:X}");
-            Console.WriteLine($"Hooks.LockedTargetPtr: 0x{Hooks.LockedTargetPtr:X}");
-            Console.WriteLine($"Hooks.InfinitePoise: 0x{Hooks.InfinitePoise:X}");
-            Console.WriteLine($"Hooks.ShouldUpdateAi: 0x{Hooks.ShouldUpdateAi:X}");
-            Console.WriteLine($"Hooks.GetForceActIdx: 0x{Hooks.GetForceActIdx:X}");
-            Console.WriteLine($"Hooks.TargetNoStagger: 0x{Hooks.TargetNoStagger:X}");
-            Console.WriteLine($"Hooks.AttackInfo: 0x{Hooks.AttackInfo:X}");
-            Console.WriteLine($"Hooks.WarpCoordWrite: 0x{Hooks.WarpCoordWrite:X}");
-            Console.WriteLine($"Hooks.WarpAngleWrite: 0x{Hooks.WarpAngleWrite:X}");
+            Console.WriteLine($@"Hooks.UpdateCoords: 0x{Hooks.UpdateCoords:X}");
+            Console.WriteLine($@"Hooks.InAirTimer: 0x{Hooks.InAirTimer:X}");
+            Console.WriteLine($@"Hooks.NoClipKb: 0x{Hooks.NoClipKb:X}");
+            Console.WriteLine($@"Hooks.NoClipTriggers: 0x{Hooks.NoClipTriggers:X}");
+            Console.WriteLine($@"Hooks.AddSubGoal: 0x{Hooks.CreateGoalObj:X}");
+            Console.WriteLine($@"Hooks.HasSpEffect: 0x{Hooks.HasSpEffect:X}");
+            Console.WriteLine($@"Hooks.BlueTargetView: 0x{Hooks.BlueTargetView:X}");
+            Console.WriteLine($@"Hooks.LockedTargetPtr: 0x{Hooks.LockedTargetPtr:X}");
+            Console.WriteLine($@"Hooks.InfinitePoise: 0x{Hooks.InfinitePoise:X}");
+            Console.WriteLine($@"Hooks.ShouldUpdateAi: 0x{Hooks.ShouldUpdateAi:X}");
+            Console.WriteLine($@"Hooks.GetForceActIdx: 0x{Hooks.GetForceActIdx:X}");
+            Console.WriteLine($@"Hooks.TargetNoStagger: 0x{Hooks.TargetNoStagger:X}");
+            Console.WriteLine($@"Hooks.AttackInfo: 0x{Hooks.AttackInfo:X}");
+            Console.WriteLine($@"Hooks.WarpCoordWrite: 0x{Hooks.WarpCoordWrite:X}");
+            Console.WriteLine($@"Hooks.WarpAngleWrite: 0x{Hooks.WarpAngleWrite:X}");
 
-            Console.WriteLine($"Funcs.GraceWarp: 0x{Functions.GraceWarp:X}");
-            Console.WriteLine($"Funcs.SetEvent: 0x{Functions.SetEvent:X}");
-            Console.WriteLine($"Funcs.SetSpEffect: 0x{Functions.SetSpEffect:X}");
-            Console.WriteLine($"Funcs.GiveRunes: 0x{Functions.GiveRunes:X}");
-            Console.WriteLine($"Funcs.LookupByFieldInsHandle: 0x{Functions.LookupByFieldInsHandle:X}");
-            Console.WriteLine($"Funcs.WarpToBlock: 0x{Functions.WarpToBlock:X}");
-            Console.WriteLine($"Funcs.GetEvent: 0x{Functions.GetEvent:X}");
-            Console.WriteLine($"Funcs.GetPlayerItemQuantityById: 0x{Functions.GetPlayerItemQuantityById:X}");
-            Console.WriteLine($"Funcs.ItemSpawn: 0x{Functions.ItemSpawn:X}");
-            Console.WriteLine($"Funcs.MatrixVectorProduct: 0x{Functions.MatrixVectorProduct:X}");
-            Console.WriteLine($"Funcs.ChrInsByHandle: 0x{Functions.ChrInsByHandle:X}");
-            Console.WriteLine($"Funcs.FindAndRemoveSpEffect: 0x{Functions.FindAndRemoveSpEffect:X}");
+            Console.WriteLine($@"Funcs.GraceWarp: 0x{Functions.GraceWarp:X}");
+            Console.WriteLine($@"Funcs.SetEvent: 0x{Functions.SetEvent:X}");
+            Console.WriteLine($@"Funcs.SetSpEffect: 0x{Functions.SetSpEffect:X}");
+            Console.WriteLine($@"Funcs.GiveRunes: 0x{Functions.GiveRunes:X}");
+            Console.WriteLine($@"Funcs.LookupByFieldInsHandle: 0x{Functions.LookupByFieldInsHandle:X}");
+            Console.WriteLine($@"Funcs.WarpToBlock: 0x{Functions.WarpToBlock:X}");
+            Console.WriteLine($@"Funcs.GetEvent: 0x{Functions.GetEvent:X}");
+            Console.WriteLine($@"Funcs.GetPlayerItemQuantityById: 0x{Functions.GetPlayerItemQuantityById:X}");
+            Console.WriteLine($@"Funcs.ItemSpawn: 0x{Functions.ItemSpawn:X}");
+            Console.WriteLine($@"Funcs.MatrixVectorProduct: 0x{Functions.MatrixVectorProduct:X}");
+            Console.WriteLine($@"Funcs.ChrInsByHandle: 0x{Functions.ChrInsByHandle:X}");
+            Console.WriteLine($@"Funcs.FindAndRemoveSpEffect: 0x{Functions.FindAndRemoveSpEffect:X}");
+            Console.WriteLine($@"Funcs.EmevdSwitch: 0x{Functions.EmevdSwitch:X}");
+            Console.WriteLine($@"Funcs.EmkEventInsCtor: 0x{Functions.EmkEventInsCtor:X}");
 #endif
         }
 

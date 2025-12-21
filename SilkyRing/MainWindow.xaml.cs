@@ -62,11 +62,12 @@ namespace SilkyRing
             IEzStateService ezStateService = new EzStateService(_memoryService);
             IItemService itemService = new ItemService(_memoryService);
             ISpEffectService spEffectService = new SpEffectService(_memoryService);
+            IEmevdService emevdService = new EmevdService(_memoryService);
 
             _dlcService = new DlcService(_memoryService);
 
 
-            PlayerViewModel playerViewModel = new PlayerViewModel(playerService, _stateService, hotkeyManager, eventService, spEffectService);
+            PlayerViewModel playerViewModel = new PlayerViewModel(playerService, _stateService, hotkeyManager, eventService, spEffectService, emevdService);
             TravelViewModel travelViewModel = new TravelViewModel(travelService, eventService, _stateService, _dlcService);
             EnemyViewModel enemyViewModel = new EnemyViewModel(enemyService, _stateService, hotkeyManager);
             TargetViewModel targetViewModel = new TargetViewModel(targetService, _stateService, enemyService,
@@ -132,14 +133,14 @@ namespace SilkyRing
                     _aobScanner.Scan();
                     _hasScanned = true;
                     _stateService.Publish(State.Attached);
-                    Console.WriteLine($"Base: 0x{_memoryService.BaseAddress.ToInt64():X}");
+                    Console.WriteLine($@"Base: 0x{_memoryService.BaseAddress.ToInt64():X}");
                 }
 
 
                 if (!_hasAllocatedMemory)
                 {
                     _memoryService.AllocCodeCave();
-                    Console.WriteLine($"Code cave: 0x{CodeCaveOffsets.Base.ToInt64():X}");
+                    Console.WriteLine($@"Code cave: 0x{CodeCaveOffsets.Base.ToInt64():X}");
                     _hasAllocatedMemory = true;
                 }
 

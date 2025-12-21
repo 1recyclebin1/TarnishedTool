@@ -492,6 +492,26 @@ namespace SilkyRing.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to 48 89 e5                mov    rbp,rsp
+        ///48 81 ec 08 04 00 00    sub    rsp,0x408
+        ///48 8d 8d 50 fe ff ff    lea    rcx,[rbp-0x1b0]
+        ///48 8d 95 40 fe ff ff    lea    rdx,[rbp-0x1c0]
+        ///c7 02 00 00 00 00       mov    DWORD PTR [rdx],0x0
+        ///66 c7 42 04 ff ff       mov    WORD PTR [rdx+0x4],0xffff
+        ///c7 42 08 00 00 00 00    mov    DWORD PTR [rdx+0x8],0x0
+        ///4c 8d 85 30 fe ff ff    lea    r8,[rbp-0x1d0]
+        ///49 c7 00 00 00 00 00    mov    QWORD PTR [r8],0x0
+        ///49 c7 40 08 00 00 00    mov    QWORD PTR [r8+0x8],0x0
+        ///00
+        ///4c 8d 8d 20 [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string ExecuteEmevdCommand {
+            get {
+                return ResourceManager.GetString("ExecuteEmevdCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 48 89 e5                mov    rbp,rsp
         ///48 81 ec 98 05 00 00    sub    rsp,0x598
         ///48 8d 8d e0 fb ff ff    lea    rcx,[rbp-0x420]
         ///ba 00 00 00 00          mov    edx,0x0

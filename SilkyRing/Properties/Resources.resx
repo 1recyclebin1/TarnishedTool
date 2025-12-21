@@ -4317,4 +4317,50 @@ c3                      ret</value>
 0,40000DB6,Spark Aromatic,10,600
 0,40000DAC,Uplifting Aromatic,10,600</value>
   </data>
+  <data name="ExecuteEmevdCommand" xml:space="preserve">
+    <value>48 89 e5                mov    rbp,rsp
+48 81 ec 08 04 00 00    sub    rsp,0x408
+48 8d 8d 50 fe ff ff    lea    rcx,[rbp-0x1b0]
+48 8d 95 40 fe ff ff    lea    rdx,[rbp-0x1c0]
+c7 02 00 00 00 00       mov    DWORD PTR [rdx],0x0
+66 c7 42 04 ff ff       mov    WORD PTR [rdx+0x4],0xffff
+c7 42 08 00 00 00 00    mov    DWORD PTR [rdx+0x8],0x0
+4c 8d 85 30 fe ff ff    lea    r8,[rbp-0x1d0]
+49 c7 00 00 00 00 00    mov    QWORD PTR [r8],0x0
+49 c7 40 08 00 00 00    mov    QWORD PTR [r8+0x8],0x0
+00
+4c 8d 8d 20 fe ff ff    lea    r9,[rbp-0x1e0]
+49 c7 01 00 00 00 00    mov    QWORD PTR [r9],0x0
+c7 44 24 28 00 00 00    mov    DWORD PTR [rsp+0x28],0x0
+00
+c7 44 24 30 ff ff ff    mov    DWORD PTR [rsp+0x30],0xffffffff
+ff
+c7 44 24 38 ff ff ff    mov    DWORD PTR [rsp+0x38],0xffffffff
+ff
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00
+ff d0                   call   rax
+48 8d 8d f0 fd ff ff    lea    rcx,[rbp-0x210]
+c7 01 fe fe fe fe       mov    DWORD PTR [rcx],0xfefefefe
+c7 41 04 fe fe fe fe    mov    DWORD PTR [rcx+0x4],0xfefefefe
+4c 8d 85 50 fe ff ff    lea    r8,[rbp-0x1b0]
+49 89 88 d0 00 00 00    mov    QWORD PTR [r8+0xd0],rcx
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00
+48 8d 08                lea    rcx,[rax]
+49 89 88 d8 00 00 00    mov    QWORD PTR [r8+0xd8],rcx
+48 a1 00 00 00 00 00    movabs rax,ds:0x0
+00 00 00
+48 8b 48 28             mov    rcx,QWORD PTR [rax+0x28]
+b8 0a d7 a3 3c          mov    eax,0x3ca3d70a
+66 0f 6e c8             movd   xmm1,eax
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00
+ff d0                   call   rax
+48 8d 8d 50 fe ff ff    lea    rcx,[rbp-0x1b0]
+48 8b 01                mov    rax,QWORD PTR [rcx]
+ff 10                   call   QWORD PTR [rax]
+48 81 c4 08 04 00 00    add    rsp,0x408
+c3                      ret</value>
+  </data>
 </root>

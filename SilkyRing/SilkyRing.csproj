@@ -98,11 +98,13 @@
         <Compile Include="Enums\Affinity.cs" />
         <Compile Include="Enums\HotkeyActions.cs" />
         <Compile Include="Enums\State.cs" />
+        <Compile Include="GameIds\Emevd.cs" />
         <Compile Include="GameIds\Event.cs" />
         <Compile Include="GameIds\EzState.cs" />
         <Compile Include="GameIds\SpEffect.cs" />
         <Compile Include="Interfaces\IAttackInfoService.cs" />
         <Compile Include="Interfaces\IDlcService.cs" />
+        <Compile Include="Interfaces\IEmevdService.cs" />
         <Compile Include="Interfaces\IEnemyService.cs" />
         <Compile Include="Interfaces\IEventService.cs" />
         <Compile Include="Interfaces\IEzStateService.cs" />
@@ -134,6 +136,7 @@
         <Compile Include="Models\Weapon.cs" />
         <Compile Include="Services\AttackInfoService.cs" />
         <Compile Include="Services\DlcService.cs" />
+        <Compile Include="Services\EmevdService.cs" />
         <Compile Include="Services\EnemyService.cs" />
         <Compile Include="Services\EzStateService.cs" />
         <Compile Include="Services\ItemService.cs" />

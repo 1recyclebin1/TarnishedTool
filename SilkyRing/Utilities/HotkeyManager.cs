@@ -104,7 +104,7 @@ public class HotkeyManager
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error saving hotkeys: {ex.Message}");
+            Console.WriteLine($@"Error saving hotkeys: {ex.Message}");
         }
     }
 
@@ -135,7 +135,7 @@ public class HotkeyManager
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading hotkeys: {ex.Message}");
+            Console.WriteLine($@"Error loading hotkeys: {ex.Message}");
         }
     }
 

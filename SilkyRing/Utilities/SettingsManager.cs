@@ -52,7 +52,7 @@ public class SettingsManager
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error saving settings: {ex.Message}");
+            Console.WriteLine($@"Error saving settings: {ex.Message}");
         }
     }
 

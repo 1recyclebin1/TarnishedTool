@@ -177,15 +177,12 @@ namespace SilkyRing.Memory
         public static class FieldArea
         {
             public static IntPtr Base;
-
-            // +0xA0 = Current Dungeon / Boss flag
         }
         
         public static class InputManager
         {
             public static IntPtr Base;
-
-            // +0xA0 = Current Dungeon / Boss flag
+            
         }
 
         public static class LuaEventMan
@@ -194,6 +191,11 @@ namespace SilkyRing.Memory
         }
 
         public static class VirtualMemFlag
+        {
+            public static IntPtr Base;
+        }
+        
+        public static class CSEmkSystem
         {
             public static IntPtr Base;
         }
@@ -347,6 +349,8 @@ namespace SilkyRing.Memory
             public static long MatrixVectorProduct;
             public static long ChrInsByHandle;
             public static long FindAndRemoveSpEffect;
+            public static long EmevdSwitch;
+            public static long EmkEventInsCtor;
         }
 
         public static class Patches

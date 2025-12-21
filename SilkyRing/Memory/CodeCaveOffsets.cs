@@ -57,6 +57,8 @@ namespace SilkyRing.Memory
         public const int ItemSpawnStruct = 0x1250;
         public const int ItemSpawnCode = 0x1350;
 
+        public const int EmevdArgs = 0x1600;
+
         
         //TODO 
         public const int Rykard = 0x300;

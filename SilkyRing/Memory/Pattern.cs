@@ -1,24 +1,19 @@
 ﻿namespace SilkyRing.Memory
 {
-    public class Pattern
+    public class Pattern(
+        byte[] bytes,
+        string mask,
+        int instructionOffset,
+        AddressingMode addressingMode,
+        int offsetLocation = 0,
+        int instructionLength = 0)
     {
-        public byte[] Bytes { get; }
-        public string Mask { get; }
-        public int InstructionOffset { get; }
-        public AddressingMode AddressingMode { get; }
-        public int OffsetLocation { get; }
-        public int InstructionLength { get; }
-
-        public Pattern(byte[] bytes, string mask, int instructionOffset, AddressingMode addressingMode,
-            int offsetLocation = 0, int instructionLength = 0)
-        {
-            Bytes = bytes;
-            Mask = mask;
-            InstructionOffset = instructionOffset;
-            AddressingMode = addressingMode;
-            OffsetLocation = offsetLocation;
-            InstructionLength = instructionLength;
-        }
+        public byte[] Bytes { get; } = bytes;
+        public string Mask { get; } = mask;
+        public int InstructionOffset { get; } = instructionOffset;
+        public AddressingMode AddressingMode { get; } = addressingMode;
+        public int OffsetLocation { get; } = offsetLocation;
+        public int InstructionLength { get; } = instructionLength;
 
         public static readonly Pattern WorldChrMan = new Pattern(
             new byte[] { 0x48, 0x39, 0x2D, 0x42 },
@@ -370,6 +365,33 @@
             AddressingMode.Relative,
             1,
             5
+        );
+
+        public static readonly Pattern EmevdSwitch = new Pattern(
+            new byte[] { 0x8B, 0x8B, 0xC0, 0x00, 0x00, 0x00, 0x89, 0x4B },
+            "xxxxxxxx",
+            -0x1E,
+            AddressingMode.Relative,
+            1,
+            5
+        );
+
+        public static readonly Pattern EmkEventInsCtor = new Pattern(
+            new byte[] { 0x75, 0x0C, 0x0F, 0xB7, 0x47 },
+            "xxxxx",
+            -0x2E,
+            AddressingMode.Relative,
+            1,
+            5
+        );
+
+        public static readonly Pattern CSEmkSystem = new Pattern(
+            new byte[] { 0x0F, 0x11, 0x80, 0x8C },
+            "xxxx",
+            0x7,
+            AddressingMode.Relative,
+            3,
+            7
         );
 
         //Patches

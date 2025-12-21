@@ -36,6 +36,7 @@ namespace SilkyRing.ViewModels
         private readonly HotkeyManager _hotkeyManager;
         private readonly IEventService _eventService;
         private readonly ISpEffectService _spEffectService;
+        private readonly IEmevdService _emevdService;
 
         private readonly SpEffectViewModel _spEffectViewModel = new();
         private SpEffectsWindow _spEffectsWindow;
@@ -43,12 +44,13 @@ namespace SilkyRing.ViewModels
         public static readonly long[] NewGameEventIds = [50, 51, 52, 53, 54, 55, 56, 57];
 
         public PlayerViewModel(IPlayerService playerService, IStateService stateService, HotkeyManager hotkeyManager,
-            IEventService eventService, ISpEffectService spEffectService)
+            IEventService eventService, ISpEffectService spEffectService, IEmevdService emevdService)
         {
             _playerService = playerService;
             _hotkeyManager = hotkeyManager;
             _eventService = eventService;
             _spEffectService = spEffectService;
+            _emevdService = emevdService;
 
             RegisterHotkeys();
 
@@ -65,6 +67,7 @@ namespace SilkyRing.ViewModels
 
             GiveRunesCommand = new DelegateCommand(GiveRunes);
             ApplyRuneArcCommand = new DelegateCommand(ApplyRuneArc);
+            RestCommand = new DelegateCommand(Rest);
 
             ApplySpEffectCommand = new DelegateCommand(ApplySpEffect);
             RemoveSpEffectCommand = new DelegateCommand(RemoveSpEffect);
@@ -87,6 +90,7 @@ namespace SilkyRing.ViewModels
 
         public ICommand GiveRunesCommand { get; set; }
         public ICommand ApplyRuneArcCommand { get; set; }
+        public ICommand RestCommand { get; set; }
 
         public ICommand ApplySpEffectCommand { get; set; }
         public ICommand RemoveSpEffectCommand { get; set; }
@@ -755,6 +759,8 @@ namespace SilkyRing.ViewModels
         {
             return Math.Abs(a - b) < Epsilon;
         }
+
+        private void Rest() => _emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.Rest);
 
         private void ApplySpEffect()
         {

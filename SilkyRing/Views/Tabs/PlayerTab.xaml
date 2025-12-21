@@ -428,7 +428,7 @@
                     <Button Content="Rest"
                             Width="150"
                             Margin="0, 15, 0,0"
-
+                            Command="{Binding RestCommand}"
                             IsEnabled="{Binding AreOptionsEnabled}">
                     </Button>
                 </StackPanel>

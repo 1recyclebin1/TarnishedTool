@@ -94,42 +94,7 @@ namespace SilkyRing.Services
             });
             memoryService.WriteBytes(updateCoordsCode, codeBytes);
         }
-
-        public void ToggleTargetingView(bool isTargetingViewEnabled) =>
-            memoryService.WriteUInt8(TargetView.Base, isTargetingViewEnabled ? 1 : 0);
-
-        public void ToggleReducedTargetingView(bool isTargetingViewEnabled)
-        {
-            var code = CodeCaveOffsets.Base + (int)CodeCaveOffsets.TargetView.BlueTargetView;
-            if (isTargetingViewEnabled)
-            {
-                var maxDist = CodeCaveOffsets.Base + (int)CodeCaveOffsets.TargetView.MaxDist;
-                memoryService.WriteFloat(maxDist, 100.0f * 100.0f);
-                var codeBytes = AsmLoader.GetAsmBytes("ReduceTargetView");
-                var bytes = BitConverter.GetBytes(WorldChrMan.Base.ToInt64());
-                var hook = Hooks.BlueTargetView;
-                Array.Copy(bytes, 0, codeBytes, 0x36 + 2, 8);
-                AsmHelper.WriteRelativeOffsets(codeBytes, new[]
-                {
-                    (code.ToInt64() + 0x86, maxDist.ToInt64(), 8, 0x86 + 4),
-                    (code.ToInt64() + 0xC4, hook + 0x5, 5, 0xC4 + 1),
-                    (code.ToInt64() + 0xCA, hook + 0x141, 5, 0xCA + 1),
-                });
-                memoryService.WriteBytes(code, codeBytes);
-                hookManager.InstallHook(code.ToInt64(), hook, new byte[]
-                    { 0x48, 0x8D, 0x54, 0x24, 0x40 });
-            }
-            else
-            {
-                hookManager.UninstallHook(code.ToInt64());
-            }
-        }
-
-        public void SetTargetViewMaxDist(float reducedTargetViewDistance)
-        {
-            var maxDist = CodeCaveOffsets.Base + (int)CodeCaveOffsets.TargetView.MaxDist;
-            memoryService.WriteFloat(maxDist, reducedTargetViewDistance * reducedTargetViewDistance);
-        }
+        
 
         public void ToggleDrawHitbox(bool isDrawHitboxEnabled) =>
             memoryService.WriteUInt8((IntPtr)memoryService.ReadInt64(DamageManager.Base) + DamageManager.HitboxView,

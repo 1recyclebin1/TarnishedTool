@@ -125,6 +125,48 @@ public class EnemyViewModel : BaseViewModel
             _enemyService.ToggleDisableAi(_isDisableAiEnabled);
         }
     }
+
+    private bool _isTargetingViewEnabled;
+
+    public bool IsTargetingViewEnabled
+    {
+        get => _isTargetingViewEnabled;
+        set
+        {
+            if (!SetProperty(ref _isTargetingViewEnabled, value)) return;
+            _enemyService.ToggleTargetingView(_isTargetingViewEnabled);
+            if (!_isTargetingViewEnabled)
+            {
+                IsDrawReducedTargetViewEnabled = false;
+            }
+        }
+    }
+
+    private bool _isDrawReducedTargetViewEnabled;
+
+    public bool IsDrawReducedTargetViewEnabled
+    {
+        get => _isDrawReducedTargetViewEnabled;
+        set
+        {
+            if (!SetProperty(ref _isDrawReducedTargetViewEnabled, value)) return;
+            _enemyService.ToggleReducedTargetingView(_isDrawReducedTargetViewEnabled);
+            _enemyService.SetTargetViewMaxDist(ReducedTargetViewDistance);
+        }
+    }
+
+    private float _reducedTargetViewDistance = 100;
+
+    public float ReducedTargetViewDistance
+    {
+        get => _reducedTargetViewDistance;
+        set
+        {
+            if (!SetProperty(ref _reducedTargetViewDistance, value)) return;
+            if (!IsDrawReducedTargetViewEnabled) return;
+            _enemyService.SetTargetViewMaxDist(_reducedTargetViewDistance);
+        }
+    }
     
     private bool _isRykardNoMegaEnabled;
 
@@ -177,6 +219,11 @@ public class EnemyViewModel : BaseViewModel
         if (IsNoMoveEnabled) _enemyService.ToggleNoMove(true);
         if (IsDisableAiEnabled) _enemyService.ToggleDisableAi(true);
         if (IsRykardNoMegaEnabled) _enemyService.ToggleRykardMega(true);
+        if (IsTargetingViewEnabled) _enemyService.ToggleTargetingView(true);
+        if (IsDrawReducedTargetViewEnabled && IsTargetingViewEnabled)
+            _enemyService.ToggleReducedTargetingView(true);
+        if (IsDrawReducedTargetViewEnabled && IsTargetingViewEnabled)
+            _enemyService.SetTargetViewMaxDist(ReducedTargetViewDistance);
     }
     
     private void RegisterHotkeys()

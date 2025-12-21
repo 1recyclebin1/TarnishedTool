@@ -1,12 +1,6 @@
-﻿using System;
-using System.Windows.Input;
-using SilkyRing.Core;
-using SilkyRing.Enums;
-using SilkyRing.GameIds;
+﻿using SilkyRing.Enums;
 using SilkyRing.Interfaces;
-using SilkyRing.Services;
 using SilkyRing.Utilities;
-using static SilkyRing.Memory.Offsets;
 
 namespace SilkyRing.ViewModels
 {
@@ -14,7 +8,7 @@ namespace SilkyRing.ViewModels
     {
         private const float DefaultNoclipMultiplier = 1f;
         private const uint BaseSpeed = 0x3e4ccccd;
-        
+
         private const float DefaultGameSpeed = 1f;
         private const float Epsilon = 0.0001f;
 
@@ -128,10 +122,6 @@ namespace SilkyRing.ViewModels
                 _utilityService.ToggleDungeonWarp(_isDungeonWarpEnabled);
             }
         }
-        
-        
-        
-        
 
         #endregion
 
@@ -173,8 +163,6 @@ namespace SilkyRing.ViewModels
         }
 
         #endregion
-        
-
 
         // public bool IsDrawHitboxEnabled
         // {
@@ -294,47 +282,6 @@ namespace SilkyRing.ViewModels
         // }
         //
 
-        // private bool _isTargetingViewEnabled;
-        //
-        // public bool IsTargetingViewEnabled
-        // {
-        //     get => _isTargetingViewEnabled;
-        //     set
-        //     {
-        //         if (!SetProperty(ref _isTargetingViewEnabled, value)) return;
-        //         _utilityService.ToggleTargetingView(_isTargetingViewEnabled);
-        //         if (!_isTargetingViewEnabled)
-        //         {
-        //             IsDrawReducedTargetViewEnabled = false;
-        //         }
-        //     }
-        // }
-        //
-        // private bool _isDrawReducedTargetViewEnabled;
-        //
-        // public bool IsDrawReducedTargetViewEnabled
-        // {
-        //     get => _isDrawReducedTargetViewEnabled;
-        //     set
-        //     {
-        //         if (!SetProperty(ref _isDrawReducedTargetViewEnabled, value)) return;
-        //         _utilityService.ToggleReducedTargetingView(_isDrawReducedTargetViewEnabled);
-        //         _utilityService.SetTargetViewMaxDist(ReducedTargetViewDistance);
-        //     }
-        // }
-        //
-        // private float _reducedTargetViewDistance = 100;
-        //
-        // public float ReducedTargetViewDistance
-        // {
-        //     get => _reducedTargetViewDistance;
-        //     set
-        //     {
-        //         if (!SetProperty(ref _reducedTargetViewDistance, value)) return;
-        //         if (!IsDrawReducedTargetViewEnabled) return;
-        //         _utilityService.SetTargetViewMaxDist(_reducedTargetViewDistance);
-        //     }
-        // }
         //
         // //
         //
@@ -416,11 +363,8 @@ namespace SilkyRing.ViewModels
             //
             // if (IsDrawHitboxEnabled) _utilityService.ToggleDrawHitbox(true);
             //
-            // if (IsTargetingViewEnabled) _utilityService.ToggleTargetingView(true);
-            // if (IsDrawReducedTargetViewEnabled && IsTargetingViewEnabled)
-            //     _utilityService.ToggleReducedTargetingView(true);
-            // if (IsDrawReducedTargetViewEnabled && IsTargetingViewEnabled)
-            //     _utilityService.SetTargetViewMaxDist(ReducedTargetViewDistance);
+
+
             //
             // if (IsDrawLowHitEnabled) _utilityService.ToggleWorldHitDraw(WorldHitMan.Offsets.LowHit, true);
             // if (IsDrawHighHitEnabled) _utilityService.ToggleWorldHitDraw(WorldHitMan.Offsets.HighHit, true);

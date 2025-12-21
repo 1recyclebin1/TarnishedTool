@@ -11,6 +11,8 @@ public interface IEnemyService
     void ToggleNoMove(bool isEnabled);
     void ToggleDisableAi(bool isEnabled);
     void ToggleTargetingView(bool isEnabled);
+    void ToggleReducedTargetingView(bool isTargetingViewEnabled);
+    void SetTargetViewMaxDist(float reducedTargetViewDistance);
     void ToggleRykardMega(bool isRykardNoMegaEnabled);
     void ForceActSequence(int[] actSequence, int npcThinkParamId);
     void UnhookForceAct();

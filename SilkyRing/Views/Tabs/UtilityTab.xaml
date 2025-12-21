@@ -6,7 +6,7 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:converters="clr-namespace:SilkyRing.Converters"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="500">
+             d:DesignHeight="720" d:DesignWidth="600">
 
     <UserControl.Resources>
         <converters:BooleanAndConverter x:Key="BooleanAndConverter" />
@@ -50,7 +50,7 @@
                         <Button Content="Force Save"
                                 IsEnabled="{Binding AreOptionsEnabled}"
                                 Padding="5,3"
-                  
+                                Command="{Binding SaveCommand}"
                                 Margin="0,0,20,0" />
                     </StackPanel>
 
@@ -65,15 +65,26 @@
                                            FormatString="F2"
                                            BorderBrush="#3F3F46" />
                         <TextBlock Text="Game Speed" VerticalAlignment="Center" Margin="10,0,30,0" />
-                        <CheckBox Content="Show Mad Warrior Spawn"
-                                  IsChecked="{Binding IsMadWarriorSpawnEnabled}"
+                        <CheckBox Content="Remember Speed"
+                                  IsChecked="{Binding IsRememberSpeedEnabled}"
                                   VerticalAlignment="Center"
                                   Margin="0,0,10,0" />
-                        <TextBlock Text="{Binding MadWarriorStatusText}"
-                                   Foreground="{Binding MadWarriorStatusColor}"
-                                   VerticalAlignment="Center"
-                                   FontWeight="Bold"
-                                   Visibility="{Binding IsMadWarriorSpawnEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        <Border
+                            Background="#3498db"
+                            CornerRadius="10"
+                            Width="12"
+                            Height="12"
+                            Margin="5,0,0,0"
+                            VerticalAlignment="Center"
+                            ToolTip="Remember toggled speed across app restarts"
+                            ToolTipService.InitialShowDelay='100'>
+                            <TextBlock Text="i"
+                                       Foreground="White"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontWeight="Bold"
+                                       FontSize="10" />
+                        </Border>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>

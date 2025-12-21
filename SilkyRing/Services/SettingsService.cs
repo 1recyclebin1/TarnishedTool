@@ -11,7 +11,4 @@ public class SettingsService(MemoryService memoryService, HookManager hookManage
 {
     public void Quitout() =>
         memoryService.WriteUInt8((IntPtr)memoryService.ReadInt64(GameMan.Base) + GameMan.ShouldQuitout, 1);
-
-    public void ForceSave() =>
-        memoryService.WriteUInt8((IntPtr)memoryService.ReadInt64(GameMan.Base) + GameMan.ForceSave, 1);
 }

@@ -99,7 +99,10 @@ public class SettingsViewModel : BaseViewModel
         [
             new("Quitout", HotkeyActions.Quitout),
             new("Force Save", HotkeyActions.ForceSave),
-            new("Noclip", HotkeyActions.Noclip)
+            new("Noclip", HotkeyActions.Noclip),
+            new("Increase Game Speed", HotkeyActions.IncreaseGameSpeed),
+            new("Decrease Game Speed", HotkeyActions.DecreaseGameSpeed),
+            new("Toggle Game Speed", HotkeyActions.ToggleGameSpeed),
         ];
 
     
@@ -334,7 +337,6 @@ public class SettingsViewModel : BaseViewModel
     private void RegisterHotkeys()
     {
         _hotkeyManager.RegisterAction(HotkeyActions.Quitout, () => _settingsService.Quitout());
-        _hotkeyManager.RegisterAction(HotkeyActions.ForceSave, () => _settingsService.ForceSave());
     }
 
     private void ClearHotkeys()

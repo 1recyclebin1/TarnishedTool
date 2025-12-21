@@ -9,6 +9,9 @@ namespace SilkyRing.Services
     public class UtilityService(MemoryService memoryService, HookManager hookManager, IPlayerService playerService)
         : IUtilityService
     {
+        public void ForceSave() =>
+            memoryService.WriteUInt8((IntPtr)memoryService.ReadInt64(GameMan.Base) + GameMan.ForceSave, 1);
+        
         public void ToggleCombatMap(bool isEnabled)
         {
             memoryService.WriteUInt8(Patches.OpenMap, isEnabled ? 0xEB : 0x74);
@@ -46,6 +49,7 @@ namespace SilkyRing.Services
                 playerService.EnableGravity();
             }
         }
+
         
         private void WriteKbCode(IntPtr kbCode)
         {
@@ -94,8 +98,14 @@ namespace SilkyRing.Services
             });
             memoryService.WriteBytes(updateCoordsCode, codeBytes);
         }
-        
 
+        public float GetSpeed() =>
+            memoryService.ReadFloat((IntPtr)memoryService.ReadInt64(CSFlipperImp.Base) + CSFlipperImp.GameSpeed);
+
+        public void SetSpeed(float speed) =>
+            memoryService.WriteFloat((IntPtr)memoryService.ReadInt64(CSFlipperImp.Base) + CSFlipperImp.GameSpeed, speed);
+        
+        
         public void ToggleDrawHitbox(bool isDrawHitboxEnabled) =>
             memoryService.WriteUInt8((IntPtr)memoryService.ReadInt64(DamageManager.Base) + DamageManager.HitboxView,
                 isDrawHitboxEnabled ? 1 : 0);

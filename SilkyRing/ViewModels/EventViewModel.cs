@@ -16,6 +16,7 @@ namespace SilkyRing.ViewModels
         private readonly IItemService _itemService;
         private readonly IDlcService _dlcService;
         private readonly IEzStateService _ezStateService;
+        private readonly IEmevdService _emevdService;
         public const int WhetstoneBladeId = 0x4000218E;
         
         private List<BossRevive> _bossReviveList;
@@ -24,12 +25,13 @@ namespace SilkyRing.ViewModels
         private List<long> _dlcMaps;
 
         public EventViewModel(IEventService eventService, IStateService stateService, IItemService itemService,
-            IDlcService dlcService, IEzStateService ezStateService)
+            IDlcService dlcService, IEzStateService ezStateService, IEmevdService emevdService)
         {
             _eventService = eventService;
             _itemService = itemService;
             _dlcService = dlcService;
             _ezStateService = ezStateService;
+            _emevdService = emevdService;
 
 
             stateService.Subscribe(State.Loaded, OnGameLoaded);

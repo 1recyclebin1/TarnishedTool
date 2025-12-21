@@ -43,6 +43,8 @@ namespace SilkyRing.Memory
             InputManager.Base = FindAddressByPattern(Pattern.InputManager);
             CSEmkSystem.Base = FindAddressByPattern(Pattern.CSEmkSystem);
             WorldAreaTimeImpl.Base = FindAddressByPattern(Pattern.WorldAreaTimeImpl);
+            GroupMask.Base = FindAddressByPattern(Pattern.GroupMask);
+            CSFlipperImp.Base = FindAddressByPattern(Pattern.CSFlipperImp);
 
 
             TryPatternWithFallback("DungeonWarp", Pattern.DungeonWarp, addr => Patches.DungeonWarp = addr, saved);
@@ -126,6 +128,8 @@ namespace SilkyRing.Memory
             Console.WriteLine($@"InputManager.Base: 0x{InputManager.Base.ToInt64():X}");
             Console.WriteLine($@"CSEmkSystem.Base: 0x{CSEmkSystem.Base.ToInt64():X}");
             Console.WriteLine($@"WorldAreaTimeImpl.Base: 0x{WorldAreaTimeImpl.Base.ToInt64():X}");
+            Console.WriteLine($@"GroupMask.Base: 0x{GroupMask.Base.ToInt64():X}");
+            Console.WriteLine($@"CSFlipperImp.Base: 0x{CSFlipperImp.Base.ToInt64():X}");
 
             Console.WriteLine($@"Patches.NoLogo: 0x{Patches.DungeonWarp.ToInt64():X}");
             Console.WriteLine($@"Patches.NoRunesFromEnemies: 0x{Patches.NoRunesFromEnemies.ToInt64():X}");

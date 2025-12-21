@@ -23,6 +23,8 @@ public class SettingsManager
     public bool EnableHotkeys { get; set; }
     public bool RememberPlayerSpeed { get; set; }
     public float PlayerSpeed { get; set; }
+    public bool RememberGameSpeed { get; set; }
+    public float GameSpeed { get; set; }
 
     private static string SettingsPath => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -50,6 +52,8 @@ public class SettingsManager
                 $"EnableHotkeys={EnableHotkeys}",
                 $"RememberPlayerSpeed={RememberPlayerSpeed}",
                 $"PlayerSpeed={PlayerSpeed}",
+                $"RememberGameSpeed={RememberGameSpeed}",
+                $"GameSpeed={GameSpeed}",
             };
 
             File.WriteAllLines(SettingsPath, lines);
@@ -126,6 +130,14 @@ public class SettingsManager
                             case "PlayerSpeed":
                                 float.TryParse(value, out float ps);
                                 settings.PlayerSpeed = ps;
+                                break;
+                            case "RememberGameSpeed":
+                                bool.TryParse(value, out bool rgs);
+                                settings.RememberGameSpeed = rgs;
+                                break;
+                            case "GameSpeed":
+                                float.TryParse(value, out float gs);
+                                settings.GameSpeed = gs;
                                 break;
                         }
                     }

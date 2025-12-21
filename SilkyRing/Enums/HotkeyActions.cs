@@ -66,6 +66,11 @@ public enum HotkeyActions
     Quitout,
     ForceSave,
     Noclip,
+    IncreaseNoClipSpeed,
+    DecreaseNoClipSpeed,
+    IncreaseGameSpeed,
+    DecreaseGameSpeed,
+    ToggleGameSpeed,
     
     
     

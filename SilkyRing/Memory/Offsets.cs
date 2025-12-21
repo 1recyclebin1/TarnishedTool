@@ -199,6 +199,12 @@ namespace SilkyRing.Memory
         {
             public static IntPtr Base;
         }
+        
+        public static class GroupMask
+        {
+            public static IntPtr Base;
+        }
+        
 
         public static class DamageManager
         {
@@ -282,6 +288,12 @@ namespace SilkyRing.Memory
         public static class WorldAreaTimeImpl
         {
             public static IntPtr Base;
+        }
+        
+        public static class CSFlipperImp
+        {
+            public static IntPtr Base;
+            public const int GameSpeed = 0x2CC;
         }
         
         public static class WorldChrManDbg

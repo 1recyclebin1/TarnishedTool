@@ -1,4 +1,7 @@
-﻿using SilkyRing.Enums;
+﻿using System;
+using System.Windows.Input;
+using SilkyRing.Core;
+using SilkyRing.Enums;
 using SilkyRing.Interfaces;
 using SilkyRing.Utilities;
 
@@ -9,6 +12,7 @@ namespace SilkyRing.ViewModels
         private const float DefaultNoclipMultiplier = 1f;
         private const uint BaseSpeed = 0x3e4ccccd;
 
+        private float _desiredGameSpeed = -1f;
         private const float DefaultGameSpeed = 1f;
         private const float Epsilon = 0.0001f;
 
@@ -35,11 +39,23 @@ namespace SilkyRing.ViewModels
             stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);
             stateService.Subscribe(State.FirstLoaded, OnGameFirstLoaded);
 
+            SaveCommand = new DelegateCommand(Save);
+
 
             RegisterHotkeys();
+            ApplyPrefs();
+        }
+
+        private void ApplyPrefs()
+        {
+            _isRememberSpeedEnabled = SettingsManager.Default.RememberGameSpeed;
+            OnPropertyChanged(nameof(IsRememberSpeedEnabled));
+            if (_isRememberSpeedEnabled) _desiredGameSpeed = SettingsManager.Default.GameSpeed;
         }
 
         #region Commands
+        
+        public ICommand SaveCommand { get; set; }
 
         #endregion
 
@@ -122,7 +138,58 @@ namespace SilkyRing.ViewModels
                 _utilityService.ToggleDungeonWarp(_isDungeonWarpEnabled);
             }
         }
+        
+        private float _gameSpeed;
 
+        public float GameSpeed
+        {
+            get => _gameSpeed;
+            set
+            {
+                if (SetProperty(ref _gameSpeed, value))
+                {
+                    _utilityService.SetSpeed(value);
+                    if (IsRememberSpeedEnabled && Math.Abs(value - DefaultGameSpeed) > Epsilon)
+                    {
+                        SettingsManager.Default.GameSpeed = value;
+                    }
+                }
+            }
+        }
+        
+        private bool _isRememberSpeedEnabled;
+        
+        public bool IsRememberSpeedEnabled
+        {
+            get => _isRememberSpeedEnabled;
+            set
+            {
+                if (SetProperty(ref _isRememberSpeedEnabled, value))
+                {
+                    if (_isRememberSpeedEnabled)
+                    {
+                        SettingsManager.Default.RememberGameSpeed = _isRememberSpeedEnabled;
+
+                        if (Math.Abs(GameSpeed - DefaultGameSpeed) > Epsilon)
+                        {
+                            SettingsManager.Default.GameSpeed = GameSpeed;
+                        }
+                    }
+                    else
+                    {
+                        SettingsManager.Default.GameSpeed = DefaultGameSpeed;
+                        SettingsManager.Default.RememberGameSpeed = _isRememberSpeedEnabled;
+                    }
+                }
+            }
+        }
+
+        #endregion
+        
+        #region Public Methods
+        
+        public void SetSpeed(float value) => GameSpeed = value;
+        
         #endregion
 
         #region Private Methods
@@ -130,6 +197,7 @@ namespace SilkyRing.ViewModels
         private void OnGameLoaded()
         {
             AreOptionsEnabled = true;
+            GameSpeed = _utilityService.GetSpeed();
         }
 
         private void OnGameNotLoaded()
@@ -157,12 +225,38 @@ namespace SilkyRing.ViewModels
             //     if (IsNoClipEnabled)
             //         NoClipSpeed = Math.Max(0.05f, NoClipSpeed - 0.50f);
             // });
-            // _hotkeyManager.RegisterAction("ToggleGameSpeed", ToggleSpeed);
-            // _hotkeyManager.RegisterAction("IncreaseGameSpeed", () => SetSpeed(Math.Min(10, GameSpeed + 0.50f)));
-            // _hotkeyManager.RegisterAction("DecreaseGameSpeed", () => SetSpeed(Math.Max(0, GameSpeed - 0.50f)));
+            
+            _hotkeyManager.RegisterAction(HotkeyActions.ForceSave, () => _utilityService.ForceSave());
+            _hotkeyManager.RegisterAction(HotkeyActions.ToggleGameSpeed, ToggleSpeed);
+            _hotkeyManager.RegisterAction(HotkeyActions.IncreaseGameSpeed, () => SetSpeed(Math.Min(10, GameSpeed + 0.50f)));
+            _hotkeyManager.RegisterAction(HotkeyActions.DecreaseGameSpeed, () => SetSpeed(Math.Max(0.5f, GameSpeed - 0.50f)));
+        }
+        
+        private void Save() => _utilityService.ForceSave();
+        
+        private void ToggleSpeed()
+        {
+            if (!AreOptionsEnabled) return;
+
+            if (!IsApproximately(GameSpeed, DefaultGameSpeed))
+            {
+                _desiredGameSpeed = GameSpeed;
+                SetSpeed(DefaultGameSpeed);
+            }
+            else if (_desiredGameSpeed >= 0)
+            {
+                SetSpeed(_desiredGameSpeed);
+            }
+        }
+        
+        private bool IsApproximately(float a, float b)
+        {
+            return Math.Abs(a - b) < Epsilon;
         }
 
         #endregion
+        
+        
 
         // public bool IsDrawHitboxEnabled
         // {
@@ -207,20 +301,8 @@ namespace SilkyRing.ViewModels
         //     }
         // }
         //
-        // public bool IsDrawEventEnabled
-        // {
-        //     get => _isDrawEventEnabled;
-        //     set
-        //     {
-        //         if (!SetProperty(ref _isDrawEventEnabled, value)) return;
-        //         IsDrawEventGeneralEnabled = _isDrawEventEnabled;
-        //         IsDrawEventSpawnEnabled = _isDrawEventEnabled;
-        //         IsDrawEventInvasionEnabled = _isDrawEventEnabled;
-        //         IsDrawEventLeashEnabled = _isDrawEventEnabled;
-        //         if (!_isDrawEventEnabled) IsDrawEventOtherEnabled = false;
-        //     }
-        // }
-        //
+
+        
         // public bool IsDrawEventGeneralEnabled
         // {
         //     get => _isDrawEventGeneralEnabled;
@@ -231,46 +313,7 @@ namespace SilkyRing.ViewModels
         //     }
         // }
         //
-        // public bool IsDrawEventSpawnEnabled
-        // {
-        //     get => _isDrawEventSpawnEnabled;
-        //     set
-        //     {
-        //         if (!SetProperty(ref _isDrawEventSpawnEnabled, value)) return;
-        //         _utilityService.ToggleDrawEvent(DrawType.EventSpawn, _isDrawEventSpawnEnabled);
-        //     }
-        // }
-        //
-        // public bool IsDrawEventInvasionEnabled
-        // {
-        //     get => _isDrawEventInvasionEnabled;
-        //     set
-        //     {
-        //         if (!SetProperty(ref _isDrawEventInvasionEnabled, value)) return;
-        //         _utilityService.ToggleDrawEvent(DrawType.EventInvasion, _isDrawEventInvasionEnabled);
-        //     }
-        // }
-        //
-        // public bool IsDrawEventLeashEnabled
-        // {
-        //     get => _isDrawEventLeashEnabled;
-        //     set
-        //     {
-        //         if (!SetProperty(ref _isDrawEventLeashEnabled, value)) return;
-        //         _utilityService.ToggleDrawEvent(DrawType.EventLeash, _isDrawEventLeashEnabled);
-        //     }
-        // }
-        //
-        // public bool IsDrawEventOtherEnabled
-        // {
-        //     get => _isDrawEventOtherEnabled;
-        //     set
-        //     {
-        //         if (!SetProperty(ref _isDrawEventOtherEnabled, value)) return;
-        //         _utilityService.ToggleDrawEvent(DrawType.EventOther, _isDrawEventOtherEnabled);
-        //     }
-        // }
-        //
+      
         // public bool IsDrawSoundEnabled
         // {
         //     get => _isDrawSoundEnabled;
@@ -295,37 +338,7 @@ namespace SilkyRing.ViewModels
         //     }
         // }
         //
-        // public bool IsSeeThroughWallsEnabled
-        // {
-        //     get => _isSeeThroughwallsEnabled;
-        //     set
-        //     {
-        //         if (!SetProperty(ref _isSeeThroughwallsEnabled, value)) return;
-        //         _utilityService.ToggleRagdollEsp(_isSeeThroughwallsEnabled);
-        //     }
-        // }
-        //
-        // public bool IsColWireframeEnabled
-        // {
-        //     get => _isColWireframeEnabled;
-        //     set
-        //     {
-        //         if (!SetProperty(ref _isColWireframeEnabled, value)) return;
-        //         _utilityService.ToggleColWireframe(_isColWireframeEnabled);
-        //     }
-        // }
-        //
-        // public bool IsDrawKillboxEnabled
-        // {
-        //     get => _isDrawKillboxEnabled;
-        //     set
-        //     {
-        //         if (!SetProperty(ref _isDrawKillboxEnabled, value)) return;
-        //         _utilityService.ToggleDrawKillbox(_isDrawKillboxEnabled);
-        //     }
-        // }
-        //
-        //
+      
         // public bool IsDrawCollisionEnabled
         // {
         //     get => _isDrawCollisionEnabled;
@@ -358,6 +371,7 @@ namespace SilkyRing.ViewModels
         //     }
         // }
 
+        
         public void TryApplyOneTimeFeatures()
         {
             //

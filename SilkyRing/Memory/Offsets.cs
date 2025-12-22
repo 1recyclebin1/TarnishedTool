@@ -177,6 +177,10 @@ namespace SilkyRing.Memory
         public static class FieldArea
         {
             public static IntPtr Base;
+
+            public const int GameRend = 0x20;
+            public const int CamMode = 0xC8; // 1 for free cam
+            
         }
         
         public static class InputManager
@@ -228,8 +232,11 @@ namespace SilkyRing.Memory
         {
             public static IntPtr Base;
 
+            public const int FlagArray = 0x90;
             public const int IsLoaded = 0x94;
-            public const int FadeFlags = 0x96;
+            public const int IsFading = 0x96;
+            public const int IsPaused = 0xD1;
+            
 
             public enum FadeBitFlags
             {
@@ -367,6 +374,7 @@ namespace SilkyRing.Memory
             public static long FindAndRemoveSpEffect;
             public static long EmevdSwitch;
             public static long EmkEventInsCtor;
+            public static long GetMovement;
         }
 
         public static class Patches
@@ -377,6 +385,7 @@ namespace SilkyRing.Memory
             public static IntPtr NoRuneLossOnDeath;
             public static IntPtr OpenMap;
             public static IntPtr CloseMap;
+            public static IntPtr EnableFreeCam;
         }
     }
 }

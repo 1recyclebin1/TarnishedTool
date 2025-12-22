@@ -57,6 +57,8 @@ namespace SilkyRing.Memory
                 addr => Patches.OpenMap = addr, saved);
             TryPatternWithFallback("CloseMap", Pattern.CloseMap,
                 addr => Patches.CloseMap = addr, saved);
+            
+            Patches.EnableFreeCam = FindAddressByPattern(Pattern.EnableFreeCam);
   
             TryPatternWithFallback("UpdateCoords", Pattern.UpdateCoords,
                 addr => Hooks.UpdateCoords = addr.ToInt64(), saved);
@@ -109,6 +111,7 @@ namespace SilkyRing.Memory
             Functions.FindAndRemoveSpEffect = FindAddressByPattern(Pattern.FindAndRemoveSpEffect).ToInt64();
             Functions.EmevdSwitch = FindAddressByPattern(Pattern.EmevdSwitch).ToInt64();
             Functions.EmkEventInsCtor = FindAddressByPattern(Pattern.EmkEventInsCtor).ToInt64();
+            Functions.GetMovement = FindAddressByPattern(Pattern.GetMovement).ToInt64();
 
 
 #if DEBUG
@@ -138,6 +141,7 @@ namespace SilkyRing.Memory
             Console.WriteLine($@"Patches.DungeonWarp: 0x{Patches.DungeonWarp.ToInt64():X}");
             Console.WriteLine($@"Patches.OpenMap: 0x{Patches.OpenMap.ToInt64():X}");
             Console.WriteLine($@"Patches.CloseMap: 0x{Patches.CloseMap.ToInt64():X}");
+            Console.WriteLine($@"Patches.EnableFreeCam: 0x{Patches.EnableFreeCam.ToInt64():X}");
 
             Console.WriteLine($@"Hooks.UpdateCoords: 0x{Hooks.UpdateCoords:X}");
             Console.WriteLine($@"Hooks.NoClipKb: 0x{Hooks.NoClipKb:X}");
@@ -168,6 +172,7 @@ namespace SilkyRing.Memory
             Console.WriteLine($@"Funcs.FindAndRemoveSpEffect: 0x{Functions.FindAndRemoveSpEffect:X}");
             Console.WriteLine($@"Funcs.EmevdSwitch: 0x{Functions.EmevdSwitch:X}");
             Console.WriteLine($@"Funcs.EmkEventInsCtor: 0x{Functions.EmkEventInsCtor:X}");
+            Console.WriteLine($@"Funcs.GetMovement: 0x{Functions.GetMovement:X}");
 #endif
         }
 

@@ -407,6 +407,15 @@
             5
         );
 
+        public static readonly Pattern GetMovement = new Pattern(
+            new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x0F, 0x28, 0xF0, 0xFF },
+            "x????xxxx",
+            0,
+            AddressingMode.Relative,
+            1,
+            5
+        );
+
         //Patches
 
         public static readonly Pattern DungeonWarp = new Pattern(
@@ -449,6 +458,15 @@
             "xxxxx",
             0x3C,
             AddressingMode.Absolute
+        );
+
+        public static readonly Pattern EnableFreeCam = new Pattern(
+            new byte[] { 0xF3, 0x0F, 0x59, 0xC2, 0xF3, 0x0F, 0x58, 0xC1, 0xF3, 0x0F, 0x11, 0x43 },
+            "xxxxxxxxxxxx",
+            0xD,
+            AddressingMode.Relative,
+            1,
+            5
         );
     }
 

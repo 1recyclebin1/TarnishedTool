@@ -11,6 +11,7 @@ namespace SilkyRing.Memory
         public enum NoClip
         {
             ZDirection = 0x50,
+            SpeedScale = 0x54,
             Kb = 0x60,
             Triggers = 0xB0,
             UpdateCoords = 0x100
@@ -59,9 +60,6 @@ namespace SilkyRing.Memory
         public const int ItemSpawnCode = 0x1350;
 
         public const int EmevdArgs = 0x1600;
-
-        
-        //TODO 
-        public const int Rykard = 0x300;
+        public const int Rykard = 0x1700;
     }
 }

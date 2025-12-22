@@ -863,12 +863,13 @@ namespace SilkyRing.Properties {
         ///41 51                   push   r9
         ///41 50                   push   r8
         ///52                      push   rdx
-        ///48 8b 15 00 00 00 00    mov    rdx,QWORD PTR [rip+0x0]        # e &lt;_main+0xe&gt;
+        ///57                      push   rdi
+        ///48 8b 15 00 00 00 00    mov    rdx,QWORD PTR [rip+0x0]        # f &lt;_main+0xf&gt;
         ///48 8b 82 08 e5 01 00    mov    rax,QWORD PTR [rdx+0x1e508]
         ///48 8b 80 90 01 00 00    mov    rax,QWORD PTR [rax+0x190]
         ///48 3b 58 68             cmp    rbx,QWORD PTR [rax+0x68]
-        ///74 3d                   je     5f &lt;start&gt;
-        ///48 8b 88 e8 00 00 00    mov    rcx,QW [rest of string was truncated]&quot;;.
+        ///74 3d                   je     60 &lt;start&gt;
+        ///4 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string NoClip_UpdateCoords {
             get {

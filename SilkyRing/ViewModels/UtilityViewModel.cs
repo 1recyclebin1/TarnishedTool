@@ -10,8 +10,7 @@ namespace SilkyRing.ViewModels
     public class UtilityViewModel : BaseViewModel
     {
         private const float DefaultNoclipMultiplier = 1f;
-        private const uint BaseSpeed = 0x3e4ccccd;
-
+        
         private float _desiredGameSpeed = -1f;
         private const float DefaultGameSpeed = 1f;
         private const float Epsilon = 0.0001f;
@@ -77,6 +76,7 @@ namespace SilkyRing.ViewModels
             set
             {
                 if (!SetProperty(ref _isNoClipEnabled, value)) return;
+                _utilityService.WriteNoClipSpeed(NoClipSpeed);
                 _utilityService.ToggleNoClip(_isNoClipEnabled);
             }
         }
@@ -90,31 +90,12 @@ namespace SilkyRing.ViewModels
             {
                 if (SetProperty(ref _noClipSpeedMultiplier, value))
                 {
-                    SetNoClipSpeed(value);
+                    if (!IsNoClipEnabled) return;
+                    _utilityService.WriteNoClipSpeed(_noClipSpeedMultiplier);
                 }
             }
         }
-
-        public void SetNoClipSpeed(float multiplier)
-        {
-            if (!IsNoClipEnabled) return;
-            // if (multiplier < 0.05f) multiplier = 0.05f;
-            // else if (multiplier > 5.0f) multiplier = 5.0f;
-            //
-            // SetProperty(ref _noClipSpeedMultiplier, multiplier);
-            //
-            // float baseXFloat = BitConverter.ToSingle(BitConverter.GetBytes(BaseXSpeedHex), 0);
-            // float baseYFloat = BitConverter.ToSingle(BitConverter.GetBytes(BaseYSpeedHex), 0);
-            //
-            // float newXFloat = baseXFloat * multiplier;
-            // float newYFloat = baseYFloat * multiplier;
-            //
-            // byte[] xBytes = BitConverter.GetBytes(newXFloat);
-            // byte[] yBytes = BitConverter.GetBytes(newYFloat);
-            //
-            // _utilityService.SetNoClipSpeed(xBytes, yBytes);
-        }
-
+        
         private bool _isCombatMapEnabled;
 
         public bool IsCombatMapEnabled
@@ -183,6 +164,36 @@ namespace SilkyRing.ViewModels
                 }
             }
         }
+        
+        private bool _isFreeCamEnabled;
+        
+        public bool IsFreeCamEnabled
+        {
+            get => _isFreeCamEnabled;
+            set
+            {
+                if (!SetProperty(ref _isFreeCamEnabled, value)) return;
+                if (_isFreeCamEnabled)
+                {
+                    IsNoClipEnabled = false;
+        
+                }
+                _utilityService.ToggleFreeCam(_isFreeCamEnabled);
+            }
+        }
+        
+        private bool _isFreezeWorldEnabled;
+        
+        public bool IsFreezeWorldEnabled
+        {
+            get => _isFreeCamEnabled;
+            set
+            {
+                if (!SetProperty(ref _isFreezeWorldEnabled, value)) return;
+                _utilityService.ToggleFreezeWorld(_isFreezeWorldEnabled);
+            }
+        }
+
 
         #endregion
         
@@ -214,17 +225,15 @@ namespace SilkyRing.ViewModels
         private void RegisterHotkeys()
         {
             _hotkeyManager.RegisterAction(HotkeyActions.Noclip, () => { IsNoClipEnabled = !IsNoClipEnabled; });
-            // _hotkeyManager.RegisterAction("IncreaseNoClipSpeed", () =>
-            // {
-            //     if (IsNoClipEnabled)
-            //         NoClipSpeed = Math.Min(5, NoClipSpeed + 0.50f);
-            // });
-            //
-            // _hotkeyManager.RegisterAction("DecreaseNoClipSpeed", () =>
-            // {
-            //     if (IsNoClipEnabled)
-            //         NoClipSpeed = Math.Max(0.05f, NoClipSpeed - 0.50f);
-            // });
+            _hotkeyManager.RegisterAction(HotkeyActions.IncreaseNoClipSpeed, () =>
+            {
+                if (IsNoClipEnabled) NoClipSpeed = Math.Min(5, NoClipSpeed + 0.50f);
+            });
+            
+            _hotkeyManager.RegisterAction(HotkeyActions.DecreaseNoClipSpeed, () =>
+            {
+                if (IsNoClipEnabled) NoClipSpeed = Math.Max(0.5f, NoClipSpeed - 0.50f);
+            });
             
             _hotkeyManager.RegisterAction(HotkeyActions.ForceSave, () => _utilityService.ForceSave());
             _hotkeyManager.RegisterAction(HotkeyActions.ToggleGameSpeed, ToggleSpeed);

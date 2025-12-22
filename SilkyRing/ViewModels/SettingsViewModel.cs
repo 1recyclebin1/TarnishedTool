@@ -103,6 +103,8 @@ public class SettingsViewModel : BaseViewModel
             new("Increase Game Speed", HotkeyActions.IncreaseGameSpeed),
             new("Decrease Game Speed", HotkeyActions.DecreaseGameSpeed),
             new("Toggle Game Speed", HotkeyActions.ToggleGameSpeed),
+            new("Increase NoClip Speed", HotkeyActions.IncreaseNoClipSpeed),
+            new("Decrease NoClip Speed", HotkeyActions.DecreaseNoClipSpeed),
         ];
 
     

@@ -9,6 +9,8 @@ namespace SilkyRing.Services
     public class UtilityService(MemoryService memoryService, HookManager hookManager, IPlayerService playerService)
         : IUtilityService
     {
+        public const float DefaultNoClipSpeedScale = 0.2f;
+        
         public void ForceSave() =>
             memoryService.WriteUInt8((IntPtr)memoryService.ReadInt64(GameMan.Base) + GameMan.ForceSave, 1);
         
@@ -84,19 +86,31 @@ namespace SilkyRing.Services
         {
             var codeBytes = AsmLoader.GetAsmBytes("NoClip_UpdateCoords");
             var zDirection = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.ZDirection;
+            var speedScale = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.SpeedScale;
 
             AsmHelper.WriteRelativeOffsets(codeBytes, new[]
             {
-                (updateCoordsCode.ToInt64() + 0x7, WorldChrMan.Base.ToInt64(), 7, 0x7 + 3),
-                (updateCoordsCode.ToInt64() + 0x42, Functions.ChrInsByHandle, 5, 0x42 + 1),
-                (updateCoordsCode.ToInt64() + 0x7E, InputManager.Base.ToInt64(), 7, 0x7E + 3),
-                (updateCoordsCode.ToInt64() + 0xE8, FieldArea.Base.ToInt64(), 7, 0xE8 + 3),
-                (updateCoordsCode.ToInt64() + 0x104, Functions.MatrixVectorProduct, 5, 0x104 + 1),
-                (updateCoordsCode.ToInt64() + 0x13A, zDirection.ToInt64(), 6, 0x13A + 2),
-                (updateCoordsCode.ToInt64() + 0x164, zDirection.ToInt64(), 7, 0x164 + 2),
-                (updateCoordsCode.ToInt64() + 0x19B, Hooks.UpdateCoords + 0xB, 5, 0x19B + 1)
+                (updateCoordsCode.ToInt64() + 0x8, WorldChrMan.Base.ToInt64(), 7, 0x8 + 3),
+                (updateCoordsCode.ToInt64() + 0x43, Functions.ChrInsByHandle, 5, 0x43 + 1),
+                (updateCoordsCode.ToInt64() + 0x7F, InputManager.Base.ToInt64(), 7, 0x7F + 3),
+                (updateCoordsCode.ToInt64() + 0x98, Functions.GetMovement, 5, 0x98 + 1),
+                (updateCoordsCode.ToInt64() + 0xAA, Functions.GetMovement, 5, 0xAA + 1),
+                (updateCoordsCode.ToInt64() + 0xBC, Functions.GetMovement, 5, 0xBC + 1),
+                (updateCoordsCode.ToInt64() + 0xCE, Functions.GetMovement, 5, 0xCE + 1),
+                (updateCoordsCode.ToInt64() + 0xF7, FieldArea.Base.ToInt64(), 7, 0xF7 + 3),
+                (updateCoordsCode.ToInt64() + 0x113, Functions.MatrixVectorProduct, 5, 0x113 + 1),
+                (updateCoordsCode.ToInt64() + 0x132, speedScale.ToInt64(), 9, 0x132 + 5),
+                (updateCoordsCode.ToInt64() + 0x148, zDirection.ToInt64(), 6, 0x148 + 2),
+                (updateCoordsCode.ToInt64() + 0x172, zDirection.ToInt64(), 7, 0x172 + 2),
+                (updateCoordsCode.ToInt64() + 0x1AA, Hooks.UpdateCoords + 0xB, 5, 0x1AA + 1)
             });
             memoryService.WriteBytes(updateCoordsCode, codeBytes);
+        }
+        
+        public void WriteNoClipSpeed(float speedMultiplier)
+        {
+            var speedScale = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.SpeedScale;
+            memoryService.WriteFloat(speedScale, DefaultNoClipSpeedScale * speedMultiplier);
         }
 
         public float GetSpeed() =>
@@ -104,8 +118,29 @@ namespace SilkyRing.Services
 
         public void SetSpeed(float speed) =>
             memoryService.WriteFloat((IntPtr)memoryService.ReadInt64(CSFlipperImp.Base) + CSFlipperImp.GameSpeed, speed);
-        
-        
+
+        public void ToggleFreeCam(bool isEnabled)
+        {
+            var patchLoc = Patches.EnableFreeCam;
+            var camMode = memoryService.FollowPointers(FieldArea.Base, [FieldArea.GameRend, FieldArea.CamMode], false);
+            if (isEnabled)
+            {
+                memoryService.WriteBytes(patchLoc, [0xB0, 0x01, 0xC3]);
+                memoryService.WriteUInt8(camMode, 1);
+            }
+            else
+            {
+                memoryService.WriteBytes(patchLoc, [0xEB, 0x80, 0xCC]);
+                memoryService.WriteUInt8(camMode, 0);
+            }
+        }
+
+        public void ToggleFreezeWorld(bool isEnabled)
+        {
+            var pauseFlag = memoryService.ReadInt64(MenuMan.Base) + MenuMan.IsPaused;
+            memoryService.WriteUInt8((IntPtr)pauseFlag, isEnabled ? 1 : 0);
+        }
+
         public void ToggleDrawHitbox(bool isDrawHitboxEnabled) =>
             memoryService.WriteUInt8((IntPtr)memoryService.ReadInt64(DamageManager.Base) + DamageManager.HitboxView,
                 isDrawHitboxEnabled ? 1 : 0);

@@ -444,7 +444,7 @@
         );
 
         public static readonly Pattern CanDrawEvents = new Pattern(
-            new byte[] { 0x48, 0x89, 0x77, 0x28, 0xE8 },
+            [0x48, 0x89, 0x77, 0x28, 0xE8],
             "xxxxx",
             0,
             AddressingMode.Absolute
@@ -453,49 +453,49 @@
         //Patches
 
         public static readonly Pattern DungeonWarp = new Pattern(
-            new byte[] { 0x74, 0x3A, 0x8B, 0x81, 0xA0 },
+            [0x74, 0x3A, 0x8B, 0x81, 0xA0],
             "xxxxx",
             0,
             AddressingMode.Absolute
         );
 
         public static readonly Pattern NoRunesFromEnemies = new Pattern(
-            new byte[] { 0x41, 0xFF, 0x91, 0xC8, 0x05 },
+            [0x41, 0xFF, 0x91, 0xC8, 0x05],
             "xxxxx",
             0,
             AddressingMode.Absolute
         );
 
         public static readonly Pattern NoRuneArcLoss = new Pattern(
-            new byte[] { 0x74, 0x09, 0x66, 0xC7, 0x81, 0xFF },
+            [0x74, 0x09, 0x66, 0xC7, 0x81, 0xFF],
             "xxxxxx",
             0,
             AddressingMode.Absolute
         );
 
         public static readonly Pattern NoRuneLossOnDeath = new Pattern(
-            new byte[] { 0x48, 0x0F, 0x4C, 0xC1, 0x44 },
+            [0x48, 0x0F, 0x4C, 0xC1, 0x44],
             "xxxxx",
             0xB,
             AddressingMode.Absolute
         );
 
         public static readonly Pattern OpenMap = new Pattern(
-            new byte[] { 0x84, 0xC0, 0x74, 0x2E, 0xC7 },
+            [0x84, 0xC0, 0x74, 0x2E, 0xC7],
             "xxxxx",
             2,
             AddressingMode.Absolute
         );
 
         public static readonly Pattern CloseMap = new Pattern(
-            new byte[] { 0x75, 0x11, 0x38, 0x83, 0xC2 },
+            [0x75, 0x11, 0x38, 0x83, 0xC2],
             "xxxxx",
             0x3C,
             AddressingMode.Absolute
         );
 
         public static readonly Pattern EnableFreeCam = new Pattern(
-            new byte[] { 0xF3, 0x0F, 0x59, 0xC2, 0xF3, 0x0F, 0x58, 0xC1, 0xF3, 0x0F, 0x11, 0x43 },
+            [0xF3, 0x0F, 0x59, 0xC2, 0xF3, 0x0F, 0x58, 0xC1, 0xF3, 0x0F, 0x11, 0x43],
             "xxxxxxxxxxxx",
             0xD,
             AddressingMode.Relative,
@@ -504,12 +504,19 @@
         );
 
         public static readonly Pattern GetShopEvent = new Pattern(
-            new byte[] { 0x84, 0xC0, 0x74, 0x17, 0x48, 0x8D, 0x54 },
+            [0x84, 0xC0, 0x74, 0x17, 0x48, 0x8D, 0x54],
             "xxxxxxx",
             -0x5,
             AddressingMode.Relative,
             1,
             5
+        );
+
+        public static readonly Pattern NoLogo = new Pattern(
+            [0x48, 0x85, 0xD2, 0x74, 0x07, 0xC6, 0x82],
+            "xxxxxxx",
+            0x18,
+            AddressingMode.Absolute
         );
     }
 

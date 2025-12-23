@@ -60,6 +60,8 @@ namespace SilkyRing.Memory
                 addr => Patches.OpenMap = addr, saved);
             TryPatternWithFallback("CloseMap", Pattern.CloseMap,
                 addr => Patches.CloseMap = addr, saved);
+            TryPatternWithFallback("NoLogo", Pattern.NoLogo,
+                addr => Patches.NoLogo = addr, saved);
             
             Patches.EnableFreeCam = FindAddressByPattern(Pattern.EnableFreeCam);
             Patches.GetShopEvent = FindAddressByPattern(Pattern.GetShopEvent);
@@ -156,6 +158,7 @@ namespace SilkyRing.Memory
             Console.WriteLine($@"Patches.EnableFreeCam: 0x{Patches.EnableFreeCam.ToInt64():X}");
             Console.WriteLine($@"Patches.CanDrawEvents1: 0x{Patches.CanDrawEvents1.ToInt64():X}");
             Console.WriteLine($@"Patches.CanDrawEvents2: 0x{Patches.CanDrawEvents2.ToInt64():X}");
+            Console.WriteLine($@"Patches.NoLogo: 0x{Patches.NoLogo.ToInt64():X}");
 
             Console.WriteLine($@"Hooks.UpdateCoords: 0x{Hooks.UpdateCoords:X}");
             Console.WriteLine($@"Hooks.NoClipKb: 0x{Hooks.NoClipKb:X}");

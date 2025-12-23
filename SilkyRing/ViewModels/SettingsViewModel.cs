@@ -38,6 +38,7 @@ public class SettingsViewModel : BaseViewModel
         stateService.Subscribe(State.AppStart, OnAppStart);
         stateService.Subscribe(State.Loaded, OnGameLoaded);
         stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);
+        stateService.Subscribe(State.Attached, OnGameAttached);
 
 
         PlayerHotkeys =
@@ -126,7 +127,7 @@ public class SettingsViewModel : BaseViewModel
 
         ClearHotkeysCommand = new DelegateCommand(ClearHotkeys);
     }
-
+    
     #region Commands
 
     public ICommand ClearHotkeysCommand { get; set; }
@@ -167,13 +168,12 @@ public class SettingsViewModel : BaseViewModel
         get => _isNoLogoEnabled;
         set
         {
-            // if (SetProperty(ref _isNoLogoEnabled, value))
-            // {
-            //     SettingsManager.Default.NoLogo = value;
-            //     SettingsManager.Default.Save();
-            //
-            //     _settingsService.ToggleNoLogo(_isNoLogoEnabled);
-            // }
+            if (SetProperty(ref _isNoLogoEnabled, value))
+            {
+                SettingsManager.Default.NoLogo = value;
+                SettingsManager.Default.Save();
+                _settingsService.ToggleNoLogo(_isNoLogoEnabled);
+            }
         }
     }
 
@@ -291,6 +291,9 @@ public class SettingsViewModel : BaseViewModel
         
         _isDisableAchievementsEnabled = SettingsManager.Default.DisableAchievements;
         OnPropertyChanged(nameof(IsDisableAchievementsEnabled));
+        
+        _isNoLogoEnabled = SettingsManager.Default.NoLogo;
+        OnPropertyChanged(nameof(IsNoLogoEnabled));
     }
 
     private void OnGameLoaded()
@@ -303,6 +306,11 @@ public class SettingsViewModel : BaseViewModel
     private void OnGameNotLoaded()
     {
         AreOptionsEnabled = false;
+    }
+    
+    private void OnGameAttached()
+    {
+        if (IsNoLogoEnabled) _settingsService.ToggleNoLogo(true);
     }
     
 

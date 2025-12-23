@@ -17,6 +17,7 @@ public class SettingsManager
     public bool AlwaysOnTop { get; set; }
     public bool StutterFix { get; set; }
     public bool DisableAchievements { get; set; }
+    public bool NoLogo { get; set; }
     public double ResistancesWindowScaleX { get; set; } = 1.0;
     public double ResistancesWindowScaleY { get; set; } = 1.0;
     public double ResistancesWindowWidth { get; set; }
@@ -49,6 +50,7 @@ public class SettingsManager
                 $"AlwaysOnTop={AlwaysOnTop}",
                 $"StutterFix={StutterFix}",
                 $"DisableAchievements={DisableAchievements}",
+                $"NoLogo={NoLogo}",
                 $"ResistancesWindowScaleX={ResistancesWindowScaleX}",
                 $"ResistancesWindowScaleY={ResistancesWindowScaleY}",
                 $"ResistancesWindowWidth={ResistancesWindowWidth}",
@@ -115,6 +117,10 @@ public class SettingsManager
                             case "DisableAchievements":
                                 bool.TryParse(value, out bool da);
                                 settings.DisableAchievements = da;
+                                break;
+                            case "NoLogo":
+                                bool.TryParse(value, out bool nl);
+                                settings.NoLogo = nl;
                                 break;
                             case "ResistancesWindowScaleX":
                                 double.TryParse(value, out double rwx);

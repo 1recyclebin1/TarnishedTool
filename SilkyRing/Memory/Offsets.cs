@@ -405,6 +405,7 @@ namespace SilkyRing.Memory
             public static IntPtr CanDrawEvents1;
             public static IntPtr CanDrawEvents2;
             public static IntPtr GetShopEvent;
+            public static IntPtr NoLogo;
         }
     }
 }

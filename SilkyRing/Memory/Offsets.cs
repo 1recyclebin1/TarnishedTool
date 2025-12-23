@@ -389,6 +389,7 @@ namespace SilkyRing.Memory
             public static IntPtr EnableFreeCam;
             public static IntPtr CanDrawEvents1;
             public static IntPtr CanDrawEvents2;
+            public static IntPtr GetShopEvent;
         }
     }
 }

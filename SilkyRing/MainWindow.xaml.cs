@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using SilkyRing.Enums;
@@ -11,7 +10,6 @@ using SilkyRing.Memory;
 using SilkyRing.Services;
 using SilkyRing.Utilities;
 using SilkyRing.ViewModels;
-using SilkyRing.Views;
 using SilkyRing.Views.Tabs;
 using static SilkyRing.Memory.Offsets;
 using UtilityTab = SilkyRing.Views.Tabs.UtilityTab;

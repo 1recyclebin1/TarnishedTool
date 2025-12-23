@@ -134,6 +134,7 @@
         <Compile Include="Models\Item.cs" />
         <Compile Include="Models\Position.cs" />
         <Compile Include="Models\PosWithHurtbox.cs" />
+        <Compile Include="Models\ShopCommand.cs" />
         <Compile Include="Models\SpEffectEntry.cs" />
         <Compile Include="Models\Stats.cs" />
         <Compile Include="Models\Weapon.cs" />

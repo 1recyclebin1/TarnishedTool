@@ -3,6 +3,7 @@ using System.Windows.Input;
 using SilkyRing.Core;
 using SilkyRing.Enums;
 using SilkyRing.Interfaces;
+using SilkyRing.Memory;
 using SilkyRing.Utilities;
 
 namespace SilkyRing.ViewModels
@@ -247,7 +248,7 @@ namespace SilkyRing.ViewModels
             set
             {
                 if (!SetProperty(ref _isDrawLowHitEnabled, value)) return;
-                // _utilityService.ToggleWorldHitDraw(WorldHitMan.Offsets.LowHit, _isDrawLowHitEnabled);
+                _utilityService.ToggleWorldHitDraw(Offsets.WorldHitMan.LowHit, _isDrawLowHitEnabled);
                 // _utilityService.SetColDrawMode(ColDrawMode);
             }
         }
@@ -260,7 +261,7 @@ namespace SilkyRing.ViewModels
             set
             {
                 if (!SetProperty(ref _isDrawHighHitEnabled, value)) return;
-                // _utilityService.ToggleWorldHitDraw(WorldHitMan.Offsets.HighHit, _isDrawHighHitEnabled);
+                _utilityService.ToggleWorldHitDraw(Offsets.WorldHitMan.HighHit, _isDrawHighHitEnabled);
             }
         }
 
@@ -285,7 +286,7 @@ namespace SilkyRing.ViewModels
             set
             {
                 if (!SetProperty(ref _isDrawRagdollEnabled, value)) return;
-                // _utilityService.ToggleWorldHitDraw(WorldHitMan.Offsets.Ragdoll, _isDrawRagdollEnabled);
+                _utilityService.ToggleWorldHitDraw(Offsets.WorldHitMan.Ragdoll, _isDrawRagdollEnabled);
             }
         }
 

@@ -15,4 +15,6 @@ public interface IUtilityService
     void ToggleFreeCam(bool isEnabled);
     void ToggleFreezeWorld(bool isEnabled);
     void ToggleDrawHitbox(bool isEnabled);
+    void ToggleWorldHitDraw(int offset, bool isEnabled);
+    void ToggleFullShopLineup(bool isEnabled);
 }

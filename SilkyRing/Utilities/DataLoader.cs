@@ -6,6 +6,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using SilkyRing.Enums;
+using SilkyRing.GameIds;
 using SilkyRing.Models;
 using SilkyRing.Properties;
 
@@ -259,7 +260,7 @@ namespace SilkyRing.Utilities
 
             return bytes;
         }
-        
+
         private static string[] ParseCsvLine(string line)
         {
             var parts = new List<string>();
@@ -282,6 +283,7 @@ namespace SilkyRing.Utilities
                     current.Append(c);
                 }
             }
+
             parts.Add(current.ToString());
 
             return parts.ToArray();
@@ -292,21 +294,21 @@ namespace SilkyRing.Utilities
             List<BossRevive> bossRevives = new List<BossRevive>();
             string csvData = Resources.BossRevives;
             if (string.IsNullOrWhiteSpace(csvData)) return bossRevives;
-    
+
             using StringReader reader = new StringReader(csvData);
             string line;
             while ((line = reader.ReadLine()) != null)
             {
                 string[] parts = line.Split(',');
                 if (parts.Length < 3) continue;
-        
+
                 BossRevive boss = new BossRevive
                 {
                     IsDlc = parts[0] == "1",
                     BossName = parts[1],
                     IsInitializeDeadSet = parts[2] == "1"
                 };
-                
+
                 List<BossFlag> flags = new List<BossFlag>();
                 for (int i = 3; i < parts.Length - 1; i += 2)
                 {
@@ -320,15 +322,38 @@ namespace SilkyRing.Utilities
                 boss.BossFlags = flags;
                 bossRevives.Add(boss);
             }
-    
+
             return bossRevives;
+        }
+
+        public static List<ShopCommand> GetShops()
+        {
+            List<ShopCommand> shops = new List<ShopCommand>();
+            string csvData = Resources.Shops;
+            if (string.IsNullOrWhiteSpace(csvData)) return shops;
+            using StringReader reader = new StringReader(csvData);
+            string line;
+            while ((line = reader.ReadLine()) != null)
+            {
+                string[] parts = line.Split(',');
+                bool isDlc = byte.Parse(parts[0]) == 1;
+                var name = parts[1];
+                var commandId = int.Parse(parts[2]);
+                int[] @params = parts.Skip(3).Select(int.Parse).ToArray();
+    
+                var command = new EzState.TalkCommand(commandId, @params);
+                var shopCommand = new ShopCommand(isDlc, name, command);
+                shops.Add(shopCommand);
+            }
+            
+            return shops;
         }
 
         public static List<T> GetSimpleList<T>(string resourceName, Func<string, T> parser)
         {
             List<T> items = new List<T>();
             string csvData = Resources.ResourceManager.GetString(resourceName);
-    
+
             if (string.IsNullOrWhiteSpace(csvData)) return items;
 
             using StringReader reader = new StringReader(csvData);

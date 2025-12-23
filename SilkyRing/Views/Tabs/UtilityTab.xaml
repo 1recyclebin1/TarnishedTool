@@ -330,28 +330,28 @@
                     <CheckBox Content="Draw hitbox"
                               IsChecked="{Binding IsDrawHitboxEnabled}"
                               Grid.Column="0" Grid.Row="0"
-                              Margin="0,2" />
+                              Margin="0,0,5,0" />
 
                     <CheckBox Content="Player Sound"
                               IsChecked="{Binding IsDrawSoundEnabled}"
                               Grid.Column="0" Grid.Row="1"
-                              Margin="0,2" />
+                              Margin="0,2,5,2" />
                     <CheckBox Content="Ragdolls"
                               IsChecked="{Binding IsDrawRagdollsEnabled}"
                               Grid.Column="0" Grid.Row="2"
-                              Margin="0,2" />
+                              Margin="0,0,5,0" />
 
                     <CheckBox Content="Draw Low Hit"
                               IsChecked="{Binding IsDrawLowHitEnabled}"
                               Grid.Column="1" Grid.Row="0"
-                              Margin="0,2" />
+                              Margin="5,2" />
 
                     <CheckBox Content="Draw High Hit"
                               IsChecked="{Binding IsDrawHighHitEnabled}"
                               Grid.Column="1" Grid.Row="1"
-                              Margin="0,2,0,2" />
+                              Margin="5,2,5,2" />
                     <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal"
-                                Margin="0,2,0,0">
+                                Margin="10,2,5,0">
                         <TextBlock Text="Mode: " Margin="0,0,10,0" VerticalAlignment="Center" />
                         <xctk:IntegerUpDown Width="50" Height="20"
                                             Value="{Binding ColDrawMode, UpdateSourceTrigger=PropertyChanged}"

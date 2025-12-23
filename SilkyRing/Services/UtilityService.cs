@@ -10,11 +10,11 @@ namespace SilkyRing.Services
         : IUtilityService
     {
         public const float DefaultNoClipSpeedScale = 0.2f;
-        
+
         public void ForceSave() =>
             memoryService.WriteUInt8((IntPtr)memoryService.ReadInt64(GameMan.Base) + GameMan.ForceSave, 1);
 
-        public void TriggerNewNgCycle() => 
+        public void TriggerNewNgCycle() =>
             memoryService.WriteUInt8((IntPtr)memoryService.ReadInt64(GameMan.Base) + GameMan.ShouldStartNewGame, 1);
 
         public void ToggleCombatMap(bool isEnabled)
@@ -37,7 +37,7 @@ namespace SilkyRing.Services
                 WriteKbCode(kbCode);
                 WriteTriggerCode(triggersCode);
                 WriteUpdateCoords(updateCoordsCode);
-                
+
                 hookManager.InstallHook(kbCode.ToInt64(), Hooks.NoClipKb, new byte[]
                     { 0xF6, 0x84, 0x08, 0xE8, 0x07, 0x00, 0x00, 0x80 });
                 hookManager.InstallHook(triggersCode.ToInt64(), Hooks.NoClipTriggers, new byte[]
@@ -55,7 +55,6 @@ namespace SilkyRing.Services
             }
         }
 
-        
         private void WriteKbCode(IntPtr kbCode)
         {
             var codeBytes = AsmLoader.GetAsmBytes("NoClip_Keyboard");
@@ -109,7 +108,7 @@ namespace SilkyRing.Services
             });
             memoryService.WriteBytes(updateCoordsCode, codeBytes);
         }
-        
+
         public void WriteNoClipSpeed(float speedMultiplier)
         {
             var speedScale = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.SpeedScale;
@@ -120,7 +119,8 @@ namespace SilkyRing.Services
             memoryService.ReadFloat((IntPtr)memoryService.ReadInt64(CSFlipperImp.Base) + CSFlipperImp.GameSpeed);
 
         public void SetSpeed(float speed) =>
-            memoryService.WriteFloat((IntPtr)memoryService.ReadInt64(CSFlipperImp.Base) + CSFlipperImp.GameSpeed, speed);
+            memoryService.WriteFloat((IntPtr)memoryService.ReadInt64(CSFlipperImp.Base) + CSFlipperImp.GameSpeed,
+                speed);
 
         public void ToggleFreeCam(bool isEnabled)
         {
@@ -150,6 +150,10 @@ namespace SilkyRing.Services
 
         public void ToggleWorldHitDraw(int offset, bool isEnabled) =>
             memoryService.WriteUInt8(WorldHitMan.Base + offset, isEnabled ? 1 : 0);
+
+        public void ToggleFullShopLineup(bool isEnabled) =>
+            memoryService.WriteBytes(Patches.GetShopEvent,
+                isEnabled ? [0xB0, 0x01, 0xC3, 0x90, 0x90, 0x90] : [0x40, 0x53, 0x48, 0x83, 0xEC, 0x40]);
 
         public void SetColDrawMode(int val) =>
             memoryService.WriteUInt8(WorldHitMan.Base + WorldHitMan.Mode, (byte)val);

@@ -484,6 +484,15 @@
             1,
             5
         );
+
+        public static readonly Pattern GetShopEvent = new Pattern(
+            new byte[] { 0x84, 0xC0, 0x74, 0x17, 0x48, 0x8D, 0x54 },
+            "xxxxxxx",
+            -0x5,
+            AddressingMode.Relative,
+            1,
+            5
+        );
     }
 
     public enum AddressingMode

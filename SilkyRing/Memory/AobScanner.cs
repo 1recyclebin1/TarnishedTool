@@ -60,6 +60,7 @@ namespace SilkyRing.Memory
                 addr => Patches.CloseMap = addr, saved);
             
             Patches.EnableFreeCam = FindAddressByPattern(Pattern.EnableFreeCam);
+            Patches.GetShopEvent = FindAddressByPattern(Pattern.GetShopEvent);
             FindMultipleCallsInFunction(Pattern.CanDrawEvents, new Dictionary<Action<long>, int>
             {
                 { addr => Patches.CanDrawEvents1 = (IntPtr)addr, 0x4 },

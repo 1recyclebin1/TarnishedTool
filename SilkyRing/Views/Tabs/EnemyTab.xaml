@@ -126,8 +126,27 @@
                 CornerRadius="3"
                 Margin="0,0,0,5">
             <StackPanel Margin="10">
-                <TextBlock Text="Elden Beast"
-                           Margin="0,0,0,10" />
+                <StackPanel Orientation=" Horizontal">
+                    <TextBlock Text="Elden Beast"
+                               Margin="0,0,0,10" />
+                    <Border
+                        Background="#3498db"
+                        CornerRadius="10"
+                        Width="12"
+                        Height="12"
+                        Margin="10,0,0,10"
+                        VerticalAlignment="Center"
+                        ToolTip="Force Elden Stars followed up by the selected attack"
+                        ToolTipService.InitialShowDelay='100'>
+                        <TextBlock Text="i"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontWeight="Bold"
+                                   FontSize="10" />
+                    </Border>
+                </StackPanel>
+             
                 <StackPanel Orientation="Horizontal">
 
                     <ComboBox ItemsSource="{Binding Acts}"
@@ -135,7 +154,7 @@
                               SelectedItem="{Binding SelectedAct}"
                               Width="150" />
 
-                    <Button Content="Force Act Sequence"
+                    <Button Content="Force Combo"
                             IsEnabled="{Binding AreOptionsEnabled}"
                             Command="{Binding EbForceActSequenceCommand}"
                             Height="24"

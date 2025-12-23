@@ -15,32 +15,32 @@ namespace SilkyRing.ViewModels
         private const float DefaultGameSpeed = 1f;
         private const float Epsilon = 0.0001f;
 
-        private bool _isDrawLowHitEnabled;
-        private bool _isDrawHighHitEnabled;
-        private int _colDrawMode = 1;
-        private bool _isDrawRagdollEnabled;
+        private bool _wasNoDeathEnabled;
 
         private readonly IUtilityService _utilityService;
         private readonly IEzStateService _ezStateService;
         private readonly IPlayerService _playerService;
         private readonly HotkeyManager _hotkeyManager;
         private readonly IEmevdService _emevdService;
+        private readonly PlayerViewModel _playerViewModel;
 
         public UtilityViewModel(IUtilityService utilityService, IStateService stateService,
             IEzStateService ezStateService, IPlayerService playerService, HotkeyManager hotkeyManager,
-            IEmevdService emevdService)
+            IEmevdService emevdService, PlayerViewModel playerViewModel)
         {
             _utilityService = utilityService;
             _ezStateService = ezStateService;
             _playerService = playerService;
             _hotkeyManager = hotkeyManager;
             _emevdService = emevdService;
+            _playerViewModel = playerViewModel;
 
             stateService.Subscribe(State.Loaded, OnGameLoaded);
             stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);
             stateService.Subscribe(State.FirstLoaded, OnGameFirstLoaded);
 
             SaveCommand = new DelegateCommand(Save);
+            TriggerNgCycleCommand = new DelegateCommand(TriggerNgCycle);
             SetMorningCommand = new DelegateCommand(SetMorning);
             SetNoonCommand = new DelegateCommand(SetNoon);
             SetNightCommand = new DelegateCommand(SetNight);
@@ -54,6 +54,7 @@ namespace SilkyRing.ViewModels
             OpenAlterGarmentsCommand = new DelegateCommand(OpenAlterGarments);
             OpenUpgradeCommand = new DelegateCommand(OpenUpgrade);
             OpenSellCommand = new DelegateCommand(OpenSell);
+            OpenRebirthCommand = new DelegateCommand(OpenRebirth);
 
             RegisterHotkeys();
             ApplyPrefs();
@@ -62,6 +63,7 @@ namespace SilkyRing.ViewModels
         #region Commands
 
         public ICommand SaveCommand { get; set; }
+        public ICommand TriggerNgCycleCommand { get; set; }
         public ICommand SetMorningCommand { get; set; }
         public ICommand SetNoonCommand { get; set; }
         public ICommand SetNightCommand { get; set; }
@@ -75,6 +77,7 @@ namespace SilkyRing.ViewModels
         public ICommand OpenAlterGarmentsCommand { get; set; }
         public ICommand OpenUpgradeCommand { get; set; }
         public ICommand OpenSellCommand { get; set; }
+        public ICommand OpenRebirthCommand { get; set; }
 
         #endregion
 
@@ -96,8 +99,18 @@ namespace SilkyRing.ViewModels
             set
             {
                 if (!SetProperty(ref _isNoClipEnabled, value)) return;
-                _utilityService.WriteNoClipSpeed(NoClipSpeed);
-                _utilityService.ToggleNoClip(_isNoClipEnabled);
+                if (_isNoClipEnabled)
+                {
+                    _utilityService.WriteNoClipSpeed(NoClipSpeed);
+                    _wasNoDeathEnabled = _playerViewModel.IsNoDeathEnabled;
+                    _playerViewModel.IsNoDeathEnabled = true;
+                    _utilityService.ToggleNoClip(_isNoClipEnabled);
+                }
+                else
+                {
+                    _utilityService.ToggleNoClip(_isNoClipEnabled);
+                    _playerViewModel.IsNoDeathEnabled = _wasNoDeathEnabled;
+                }
             }
         }
 
@@ -226,6 +239,56 @@ namespace SilkyRing.ViewModels
             }
         }
 
+        private bool _isDrawLowHitEnabled;
+
+        public bool IsDrawLowHitEnabled
+        {
+            get => _isDrawLowHitEnabled;
+            set
+            {
+                if (!SetProperty(ref _isDrawLowHitEnabled, value)) return;
+                // _utilityService.ToggleWorldHitDraw(WorldHitMan.Offsets.LowHit, _isDrawLowHitEnabled);
+                // _utilityService.SetColDrawMode(ColDrawMode);
+            }
+        }
+
+        private bool _isDrawHighHitEnabled;
+
+        public bool IsDrawHighHitEnabled
+        {
+            get => _isDrawHighHitEnabled;
+            set
+            {
+                if (!SetProperty(ref _isDrawHighHitEnabled, value)) return;
+                // _utilityService.ToggleWorldHitDraw(WorldHitMan.Offsets.HighHit, _isDrawHighHitEnabled);
+            }
+        }
+
+        private int _colDrawMode = 1;
+
+        public int ColDrawMode
+        {
+            get => _colDrawMode;
+            set
+            {
+                if (!SetProperty(ref _colDrawMode, value)) return;
+                if (!IsDrawHighHitEnabled && !IsDrawLowHitEnabled) return;
+                // _utilityService.SetColDrawMode(_colDrawMode);
+            }
+        }
+
+        private bool _isDrawRagdollEnabled;
+
+        public bool IsDrawRagdollsEnabled
+        {
+            get => _isDrawRagdollEnabled;
+            set
+            {
+                if (!SetProperty(ref _isDrawRagdollEnabled, value)) return;
+                // _utilityService.ToggleWorldHitDraw(WorldHitMan.Offsets.Ragdoll, _isDrawRagdollEnabled);
+            }
+        }
+
         #endregion
 
         #region Public Methods
@@ -283,6 +346,7 @@ namespace SilkyRing.ViewModels
         }
 
         private void Save() => _utilityService.ForceSave();
+        private void TriggerNgCycle() => _utilityService.TriggerNewNgCycle();
 
         private void ToggleSpeed()
         {
@@ -307,15 +371,25 @@ namespace SilkyRing.ViewModels
         private void SetMorning() => _emevdService.ExecuteEmevdCommand(GameIds.Emevd.EmevdCommands.SetMorning);
         private void SetNoon() => _emevdService.ExecuteEmevdCommand(GameIds.Emevd.EmevdCommands.SetNoon);
         private void SetNight() => _emevdService.ExecuteEmevdCommand(GameIds.Emevd.EmevdCommands.SetNight);
-        
+
         private void OpenLevelUp() => _ezStateService.ExecuteTalkCommand(GameIds.EzState.TalkCommands.LevelUp);
         private void OpenAllot() => _ezStateService.ExecuteTalkCommand(GameIds.EzState.TalkCommands.OpenAllot);
-        private void OpenAttunement() => _ezStateService.ExecuteTalkCommand(GameIds.EzState.TalkCommands.OpenAttunement);
+
+        private void OpenAttunement() =>
+            _ezStateService.ExecuteTalkCommand(GameIds.EzState.TalkCommands.OpenAttunement);
+
         private void OpenPhysick() => _ezStateService.ExecuteTalkCommand(GameIds.EzState.TalkCommands.OpenPhysick);
         private void OpenChest() => _ezStateService.ExecuteTalkCommand(GameIds.EzState.TalkCommands.OpenChest);
-        private void OpenGreatRunes() => _ezStateService.ExecuteTalkCommand(GameIds.EzState.TalkCommands.OpenGreatRunes);
+
+        private void OpenGreatRunes() =>
+            _ezStateService.ExecuteTalkCommand(GameIds.EzState.TalkCommands.OpenGreatRunes);
+
         private void OpenAow() => _ezStateService.ExecuteTalkCommand(GameIds.EzState.TalkCommands.OpenAow);
-        private void OpenAlterGarments() => _ezStateService.ExecuteTalkCommand(GameIds.EzState.TalkCommands.OpenAlterGarments);
+
+        private void OpenAlterGarments() =>
+            _ezStateService.ExecuteTalkCommand(GameIds.EzState.TalkCommands.OpenAlterGarments);
+
+        private void OpenRebirth() => _ezStateService.ExecuteTalkCommand(GameIds.EzState.TalkCommands.Rebirth);
 
         private void OpenUpgrade()
         {
@@ -323,50 +397,17 @@ namespace SilkyRing.ViewModels
             {
                 _ezStateService.ExecuteTalkCommand(upgradeMenuFlag);
             }
+
             _ezStateService.ExecuteTalkCommand(GameIds.EzState.TalkCommands.OpenUpgrade);
-        } 
+        }
 
         private void OpenSell()
         {
             var playerHandle = _playerService.GetHandle();
             _ezStateService.ExecuteTalkCommand(GameIds.EzState.TalkCommands.OpenSell, playerHandle);
-        } 
+        }
 
         #endregion
-
-        //
-        // public bool IsDrawLowHitEnabled
-        // {
-        //     get => _isDrawLowHitEnabled;
-        //     set
-        //     {
-        //         if (!SetProperty(ref _isDrawLowHitEnabled, value)) return;
-        //         // _utilityService.ToggleWorldHitDraw(WorldHitMan.Offsets.LowHit, _isDrawLowHitEnabled);
-        //         _utilityService.SetColDrawMode(ColDrawMode);
-        //     }
-        // }
-        //
-        // public bool IsDrawHighHitEnabled
-        // {
-        //     get => _isDrawHighHitEnabled;
-        //     set
-        //     {
-        //         if (!SetProperty(ref _isDrawHighHitEnabled, value)) return;
-        //         // _utilityService.ToggleWorldHitDraw(WorldHitMan.Offsets.HighHit, _isDrawHighHitEnabled);
-        //     }
-        // }
-        //
-        // public int ColDrawMode
-        // {
-        //     get => _colDrawMode;
-        //     set
-        //     {
-        //         if (!SetProperty(ref _colDrawMode, value)) return;
-        //         if (!IsDrawHighHitEnabled && !IsDrawLowHitEnabled) return;
-        //         _utilityService.SetColDrawMode(_colDrawMode);
-        //     }
-        // }
-        //
 
         // public bool IsDrawEventGeneralEnabled
         // {
@@ -390,31 +431,6 @@ namespace SilkyRing.ViewModels
         // }
         //
 
-        //
-        // //
-        //
-        // public bool IsDrawRagdollsEnabled
-        // {
-        //     get => _isDrawRagdollEnabled;
-        //     set
-        //     {
-        //         if (!SetProperty(ref _isDrawRagdollEnabled, value)) return;
-        //         // _utilityService.ToggleWorldHitDraw(WorldHitMan.Offsets.Ragdoll, _isDrawRagdollEnabled);
-        //     }
-        // }
-        //
-
-        // public bool IsDrawCollisionEnabled
-        // {
-        //     get => _isDrawCollisionEnabled;
-        //     set
-        //     {
-        //         if (!SetProperty(ref _isDrawCollisionEnabled, value)) return;
-        //         _utilityService.ToggleDrawCol(_isDrawCollisionEnabled);
-        //         if (!_isDrawCollisionEnabled) IsColWireframeEnabled = false;
-        //     }
-        // }
-        //
         //
         // public bool IsHideCharactersEnabled
         // {

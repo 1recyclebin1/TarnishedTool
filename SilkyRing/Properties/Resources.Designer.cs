@@ -1046,6 +1046,29 @@ namespace SilkyRing.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 0,Bernahl,22,100075,100099
+        ///0,Boggart,22,100425,100474
+        ///0,Borther Corhyn,22,100350,100399
+        ///0,D,22,100125,100149
+        ///1,Dragon Communion - Bayle,135,102350,102351
+        ///0,Dragon Communion - Caelid,135,101950,101974
+        ///0,Dragon Communion - Limgrave,135,101975,101999
+        ///0,Enia - Equipment,148,101500,101574
+        ///0,Enia - Remembrances,111,101898,101949
+        ///0,Gostoc,22,100000,100024
+        ///0,Gowry Incantations,22,100185,100199
+        ///0,Gowry Sorceries,22,100175,100184
+        ///0,Hermit Merchant - Leyndell,22,100725,100749
+        ///0,Iji,22,100225,100249
+        ///0,Imp [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Shops {
+            get {
+                return ResourceManager.GetString("Shops", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 0,4000114F,Adula&apos;s Moonblade,99,600
         ///0,400011F8,Ambush Shard,99,600
         ///0,40001389,Ancient Death Rancor,99,600

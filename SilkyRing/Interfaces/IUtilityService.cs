@@ -5,6 +5,7 @@ namespace SilkyRing.Interfaces;
 public interface IUtilityService
 {
     void ForceSave();
+    void TriggerNewNgCycle();
     void ToggleCombatMap(bool isEnabled);
     void ToggleDungeonWarp(bool isEnabled);
     void ToggleNoClip(bool isEnabled);
@@ -14,5 +15,4 @@ public interface IUtilityService
     void ToggleFreeCam(bool isEnabled);
     void ToggleFreezeWorld(bool isEnabled);
     void ToggleDrawHitbox(bool isEnabled);
-
 }

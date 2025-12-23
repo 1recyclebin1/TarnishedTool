@@ -180,7 +180,7 @@ namespace SilkyRing.Memory
             public const int CamMode = 0xC8; // 1 for free cam
         }
 
-        public static class InputManager
+        public static class FD4PadManager
         {
             public static IntPtr Base;
         }
@@ -286,6 +286,7 @@ namespace SilkyRing.Memory
 
             public const int ShouldQuitout = 0x10;
             public const int ForceSave = 0xb72;
+            public const int ShouldStartNewGame = 0xB7D;
         }
 
         public static class MapItemManImpl

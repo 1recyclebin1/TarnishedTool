@@ -40,7 +40,7 @@ namespace SilkyRing.Memory
             GameDataMan.Base = FindAddressByPattern(Pattern.GameDataMan);
             CsDlcImp.Base = FindAddressByPattern(Pattern.CsDlcImp);
             MapItemManImpl.Base = FindAddressByPattern(Pattern.MapItemManImpl);
-            InputManager.Base = FindAddressByPattern(Pattern.InputManager);
+            FD4PadManager.Base = FindAddressByPattern(Pattern.FD4PadManager);
             CSEmkSystem.Base = FindAddressByPattern(Pattern.CSEmkSystem);
             WorldAreaTimeImpl.Base = FindAddressByPattern(Pattern.WorldAreaTimeImpl);
             GroupMask.Base = FindAddressByPattern(Pattern.GroupMask);
@@ -134,7 +134,7 @@ namespace SilkyRing.Memory
             Console.WriteLine($@"GameDataMan.Base: 0x{GameDataMan.Base.ToInt64():X}");
             Console.WriteLine($@"CsDlcImp.Base: 0x{CsDlcImp.Base.ToInt64():X}");
             Console.WriteLine($@"MapItemManImpl.Base: 0x{MapItemManImpl.Base.ToInt64():X}");
-            Console.WriteLine($@"InputManager.Base: 0x{InputManager.Base.ToInt64():X}");
+            Console.WriteLine($@"InputManager.Base: 0x{FD4PadManager.Base.ToInt64():X}");
             Console.WriteLine($@"CSEmkSystem.Base: 0x{CSEmkSystem.Base.ToInt64():X}");
             Console.WriteLine($@"WorldAreaTimeImpl.Base: 0x{WorldAreaTimeImpl.Base.ToInt64():X}");
             Console.WriteLine($@"GroupMask.Base: 0x{GroupMask.Base.ToInt64():X}");

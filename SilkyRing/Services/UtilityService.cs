@@ -13,7 +13,10 @@ namespace SilkyRing.Services
         
         public void ForceSave() =>
             memoryService.WriteUInt8((IntPtr)memoryService.ReadInt64(GameMan.Base) + GameMan.ForceSave, 1);
-        
+
+        public void TriggerNewNgCycle() => 
+            memoryService.WriteUInt8((IntPtr)memoryService.ReadInt64(GameMan.Base) + GameMan.ShouldStartNewGame, 1);
+
         public void ToggleCombatMap(bool isEnabled)
         {
             memoryService.WriteUInt8(Patches.OpenMap, isEnabled ? 0xEB : 0x74);
@@ -92,7 +95,7 @@ namespace SilkyRing.Services
             {
                 (updateCoordsCode.ToInt64() + 0x8, WorldChrMan.Base.ToInt64(), 7, 0x8 + 3),
                 (updateCoordsCode.ToInt64() + 0x43, Functions.ChrInsByHandle, 5, 0x43 + 1),
-                (updateCoordsCode.ToInt64() + 0x7F, InputManager.Base.ToInt64(), 7, 0x7F + 3),
+                (updateCoordsCode.ToInt64() + 0x7F, FD4PadManager.Base.ToInt64(), 7, 0x7F + 3),
                 (updateCoordsCode.ToInt64() + 0x98, Functions.GetMovement, 5, 0x98 + 1),
                 (updateCoordsCode.ToInt64() + 0xAA, Functions.GetMovement, 5, 0xAA + 1),
                 (updateCoordsCode.ToInt64() + 0xBC, Functions.GetMovement, 5, 0xBC + 1),

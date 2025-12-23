@@ -132,7 +132,7 @@
             7
         );
 
-        public static readonly Pattern InputManager = new Pattern(
+        public static readonly Pattern FD4PadManager = new Pattern(
             [0x80, 0xB8, 0xF9, 0x02, 0x00, 0x00, 0x00, 0x74],
             "xxxxxxxx",
             -0x3F,

@@ -78,7 +78,7 @@ namespace SilkyRing
             UtilityViewModel utilityViewModel = new UtilityViewModel(utilityService, _stateService, ezStateService,
                 playerService, hotkeyManager, emevdService, playerViewModel);
             ItemViewModel itemViewModel = new ItemViewModel(itemService, _dlcService, _stateService, eventService);
-            SettingsViewModel settingsViewModel = new SettingsViewModel(settingsService, hotkeyManager);
+            SettingsViewModel settingsViewModel = new SettingsViewModel(settingsService, hotkeyManager, _stateService);
 
             var playerTab = new PlayerTab(playerViewModel);
             var travelTab = new TravelTab(travelViewModel);
@@ -98,6 +98,8 @@ namespace SilkyRing
             MainTabControl.Items.Add(new TabItem { Header = "Event", Content = eventTab });
             MainTabControl.Items.Add(new TabItem { Header = "Items", Content = itemTab });
             MainTabControl.Items.Add(new TabItem { Header = "Settings", Content = settingsTab });
+            
+            _stateService.Publish(State.AppStart);
 
             Closing += MainWindow_Closing;
 

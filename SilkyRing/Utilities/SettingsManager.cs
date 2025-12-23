@@ -14,6 +14,9 @@ public class SettingsManager
     public double DefenseWindowTop { get; set; }
     public double WindowLeft { get; set; }
     public double WindowTop { get; set; }
+    public bool AlwaysOnTop { get; set; }
+    public bool StutterFix { get; set; }
+    public bool DisableAchievements { get; set; }
     public double ResistancesWindowScaleX { get; set; } = 1.0;
     public double ResistancesWindowScaleY { get; set; } = 1.0;
     public double ResistancesWindowWidth { get; set; }
@@ -43,6 +46,9 @@ public class SettingsManager
                 $"DefenseWindowTop={DefenseWindowTop}",
                 $"WindowLeft={WindowLeft}",
                 $"WindowTop={WindowTop}",
+                $"AlwaysOnTop={AlwaysOnTop}",
+                $"StutterFix={StutterFix}",
+                $"DisableAchievements={DisableAchievements}",
                 $"ResistancesWindowScaleX={ResistancesWindowScaleX}",
                 $"ResistancesWindowScaleY={ResistancesWindowScaleY}",
                 $"ResistancesWindowWidth={ResistancesWindowWidth}",
@@ -97,6 +103,18 @@ public class SettingsManager
                             case "WindowTop":
                                 double.TryParse(value, out double wt);
                                 settings.WindowTop = wt;
+                                break;
+                            case "AlwaysOnTop":
+                                bool.TryParse(value, out bool aot);
+                                settings.AlwaysOnTop = aot;
+                                break;
+                            case "StutterFix":
+                                bool.TryParse(value, out bool sf);
+                                settings.StutterFix = sf;
+                                break;
+                            case "DisableAchievements":
+                                bool.TryParse(value, out bool da);
+                                settings.DisableAchievements = da;
                                 break;
                             case "ResistancesWindowScaleX":
                                 double.TryParse(value, out double rwx);

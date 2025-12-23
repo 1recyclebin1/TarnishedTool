@@ -11,4 +11,18 @@ public class SettingsService(MemoryService memoryService, HookManager hookManage
 {
     public void Quitout() =>
         memoryService.WriteUInt8((IntPtr)memoryService.ReadInt64(GameMan.Base) + GameMan.ShouldQuitout, 1);
+
+    public void ToggleStutterFix(bool isEnabled) =>
+        memoryService.WriteUInt8(
+            (IntPtr)memoryService.ReadInt64(UserInputManager.Base) + UserInputManager.SteamInputEnum,
+            isEnabled ? 1 : 0);
+
+    public void ToggleDisableAchievements(bool isEnabled)
+    {
+        var isAwardAchievementsEnabledFlag = memoryService.FollowPointers(CSTrophy.Base, [
+            CSTrophy.CSTrophyPlatformImp_forSteam,
+            CSTrophy.IsAwardAchievementEnabled
+        ], false);
+        memoryService.WriteUInt8(isAwardAchievementsEnabledFlag, isEnabled ? 0 : 1);
+    }
 }

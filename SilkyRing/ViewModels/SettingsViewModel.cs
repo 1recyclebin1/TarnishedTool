@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using H.Hooks;
 using SilkyRing.Core;
@@ -17,7 +18,7 @@ public class SettingsViewModel : BaseViewModel
 {
     private readonly ISettingsService _settingsService;
     private readonly HotkeyManager _hotkeyManager;
-    
+
     private readonly Dictionary<string, HotkeyBindingViewModel> _hotkeyLookup;
 
     private string _currentSettingHotkeyId;
@@ -29,11 +30,16 @@ public class SettingsViewModel : BaseViewModel
     public ObservableCollection<HotkeyBindingViewModel> TargetHotkeys { get; }
     public ObservableCollection<HotkeyBindingViewModel> UtilityHotkeys { get; }
 
-    public SettingsViewModel(ISettingsService settingsService, HotkeyManager hotkeyManager)
+    public SettingsViewModel(ISettingsService settingsService, HotkeyManager hotkeyManager, IStateService stateService)
     {
         _settingsService = settingsService;
         _hotkeyManager = hotkeyManager;
-        
+
+        stateService.Subscribe(State.AppStart, OnAppStart);
+        stateService.Subscribe(State.Loaded, OnGameLoaded);
+        stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);
+
+
         PlayerHotkeys =
         [
             new("Set RFBS", HotkeyActions.SetRfbs),
@@ -58,15 +64,16 @@ public class SettingsViewModel : BaseViewModel
             new("Apply Special Effect", HotkeyActions.ApplySpEffect),
             new("Remove Special Effect", HotkeyActions.RemoveSpEffect),
         ];
-        EnemiesHotkeys = [
-            new ("All No Death", HotkeyActions.AllNoDeath),
-            new ("All No Damage", HotkeyActions.AllNoDamage),
-            new ("All No Hit", HotkeyActions.AllNoHit),
-            new ("All No Attack", HotkeyActions.AllNoAttack),
-            new ("All No Move", HotkeyActions.AllNoMove),
-            new ("All Disable Ai", HotkeyActions.AllDisableAi),
-            new ("Targeting View", HotkeyActions.AllTargetingView),
-            new ("Force EB act sequence", HotkeyActions.ForceEbActSequence),
+        EnemiesHotkeys =
+        [
+            new("All No Death", HotkeyActions.AllNoDeath),
+            new("All No Damage", HotkeyActions.AllNoDamage),
+            new("All No Hit", HotkeyActions.AllNoHit),
+            new("All No Attack", HotkeyActions.AllNoAttack),
+            new("All No Move", HotkeyActions.AllNoMove),
+            new("All Disable Ai", HotkeyActions.AllDisableAi),
+            new("Targeting View", HotkeyActions.AllTargetingView),
+            new("Force EB act sequence", HotkeyActions.ForceEbActSequence),
         ];
 
         TargetHotkeys =
@@ -107,7 +114,7 @@ public class SettingsViewModel : BaseViewModel
             new("Decrease NoClip Speed", HotkeyActions.DecreaseNoClipSpeed),
         ];
 
-    
+
         _hotkeyLookup = PlayerHotkeys
             .Concat(EnemiesHotkeys)
             .Concat(TargetHotkeys)
@@ -119,15 +126,22 @@ public class SettingsViewModel : BaseViewModel
 
         ClearHotkeysCommand = new DelegateCommand(ClearHotkeys);
     }
-    
+
     #region Commands
 
     public ICommand ClearHotkeysCommand { get; set; }
 
     #endregion
-    
 
     #region Properties
+
+    private bool _areOptionsEnabled = true;
+
+    public bool AreOptionsEnabled
+    {
+        get => _areOptionsEnabled;
+        set => SetProperty(ref _areOptionsEnabled, value);
+    }
 
     private bool _isEnableHotkeysEnabled;
 
@@ -145,7 +159,7 @@ public class SettingsViewModel : BaseViewModel
             }
         }
     }
-    
+
     private bool _isNoLogoEnabled;
 
     public bool IsNoLogoEnabled
@@ -170,11 +184,39 @@ public class SettingsViewModel : BaseViewModel
         get => _isAlwaysOnTopEnabled;
         set
         {
-            // if (!SetProperty(ref _isAlwaysOnTopEnabled, value)) return;
-            // SettingsManager.Default.AlwaysOnTop = value;
-            // SettingsManager.Default.Save();
-            // var mainWindow = Application.Current.MainWindow;
-            // if (mainWindow != null) mainWindow.Topmost = _isAlwaysOnTopEnabled;
+            if (!SetProperty(ref _isAlwaysOnTopEnabled, value)) return;
+            SettingsManager.Default.AlwaysOnTop = value;
+            SettingsManager.Default.Save();
+            var mainWindow = Application.Current.MainWindow;
+            if (mainWindow != null) mainWindow.Topmost = _isAlwaysOnTopEnabled;
+        }
+    }
+
+    private bool _isStutterFixEnabled;
+
+    public bool IsStutterFixEnabled
+    {
+        get => _isStutterFixEnabled;
+        set
+        {
+            if (!SetProperty(ref _isStutterFixEnabled, value)) return;
+            SettingsManager.Default.StutterFix = value;
+            SettingsManager.Default.Save();
+            if (AreOptionsEnabled) _settingsService.ToggleStutterFix(_isStutterFixEnabled);
+        }
+    }
+    
+    private bool _isDisableAchievementsEnabled;
+
+    public bool IsDisableAchievementsEnabled
+    {
+        get => _isDisableAchievementsEnabled;
+        set
+        {
+            if (!SetProperty(ref _isDisableAchievementsEnabled, value)) return;
+            SettingsManager.Default.DisableAchievements = value;
+            SettingsManager.Default.Save();
+            if (AreOptionsEnabled) _settingsService.ToggleDisableAchievements(_isDisableAchievementsEnabled);
         }
     }
 
@@ -184,7 +226,7 @@ public class SettingsViewModel : BaseViewModel
 
     public void StartSettingHotkey(string actionId)
     {
-        if (_currentSettingHotkeyId != null && 
+        if (_currentSettingHotkeyId != null &&
             _hotkeyLookup.TryGetValue(_currentSettingHotkeyId, out var prev))
         {
             prev.HotkeyText = GetHotkeyDisplayText(_currentSettingHotkeyId);
@@ -221,7 +263,7 @@ public class SettingsViewModel : BaseViewModel
 
     public void CancelSettingHotkey()
     {
-        if (_currentSettingHotkeyId != null && 
+        if (_currentSettingHotkeyId != null &&
             _hotkeyLookup.TryGetValue(_currentSettingHotkeyId, out var binding))
         {
             binding.HotkeyText = "None";
@@ -232,9 +274,38 @@ public class SettingsViewModel : BaseViewModel
     }
 
     #endregion
-    
+
     #region Private Methods
+
+    private void OnAppStart()
+    {
+        _isEnableHotkeysEnabled = SettingsManager.Default.EnableHotkeys;
+        if (_isEnableHotkeysEnabled) _hotkeyManager.Start();
+        else _hotkeyManager.Stop();
+        OnPropertyChanged(nameof(IsEnableHotkeysEnabled));
+
+        IsAlwaysOnTopEnabled = SettingsManager.Default.AlwaysOnTop;
+
+        _isStutterFixEnabled = SettingsManager.Default.StutterFix;
+        OnPropertyChanged(nameof(IsStutterFixEnabled));
+        
+        _isDisableAchievementsEnabled = SettingsManager.Default.DisableAchievements;
+        OnPropertyChanged(nameof(IsDisableAchievementsEnabled));
+    }
+
+    private void OnGameLoaded()
+    {
+        AreOptionsEnabled = true;
+        if (IsStutterFixEnabled) _settingsService.ToggleStutterFix(true);
+        if (IsDisableAchievementsEnabled) _settingsService.ToggleDisableAchievements(true);
+    }
+
+    private void OnGameNotLoaded()
+    {
+        AreOptionsEnabled = false;
+    }
     
+
     private void LoadHotkeyDisplays()
     {
         foreach (var hotkey in _hotkeyLookup.Values)
@@ -334,7 +405,7 @@ public class SettingsViewModel : BaseViewModel
             binding.HotkeyText = new Keys(currentKeys.Values.ToArray()).ToString();
         }
     }
-    
+
     private void RegisterHotkeys()
     {
         _hotkeyManager.RegisterAction(HotkeyActions.Quitout, () => _settingsService.Quitout());
@@ -344,7 +415,7 @@ public class SettingsViewModel : BaseViewModel
     {
         _hotkeyManager.ClearAll();
         LoadHotkeyDisplays();
-    } 
+    }
 
     #endregion
 }

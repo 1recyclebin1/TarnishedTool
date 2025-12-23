@@ -12,5 +12,5 @@ public enum State
     FirstLoaded,
     GameStart,
     AppClosing,
-    AppStarting,
+    AppStart,
 }

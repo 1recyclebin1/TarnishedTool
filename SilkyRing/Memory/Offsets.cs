@@ -299,6 +299,21 @@ namespace SilkyRing.Memory
             public static IntPtr Base;
         }
 
+        public static class UserInputManager
+        {
+            public static IntPtr Base;
+
+            public const int SteamInputEnum = 0x88B;
+        }
+        
+        public static class CSTrophy
+        {
+            public static IntPtr Base;
+
+            public const int CSTrophyPlatformImp_forSteam = 0x8;
+            public const int IsAwardAchievementEnabled = 0x4C;
+        }
+
         public static class CSFlipperImp
         {
             public static IntPtr Base;

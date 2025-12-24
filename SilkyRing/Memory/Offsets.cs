@@ -215,14 +215,28 @@ namespace SilkyRing.Memory
             public static IntPtr Base;
 
 
-            public const int MasterFlag = 0x0;
-            public const int ShouldShowGeom = 0x1;   // Geom + map2 best for low hit / high hit
-            public const int ShouldShowMap = 0x9;
-            
-            public const int HideSomeAssets = 0xA;
-            public const int ShouldShowMap2 = 0xB;
-            public const int ShouldShowChrs = 0xD;
-            public const int ShouldShowGrass = 0x11;
+            public enum GroupMasks
+            {
+                // MasterFlag = 0x0,
+                ShouldShowGeom = 0x1,
+                Unk02 = 0x2,
+                Unk03 = 0x3,
+                Unk04 = 0x4,
+                Unk05 = 0x5,
+                Unk06 = 0x6,
+                Unk07 = 0x7,
+                Unk08 = 0x8,
+                ShouldShowMap = 0x9,
+                HideSomeAssets = 0xA,
+                ShouldShowMap2 = 0xB,
+                Unk0C = 0xC,
+                ShouldShowChrs = 0xD,
+                Unk0E = 0xE,
+                Unk0F = 0xF,
+                Unk10 = 0x10,
+                ShouldShowGrass = 0x11,
+            }
+       
         }
 
         public static class DamageManager
@@ -420,6 +434,8 @@ namespace SilkyRing.Memory
             public static IntPtr CanDrawEvents2;
             public static IntPtr GetShopEvent;
             public static IntPtr NoLogo;
+            public static IntPtr DebugFont;
+            public static IntPtr PlayerSound;
         }
     }
 }

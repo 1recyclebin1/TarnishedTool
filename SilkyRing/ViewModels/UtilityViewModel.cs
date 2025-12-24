@@ -321,6 +321,24 @@ namespace SilkyRing.ViewModels
             }
         }
         
+        private bool _isDrawPlayerSoundEnabled;
+
+        public bool IsDrawPlayerSoundEnabled
+        {
+            get => _isDrawPlayerSoundEnabled;
+            set
+            {
+                if (!SetProperty(ref _isDrawPlayerSoundEnabled, value)) return;
+                if (_isDrawPlayerSoundEnabled)
+                {
+                    _utilityService.PatchDebugFont();
+                }
+                _utilityService.TogglePlayerSound(_isDrawPlayerSoundEnabled);
+                
+            }
+        }
+
+        
         private string _shopsSearchText = string.Empty;
 
         public string ShopsSearchText

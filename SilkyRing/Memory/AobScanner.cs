@@ -62,9 +62,12 @@ namespace SilkyRing.Memory
                 addr => Patches.CloseMap = addr, saved);
             TryPatternWithFallback("NoLogo", Pattern.NoLogo,
                 addr => Patches.NoLogo = addr, saved);
+            TryPatternWithFallback("PlayerSound", Pattern.PlayerSound,
+                addr => Patches.PlayerSound = addr, saved);
             
             Patches.EnableFreeCam = FindAddressByPattern(Pattern.EnableFreeCam);
             Patches.GetShopEvent = FindAddressByPattern(Pattern.GetShopEvent);
+            Patches.DebugFont = FindAddressByPattern(Pattern.DebugFont);
             FindMultipleCallsInFunction(Pattern.CanDrawEvents, new Dictionary<Action<long>, int>
             {
                 { addr => Patches.CanDrawEvents1 = (IntPtr)addr, 0x4 },
@@ -161,6 +164,8 @@ namespace SilkyRing.Memory
             Console.WriteLine($@"Patches.CanDrawEvents1: 0x{Patches.CanDrawEvents1.ToInt64():X}");
             Console.WriteLine($@"Patches.CanDrawEvents2: 0x{Patches.CanDrawEvents2.ToInt64():X}");
             Console.WriteLine($@"Patches.NoLogo: 0x{Patches.NoLogo.ToInt64():X}");
+            Console.WriteLine($@"Patches.DebugFont: 0x{Patches.DebugFont.ToInt64():X}");
+            Console.WriteLine($@"Patches.PlayerSound: 0x{Patches.PlayerSound.ToInt64():X}");
 
             Console.WriteLine($@"Hooks.UpdateCoords: 0x{Hooks.UpdateCoords:X}");
             Console.WriteLine($@"Hooks.InAirTimer: 0x{Hooks.InAirTimer:X}");

@@ -19,4 +19,6 @@ public interface IUtilityService
     void ToggleFullShopLineup(bool isEnabled);
     void SetColDrawMode(int val);
     void MoveCamToPlayer();
+    void PatchDebugFont();
+    void TogglePlayerSound(bool isEnabled);
 }

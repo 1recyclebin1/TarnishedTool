@@ -39,7 +39,7 @@ namespace SilkyRing.Services
                 WriteKbCode(kbCode);
                 WriteTriggerCode(triggersCode);
                 WriteUpdateCoords(updateCoordsCode);
-                
+
                 hookManager.InstallHook(inAirTimerCode.ToInt64(), Hooks.InAirTimer, new byte[]
                     { 0xF3, 0x0F, 0x11, 0x43, 0x18 });
                 hookManager.InstallHook(kbCode.ToInt64(), Hooks.NoClipKb, new byte[]
@@ -59,7 +59,7 @@ namespace SilkyRing.Services
                 playerService.EnableGravity();
             }
         }
-        
+
         private void WriteInAirTimer(IntPtr inAirTimerCode)
         {
             var codeBytes = AsmLoader.GetAsmBytes("NoClip_InAirTimer");
@@ -177,8 +177,9 @@ namespace SilkyRing.Services
 
         public void MoveCamToPlayer()
         {
-            
         }
-        
+
+        public void PatchDebugFont() => memoryService.WriteUInt8(Patches.DebugFont, 0xC3);
+        public void TogglePlayerSound(bool isEnabled) => memoryService.WriteUInt8(Patches.PlayerSound, isEnabled ? 0x75 : 0x74);
     }
 }

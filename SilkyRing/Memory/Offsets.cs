@@ -197,6 +197,7 @@ namespace SilkyRing.Memory
         {
             public static IntPtr Base;
 
+            public const int DrawEvent = 0x4;
             public const int DisableEvent = 0x28;
         }
 

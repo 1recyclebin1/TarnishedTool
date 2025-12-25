@@ -9,6 +9,7 @@ using SilkyRing.Enums;
 using SilkyRing.GameIds;
 using SilkyRing.Models;
 using SilkyRing.Properties;
+using System.Text.Json;
 
 namespace SilkyRing.Utilities
 {
@@ -365,6 +366,47 @@ namespace SilkyRing.Utilities
             }
 
             return items;
+        }
+        
+        private static readonly string LoadoutsPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "SilkyRing",
+            "CustomLoadouts.json");
+
+        public static Dictionary<string, LoadoutTemplate> LoadCustomLoadouts()
+        {
+            try
+            {
+                if (!File.Exists(LoadoutsPath))
+                    return new Dictionary<string, LoadoutTemplate>();
+
+                string json = File.ReadAllText(LoadoutsPath);
+                var loadouts = JsonSerializer.Deserialize<List<LoadoutTemplate>>(json);
+        
+                return loadouts?.ToDictionary(l => l.Name) ?? new Dictionary<string, LoadoutTemplate>();
+            }
+            catch
+            {
+                return new Dictionary<string, LoadoutTemplate>();
+            }
+        }
+
+        public static void SaveCustomLoadouts(Dictionary<string, LoadoutTemplate> loadouts)
+        {
+            try
+            {
+                string directory = Path.GetDirectoryName(LoadoutsPath);
+                if (!Directory.Exists(directory))
+                    Directory.CreateDirectory(directory);
+
+                var options = new JsonSerializerOptions { WriteIndented = true };
+                string json = JsonSerializer.Serialize(loadouts.Values.ToList(), options);
+                File.WriteAllText(LoadoutsPath, json);
+            }
+            catch
+            {
+                // Silent fail or log
+            }
         }
     }
 }

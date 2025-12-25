@@ -1,3 +1,4 @@
+using System;
 using SilkyRing.Interfaces;
 using SilkyRing.Memory;
 using SilkyRing.Utilities;
@@ -35,6 +36,24 @@ namespace SilkyRing.Services
 
             memoryService.AllocateAndExecute(bytes);
             return memoryService.ReadUInt8(result) == 1;
+        }
+
+        public void PatchEventEnable()
+        {
+            memoryService.WriteBytes(Patches.CanDrawEvents1, [0xB0, 0x01]);
+            memoryService.WriteBytes(Patches.CanDrawEvents2, [0xB0, 0x01]);
+        }
+
+        public void ToggleDrawEvents(bool isEnabled)
+        {
+            var ptr = memoryService.ReadInt64(CSDbgEvent.Base) + CSDbgEvent.DrawEvent;
+            memoryService.WriteUInt8((IntPtr)ptr, isEnabled ? 1 : 0);
+        }
+
+        public void ToggleDisableEvents(bool isEnabled)
+        {
+            var ptr = memoryService.ReadInt64(CSDbgEvent.Base) + CSDbgEvent.DisableEvent;
+            memoryService.WriteUInt8((IntPtr)ptr, isEnabled ? 1 : 0);
         }
     }
 }

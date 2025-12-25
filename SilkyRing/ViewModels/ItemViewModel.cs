@@ -4,12 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using SilkyRing.Core;
 using SilkyRing.Enums;
 using SilkyRing.Interfaces;
 using SilkyRing.Models;
 using SilkyRing.Utilities;
+using SilkyRing.Views;
 
 namespace SilkyRing.ViewModels;
 
@@ -19,13 +21,14 @@ public class ItemViewModel : BaseViewModel
     private readonly IDlcService _dlcService;
     private readonly IEventService _eventService;
 
-    private readonly Dictionary<string, List<Item>> _itemsByCategory = new();
-    private readonly List<Item> _allItems = new();
-    private List<AshOfWar> _allAshesOfWar;
+    private readonly Dictionary<string, List<Item>> _itemsByCategory;
+    private readonly List<AshOfWar> _allAshesOfWar;
+    
+    private readonly List<Item> _allItems;
+    
+    private Dictionary<string, LoadoutTemplate> _customLoadoutTemplates;
 
-    private bool _hasDlc;
-    private string _preSearchCategory;
-    private bool _isSearchActive;
+    public ItemSelectionViewModel ItemSelection { get; }
 
     public ItemViewModel(IItemService itemService, IDlcService dlcService, IStateService stateService,
         IEventService eventService)
@@ -38,17 +41,34 @@ public class ItemViewModel : BaseViewModel
         stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);
         stateService.Subscribe(State.FirstLoaded, OnGameFirstLoaded);
 
-        LoadItems();
+        _itemsByCategory = LoadItemData();
+        _allAshesOfWar = DataLoader.GetAshOfWars();
+        _customLoadoutTemplates = DataLoader.LoadCustomLoadouts();
+        _allItems = _itemsByCategory.Values.SelectMany(x => x).ToList();
+
+        ItemSelection = new ItemSelectionViewModel(_itemsByCategory, _allAshesOfWar);
+
+        ItemSelection.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(ItemSelection.SelectedCategory))
+            {
+                SelectedMassSpawnCategory = ItemSelection.SelectedCategory;
+            }
+        };
+        SelectedMassSpawnCategory = ItemSelection.SelectedCategory;
+
 
         SpawnItemCommand = new DelegateCommand(SpawnItem);
         MassSpawnCommand = new DelegateCommand(MassSpawn);
+        OpenCreateLoadoutCommand = new DelegateCommand(OpenCreateLoadoutWindow);
     }
+    
 
-    
     #region Commands
-    
+
     public ICommand SpawnItemCommand { get; set; }
     public ICommand MassSpawnCommand { get; set; }
+    public ICommand OpenCreateLoadoutCommand { get; set; }
 
     #endregion
 
@@ -62,208 +82,6 @@ public class ItemViewModel : BaseViewModel
         set => SetProperty(ref _areOptionsEnabled, value);
     }
 
-    private ObservableCollection<string> _categories;
-    public ObservableCollection<string> Categories => _categories;
-
-    private ObservableCollection<Item> _items = new();
-
-    public ObservableCollection<Item> Items
-    {
-        get => _items;
-        private set => SetProperty(ref _items, value);
-    }
-
-    private string _selectedCategory;
-
-    public string SelectedCategory
-    {
-        get => _selectedCategory;
-        set
-        {
-            if (!SetProperty(ref _selectedCategory, value) || value == null) return;
-
-            if (_isSearchActive)
-            {
-                _isSearchActive = false;
-                _searchText = string.Empty;
-                OnPropertyChanged(nameof(SearchText));
-                _preSearchCategory = null;
-            }
-
-            UpdateItemsList();
-        }
-    }
-
-    private string _searchText = string.Empty;
-
-    public string SearchText
-    {
-        get => _searchText;
-        set
-        {
-            if (!SetProperty(ref _searchText, value)) return;
-
-            if (string.IsNullOrEmpty(value))
-            {
-                _isSearchActive = false;
-                if (_preSearchCategory != null)
-                {
-                    _selectedCategory = _preSearchCategory;
-                    OnPropertyChanged(nameof(SelectedCategory));
-                    UpdateItemsList();
-                    _preSearchCategory = null;
-                }
-            }
-            else
-            {
-                if (!_isSearchActive)
-                {
-                    _preSearchCategory = _selectedCategory;
-                    _isSearchActive = true;
-                }
-
-                ApplyFilter();
-            }
-        }
-    }
-
-    private Item _selectedItem;
-
-    public Item SelectedItem
-    {
-        get => _selectedItem;
-        set
-        {
-            if (!SetProperty(ref _selectedItem, value) || value == null) return;
-
-            MaxQuantity = value.MaxStorage;
-            SelectedQuantity = value.StackSize;
-            QuantityEnabled = value.StackSize > 1;
-
-            if (value is Weapon weapon)
-            {
-                ConfigureForWeapon(weapon);
-            }
-            else
-            {
-                ShowWeaponOptions = false;
-                ShowAowOptions = false;
-            }
-        }
-    }
-
-    private bool _quantityEnabled;
-
-    public bool QuantityEnabled
-    {
-        get => _quantityEnabled;
-        private set => SetProperty(ref _quantityEnabled, value);
-    }
-
-    private int _maxQuantity = 1;
-
-    public int MaxQuantity
-    {
-        get => _maxQuantity;
-        private set => SetProperty(ref _maxQuantity, value);
-    }
-
-    private int _selectedQuantity = 1;
-
-    public int SelectedQuantity
-    {
-        get => _selectedQuantity;
-        set
-        {
-            int clampedValue = Math.Max(1, Math.Min(value, MaxQuantity));
-            SetProperty(ref _selectedQuantity, clampedValue);
-        }
-    }
-
-    private bool _showWeaponOptions;
-
-    public bool ShowWeaponOptions
-    {
-        get => _showWeaponOptions;
-        private set => SetProperty(ref _showWeaponOptions, value);
-    }
-
-    private int _maxUpgradeLevel = 25;
-
-    public int MaxUpgradeLevel
-    {
-        get => _maxUpgradeLevel;
-        private set => SetProperty(ref _maxUpgradeLevel, value);
-    }
-
-    private int _selectedUpgrade;
-
-    public int SelectedUpgrade
-    {
-        get => _selectedUpgrade;
-        set
-        {
-            int clampedValue = Math.Max(0, Math.Min(value, MaxUpgradeLevel));
-            SetProperty(ref _selectedUpgrade, clampedValue);
-        } 
-    }
-    
-    private bool _canUpgrade;
-
-    public bool CanUpgrade
-    {
-        get => _canUpgrade;
-        private set => SetProperty(ref _canUpgrade, value);
-    }
-    
-
-    private bool _showAowOptions;
-
-    public bool ShowAowOptions
-    {
-        get => _showAowOptions;
-        private set => SetProperty(ref _showAowOptions, value);
-    }
-
-    private ObservableCollection<AshOfWar> _availableAshesOfWar = new();
-
-    public ObservableCollection<AshOfWar> AvailableAshesOfWar
-    {
-        get => _availableAshesOfWar;
-        private set => SetProperty(ref _availableAshesOfWar, value);
-    }
-
-    private AshOfWar _selectedAshOfWar;
-
-    public AshOfWar SelectedAshOfWar
-    {
-        get => _selectedAshOfWar;
-        set
-        {
-            if (!SetProperty(ref _selectedAshOfWar, value) || value == null) return;
-            
-            _selectedAffinity = 0;
-            AvailableAffinities = new ObservableCollection<Affinity>(value.GetAvailableAffinities());
-            SelectedAffinity = AvailableAffinities.FirstOrDefault();
-        }
-    }
-
-    private ObservableCollection<Affinity> _availableAffinities = new();
-
-    public ObservableCollection<Affinity> AvailableAffinities
-    {
-        get => _availableAffinities;
-        private set => SetProperty(ref _availableAffinities, value);
-    }
-
-    private Affinity _selectedAffinity;
-
-    public Affinity SelectedAffinity
-    {
-        get => _selectedAffinity;
-        set => SetProperty(ref _selectedAffinity, value);
-    }
-    
     private string _selectedMassSpawnCategory;
 
     public string SelectedMassSpawnCategory
@@ -271,12 +89,25 @@ public class ItemViewModel : BaseViewModel
         get => _selectedMassSpawnCategory;
         set => SetProperty(ref _selectedMassSpawnCategory, value);
     }
+    
+    private ObservableCollection<string> _loadouts;
+    public ObservableCollection<string> Loadouts
+    {
+        get => _loadouts;
+        private set => SetProperty(ref _loadouts, value);
+    }
+
+    private string _selectedLoadoutName;
+    public string SelectedLoadoutName
+    {
+        get => _selectedLoadoutName;
+        set => SetProperty(ref _selectedLoadoutName, value);
+    }
 
     #endregion
 
     #region Private Methods
 
-    
     private void OnGameLoaded()
     {
         AreOptionsEnabled = true;
@@ -286,131 +117,78 @@ public class ItemViewModel : BaseViewModel
     {
         AreOptionsEnabled = false;
     }
-    
+
     private void OnGameFirstLoaded()
     {
-        _hasDlc = _dlcService.IsDlcAvailable;
-        UpdateItemsList();
-    }
-    
-    private void LoadItems()
-    {
-        _itemsByCategory["Armor"] = DataLoader.GetItems("Armor", "Armor");
-        _itemsByCategory["Arrows"] = DataLoader.GetItems("Arrows", "Arrows");
-        _itemsByCategory["Ash of War"] = DataLoader.GetItems("AshOfWarSpawn", "Ash of War");
-        _itemsByCategory["Bell Bearings"] = DataLoader.GetItems("BellBearings", "Bell Bearings");
-        _itemsByCategory["Consumables"] = DataLoader.GetItems("Consumables", "Consumables");
-        _itemsByCategory["Cookbooks"] = DataLoader.GetEventItems("Cookbooks", "Cookbooks").Cast<Item>().ToList();
-        _itemsByCategory["Crafting Materials"] = DataLoader.GetItems("CraftingMaterials", "Crafting Materials");
-        _itemsByCategory["Crystal Tears"] = DataLoader.GetItems("CrystalTears", "Crystal Tears");
-        _itemsByCategory["Incantations"] = DataLoader.GetItems("Incantations", "Incantations");
-        _itemsByCategory["Key Items"] = DataLoader.GetEventItems("KeyItems", "Key Items").Cast<Item>().ToList();
-        _itemsByCategory["Pots and Perfumes"] = DataLoader.GetItems("PotsAndPerfumes", "Pots and Perfumes");
-        _itemsByCategory["Prattling Pate"] = DataLoader.GetItems("PrattlingPate", "Prattling Pate");
-        _itemsByCategory["Sorceries"] = DataLoader.GetItems("Sorceries", "Sorceries");
-        _itemsByCategory["Spirit Ashes"] = DataLoader.GetItems("SpiritAshes", "Spirit Ashes");
-        _itemsByCategory["Talismans"] = DataLoader.GetItems("Talismans", "Talismans");
-        _itemsByCategory["Upgrade Materials"] = DataLoader.GetItems("UpgradeMaterials", "Upgrade Materials");
-        _itemsByCategory["Weapons"] = DataLoader.GetWeapons().Cast<Item>().ToList();
-
-
-        _allItems.AddRange(_itemsByCategory.Values.SelectMany(x => x));
-        _allAshesOfWar = DataLoader.GetAshOfWars();
-        
-        _categories = new ObservableCollection<string>(_itemsByCategory.Keys);
-        SelectedCategory = Categories.FirstOrDefault();
+        var hasDlc = _dlcService.IsDlcAvailable;
+        ItemSelection.SetDlcAvailable(hasDlc);
     }
 
-    private void UpdateItemsList()
+    private Dictionary<string, List<Item>> LoadItemData()
     {
-        if (_selectedCategory == null || !_itemsByCategory.ContainsKey(_selectedCategory))
+        var items = new Dictionary<string, List<Item>>
         {
-            Items = new ObservableCollection<Item>();
-            return;
-        }
+            ["Armor"] = DataLoader.GetItems("Armor", "Armor"),
+            ["Arrows"] = DataLoader.GetItems("Arrows", "Arrows"),
+            ["Ash of War"] = DataLoader.GetItems("AshOfWarSpawn", "Ash of War"),
+            ["Bell Bearings"] = DataLoader.GetItems("BellBearings", "Bell Bearings"),
+            ["Consumables"] = DataLoader.GetItems("Consumables", "Consumables"),
+            ["Cookbooks"] = DataLoader.GetEventItems("Cookbooks", "Cookbooks").Cast<Item>().ToList(),
+            ["Crafting Materials"] = DataLoader.GetItems("CraftingMaterials", "Crafting Materials"),
+            ["Crystal Tears"] = DataLoader.GetItems("CrystalTears", "Crystal Tears"),
+            ["Incantations"] = DataLoader.GetItems("Incantations", "Incantations"),
+            ["Key Items"] = DataLoader.GetEventItems("KeyItems", "Key Items").Cast<Item>().ToList(),
+            ["Pots and Perfumes"] = DataLoader.GetItems("PotsAndPerfumes", "Pots and Perfumes"),
+            ["Prattling Pate"] = DataLoader.GetItems("PrattlingPate", "Prattling Pate"),
+            ["Sorceries"] = DataLoader.GetItems("Sorceries", "Sorceries"),
+            ["Spirit Ashes"] = DataLoader.GetItems("SpiritAshes", "Spirit Ashes"),
+            ["Talismans"] = DataLoader.GetItems("Talismans", "Talismans"),
+            ["Upgrade Materials"] = DataLoader.GetItems("UpgradeMaterials", "Upgrade Materials"),
+            ["Weapons"] = DataLoader.GetWeapons().Cast<Item>().ToList()
+        };
 
-        var items = _itemsByCategory[_selectedCategory];
-        Items = new ObservableCollection<Item>(
-            _hasDlc ? items : items.Where(i => !i.IsDlc));
-        SelectedItem = Items.FirstOrDefault();
-        SelectedMassSpawnCategory = SelectedCategory;
+        return items;
     }
 
-    private void ApplyFilter()
-    {
-        var searchLower = _searchText.ToLower();
-        var filtered = _allItems.Where(i => i.Name.ToLower().Contains(searchLower));
-
-        if (!_hasDlc)
-            filtered = filtered.Where(i => !i.IsDlc);
-
-        Items = new ObservableCollection<Item>(filtered);
-        SelectedItem = Items.FirstOrDefault();
-    }
-
-    private void ConfigureForWeapon(Weapon weapon)
-    {
-        ShowWeaponOptions = true;
-        CanUpgrade = weapon.UpgradeType < 2;
-        if (CanUpgrade) MaxUpgradeLevel = weapon.UpgradeType == 0 ? 25 : 10;
-        
-        if (SelectedUpgrade > MaxUpgradeLevel) SelectedUpgrade = MaxUpgradeLevel;
-
-        if (weapon.CanApplyAow)
-        {
-            ShowAowOptions = true;
-            
-            var aows = _allAshesOfWar.Where(aow => aow.SupportsWeaponType(weapon.WeaponType));
-            
-            AvailableAshesOfWar = new ObservableCollection<AshOfWar>(aows);
-            SelectedAshOfWar = AvailableAshesOfWar.FirstOrDefault();
-        }
-        else
-        {
-            ShowAowOptions = false;
-            SelectedAshOfWar = null;
-            AvailableAffinities = new ObservableCollection<Affinity>();
-        }
-    }
-    
     private void SpawnItem()
     {
-        if (_selectedItem == null) return;
-        
-        int itemId = SelectedItem.Id;
-        int quantity = SelectedQuantity;
-        int aowId = -1;
-        int maxQuantity = SelectedItem.MaxStorage + SelectedItem.StackSize;
-        bool shouldQuantityAdjust = SelectedItem.StackSize > 1;
+        if (ItemSelection.SelectedItem == null) return;
 
-        if (SelectedItem is Weapon weapon)
+        int itemId = ItemSelection.SelectedItem.Id;
+        int quantity = ItemSelection.SelectedQuantity;
+        int aowId = -1;
+        int maxQuantity = ItemSelection.SelectedItem.MaxStorage + ItemSelection.SelectedItem.StackSize;
+        bool shouldQuantityAdjust = ItemSelection.SelectedItem.StackSize > 1;
+
+        if (ItemSelection.SelectedItem is Weapon weapon)
         {
-            if (CanUpgrade) itemId += SelectedUpgrade;
-        
-            if (weapon.CanApplyAow && SelectedAshOfWar != null)
+            if (ItemSelection.CanUpgrade) itemId += ItemSelection.SelectedUpgrade;
+
+            if (weapon.CanApplyAow && ItemSelection.SelectedAshOfWar != null)
             {
-                itemId += SelectedAffinity.GetIdOffset();
-                aowId = SelectedAshOfWar.Id;
+                itemId += ItemSelection.SelectedAffinity.GetIdOffset();
+                aowId = ItemSelection.SelectedAshOfWar.Id;
             }
         }
 
-        if (SelectedItem is EventItem eventItem && eventItem.NeedsEvent)
+        if (ItemSelection.SelectedItem is EventItem eventItem && eventItem.NeedsEvent)
         {
             _eventService.SetEvent(eventItem.EventId, true);
         }
-        
+
         _itemService.SpawnItem(itemId, quantity, aowId, shouldQuantityAdjust, maxQuantity);
     }
-    
+
     private void MassSpawn()
     {
-        if (string.IsNullOrEmpty(SelectedMassSpawnCategory) || 
+        if (string.IsNullOrEmpty(SelectedMassSpawnCategory) ||
             !_itemsByCategory.ContainsKey(SelectedMassSpawnCategory))
             return;
 
         var items = _itemsByCategory[SelectedMassSpawnCategory];
-    
-        if (!_hasDlc)
+        var hasDlc = _dlcService.IsDlcAvailable;
+
+        if (!hasDlc)
             items = items.Where(i => !i.IsDlc).ToList();
 
         foreach (var item in items)
@@ -421,16 +199,93 @@ public class ItemViewModel : BaseViewModel
             int maxQuantity = item.MaxStorage + item.StackSize;
             bool shouldQuantityAdjust = item.StackSize > 1;
 
-      
+            Task.Delay(100).Wait();
             if (item is EventItem eventItem && eventItem.NeedsEvent)
             {
                 _eventService.SetEvent(eventItem.EventId, true);
             }
-        
+
             _itemService.SpawnItem(itemId, quantity, aowId, shouldQuantityAdjust, maxQuantity);
         }
     }
+    
+    private void OpenCreateLoadoutWindow()
+    {
+        var window = new CreateLoadoutWindow(
+            _itemsByCategory,
+            _allAshesOfWar,
+            _customLoadoutTemplates,
+            _dlcService.IsDlcAvailable);
 
+        if (window.ShowDialog() == true) 
+            RefreshLoadouts();
+    }
+    
+    private void RefreshLoadouts()
+    {
+        _loadouts.Clear();
+        foreach (var name in _customLoadoutTemplates.Keys)
+        {
+            _loadouts.Add(name);
+        }
+
+        if (string.IsNullOrEmpty(SelectedLoadoutName) || !_customLoadoutTemplates.ContainsKey(SelectedLoadoutName))
+        {
+            SelectedLoadoutName = _loadouts.FirstOrDefault();
+        }
+
+        DataLoader.SaveCustomLoadouts(_customLoadoutTemplates);
+    }
+    
+    public void SpawnLoadout()
+    {
+        if (string.IsNullOrEmpty(SelectedLoadoutName) || !_customLoadoutTemplates.ContainsKey(SelectedLoadoutName))
+            return;
+
+        var loadout = _customLoadoutTemplates[SelectedLoadoutName];
+        foreach (var template in loadout.Items)
+        {
+            var item = _allItems.FirstOrDefault(i => i.Name == template.ItemName);
+            if (item == null) continue;
+
+            int itemId = item.Id;
+            int quantity = template.Quantity > 0 ? template.Quantity : item.StackSize;
+            int aowId = -1;
+            int maxQuantity = item.MaxStorage + item.StackSize;
+            bool shouldQuantityAdjust = item.StackSize > 1;
+
+            if (item is Weapon weapon)
+            {
+                if (weapon.UpgradeType < 2)
+                {
+                    itemId += template.Upgrade;
+                }
+                
+                if (weapon.CanApplyAow && !string.IsNullOrEmpty(template.AshOfWarName))
+                {
+                    var aow = _allAshesOfWar.FirstOrDefault(a => a.Name == template.AshOfWarName);
+                    if (aow != null)
+                    {
+                        aowId = aow.Id;
+
+                        if (!string.IsNullOrEmpty(template.AffinityName) && 
+                            Enum.TryParse<Affinity>(template.AffinityName, out var affinity))
+                        {
+                            itemId += affinity.GetIdOffset();
+                        }
+                    }
+                }
+            }
+
+            if (item is EventItem eventItem && eventItem.NeedsEvent)
+            {
+                _eventService.SetEvent(eventItem.EventId, true);
+            }
+
+            Task.Delay(100).Wait();
+            _itemService.SpawnItem(itemId, quantity, aowId, shouldQuantityAdjust, maxQuantity);
+        }
+    }
 
     #endregion
 }

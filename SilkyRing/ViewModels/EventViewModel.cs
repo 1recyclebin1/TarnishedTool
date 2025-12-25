@@ -124,6 +124,34 @@ namespace SilkyRing.ViewModels
             set => SetProperty(ref _eventStatusColor, value);
         }
         
+        private bool _isDrawEventsEnabled;
+        
+        public bool IsDrawEventsEnabled
+        {
+            get => _isDrawEventsEnabled;
+            set
+            {
+                if (!SetProperty(ref _isDrawEventsEnabled, value)) return;
+                if (_isDrawEventsEnabled) _eventService.PatchEventEnable();
+                _eventService.ToggleDrawEvents(_isDrawEventsEnabled);
+                
+            }
+        }
+        
+        private bool _isDisableEventsEnabled;
+        
+        public bool IsDisableEventsEnabled
+        {
+            get => _isDisableEventsEnabled;
+            set
+            {
+                if (!SetProperty(ref _isDisableEventsEnabled, value)) return;
+                _eventService.ToggleDisableEvents(_isDisableEventsEnabled);
+                
+            }
+        }
+
+        
         #endregion
 
         #region Private Methods

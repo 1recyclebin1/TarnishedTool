@@ -38,8 +38,8 @@
             <TextBlock Grid.Row="0" Text="Categories" Margin="0,0,0,5" />
 
             <ListBox Grid.Row="1"
-                     ItemsSource="{Binding Categories}"
-                     SelectedItem="{Binding SelectedCategory}"
+                     ItemsSource="{Binding ItemSelection.Categories}"
+                     SelectedItem="{Binding ItemSelection.SelectedCategory}"
                      BorderThickness="1"
                      BorderBrush="#333">
                 <ListBox.ItemContainerStyle>
@@ -73,7 +73,7 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            
+
             <Grid Grid.Row="2" Margin="0,5,0,5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -83,17 +83,17 @@
                            VerticalAlignment="Center"
                            Margin="0,0,5,0" />
                 <xctk:IntegerUpDown Grid.Column="1"
-                                    Value="{Binding SelectedQuantity}"
+                                    Value="{Binding ItemSelection.SelectedQuantity}"
                                     Minimum="1"
-                                    Maximum="{Binding MaxQuantity}"
-                                    IsEnabled="{Binding QuantityEnabled}"
+                                    Maximum="{Binding ItemSelection.MaxQuantity}"
+                                    IsEnabled="{Binding ItemSelection.QuantityEnabled}"
                                     Margin="0,5"
                                     Increment="1" />
             </Grid>
-            
+
             <StackPanel Grid.Row="3"
-                        Visibility="{Binding ShowWeaponOptions, Converter={StaticResource BooleanToVisibilityConverter}}">
-                
+                        Visibility="{Binding ItemSelection.ShowWeaponOptions, Converter={StaticResource BooleanToVisibilityConverter}}">
+
                 <Grid Margin="0,0,0,5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -103,34 +103,35 @@
                                VerticalAlignment="Center"
                                Margin="0,0,5,0" />
                     <xctk:IntegerUpDown Grid.Column="1"
-                                        Value="{Binding SelectedUpgrade}"
+                                        Value="{Binding ItemSelection.SelectedUpgrade}"
                                         Minimum="0"
-                                        Maximum="{Binding MaxUpgradeLevel}"
+                                        Maximum="{Binding ItemSelection.MaxUpgradeLevel}"
                                         Margin="0,5"
                                         Increment="1" />
                 </Grid>
-                
-                <StackPanel Visibility="{Binding ShowAowOptions, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+                <StackPanel
+                    Visibility="{Binding ItemSelection.ShowAowOptions, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <TextBlock Text="Ash of War:" Margin="0,0,0,5" />
-                    <ComboBox ItemsSource="{Binding AvailableAshesOfWar}"
-                              SelectedItem="{Binding SelectedAshOfWar}"
+                    <ComboBox ItemsSource="{Binding ItemSelection.AvailableAshesOfWar}"
+                              SelectedItem="{Binding ItemSelection.SelectedAshOfWar}"
                               DisplayMemberPath="Name"
                               Margin="0,0,0,10" />
 
                     <TextBlock Text="Affinity:" Margin="0,0,0,5" />
-                    <ComboBox ItemsSource="{Binding AvailableAffinities}"
-                              SelectedItem="{Binding SelectedAffinity}"
+                    <ComboBox ItemsSource="{Binding ItemSelection.AvailableAffinities}"
+                              SelectedItem="{Binding ItemSelection.SelectedAffinity}"
                               Margin="0,0,0,10" />
                 </StackPanel>
             </StackPanel>
-            
+
             <StackPanel Grid.Row="4" Margin="0,5,0,0">
                 <Button Content="Spawn"
                         Command="{Binding SpawnItemCommand}"
                         IsEnabled="{Binding AreOptionsEnabled}"
                         Height="25" />
             </StackPanel>
-            
+
             <StackPanel Grid.Row="5" Margin="0,15,0,0">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -167,14 +168,14 @@
                           IsEnabled="{Binding AutoSpawnEnabled}"
                           DisplayMemberPath="Name"
                           TextSearch.TextPath="Name"
-                       
+
                           Margin="0,5,0,0" />
             </StackPanel>
         </Grid>
-        
+
         <TextBox Grid.Row="0" Grid.Column="1"
                  Name="SearchBox"
-                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                 Text="{Binding ItemSelection.SearchText, UpdateSourceTrigger=PropertyChanged}"
                  HorizontalAlignment="Right"
                  Width="150"
                  Height="25"
@@ -231,7 +232,7 @@
                 </ControlTemplate>
             </TextBox.Template>
         </TextBox>
-        
+
         <Grid Grid.Row="1" Grid.Column="1" Margin="10,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
@@ -241,8 +242,8 @@
             <Border Grid.Row="0"
                     BorderThickness="1"
                     BorderBrush="#333">
-                <ListView ItemsSource="{Binding Items}"
-                          SelectedItem="{Binding SelectedItem}"
+                <ListView ItemsSource="{Binding ItemSelection.Items}"
+                          SelectedItem="{Binding ItemSelection.SelectedItem}"
                           VirtualizingPanel.IsVirtualizing="True"
                           VirtualizingPanel.VirtualizationMode="Recycling"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -296,7 +297,7 @@
                                            Foreground="#888888"
                                            FontStyle="Italic"
                                            Margin="10,0,0,0"
-                                           Visibility="{Binding DataContext.IsSearchActive, 
+                                           Visibility="{Binding DataContext.ItemSelection.IsSearchActive, 
                                                RelativeSource={RelativeSource AncestorType=UserControl}, 
                                                Converter={StaticResource BooleanToVisibilityConverter}}" />
                             </Grid>
@@ -304,7 +305,7 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </Border>
-            
+
             <Border Grid.Row="1"
                     BorderThickness="1"
                     BorderBrush="#333"
@@ -319,7 +320,7 @@
 
                     <StackPanel Grid.Column="0" Margin="0,0,5,0">
                         <TextBlock Text="Mass Spawn" FontWeight="Bold" Margin="0,0,0,5" />
-                        <ComboBox ItemsSource="{Binding Categories}"
+                        <ComboBox ItemsSource="{Binding ItemSelection.Categories}"
                                   SelectedItem="{Binding SelectedMassSpawnCategory}"
                                   Margin="0,0,0,5" />
                         <Button Content="Mass Spawn"
@@ -343,7 +344,7 @@
 
                             <Button Grid.Column="2"
                                     Content="Create"
-                          
+                                    Command="{Binding OpenCreateLoadoutCommand}"
                                     Height="20"
                                     Padding="8,0" />
                         </Grid>
@@ -353,7 +354,7 @@
                                   Margin="0,0,0,5" />
 
                         <Button Content="Spawn Selected Preset"
-                            
+
                                 IsEnabled="{Binding AreOptionsEnabled}"
                                 Height="25" />
                     </StackPanel>

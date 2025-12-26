@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
 using SilkyRing.Core;
@@ -84,7 +85,6 @@ namespace SilkyRing.ViewModels
             };
             _playerTick.Tick += PlayerTick;
         }
-        
 
         #region Commands
 
@@ -113,9 +113,9 @@ namespace SilkyRing.ViewModels
             get => _areOptionsEnabled;
             set => SetProperty(ref _areOptionsEnabled, value);
         }
-        
+
         private bool _isDlcAvailable;
-        
+
         public bool IsDlcAvailable
         {
             get => _isDlcAvailable;
@@ -217,7 +217,7 @@ namespace SilkyRing.ViewModels
             {
                 if (SetProperty(ref _isNoDeathEnabled, value))
                 {
-                    _playerService.ToggleDebugFlag(WorldChrManDbg.PlayerNoDeath, true);
+                    _playerService.ToggleDebugFlag(WorldChrManDbg.PlayerNoDeath, _isNoDeathEnabled);
                 }
             }
         }
@@ -403,7 +403,7 @@ namespace SilkyRing.ViewModels
                 }
             }
         }
-        
+
         private bool _isNoTimePassOnDeathEnabled;
 
         public bool IsNoTimePassOnDeathEnabled
@@ -524,11 +524,10 @@ namespace SilkyRing.ViewModels
                 if (SetProperty(ref _newGame, value))
                 {
                     SetNewGame(value);
-                    
                 }
             }
         }
-        
+
         private float _playerSpeed;
 
         public float PlayerSpeed
@@ -581,7 +580,7 @@ namespace SilkyRing.ViewModels
         }
 
         private bool _isRememberSpeedEnabled;
-        
+
         public bool IsRememberSpeedEnabled
         {
             get => _isRememberSpeedEnabled;
@@ -606,9 +605,9 @@ namespace SilkyRing.ViewModels
                 }
             }
         }
-        
+
         private bool _isAutoSetNewGameSevenEnabled;
-    
+
         public bool IsAutoSetNewGameSevenEnabled
         {
             get => _isAutoSetNewGameSevenEnabled;
@@ -642,8 +641,16 @@ namespace SilkyRing.ViewModels
         private void OnGameLoaded()
         {
             AreOptionsEnabled = true;
-            if (IsSetRfbsOnLoadEnabled) SetRfbs();
-            if (IsTorrentNoDeathEnabled) _playerService.ToggleTorrentNoDeath(true);
+
+            _ = Task.Run(() =>
+            {
+                Task.Delay(500).Wait();
+                if (IsSetRfbsOnLoadEnabled) SetRfbs();
+                if (IsTorrentNoDeathEnabled) _playerService.ToggleTorrentNoDeath(true);
+                if (IsNoDamageEnabled) _playerService.ToggleNoDamage(true);
+            });
+
+
             LoadStats();
             _playerTick.Start();
             _pauseUpdates = false;
@@ -673,7 +680,7 @@ namespace SilkyRing.ViewModels
             AreOptionsEnabled = false;
             _playerTick.Stop();
         }
-        
+
         private void OnGameStart()
         {
             if (!IsAutoSetNewGameSevenEnabled) return;
@@ -689,6 +696,10 @@ namespace SilkyRing.ViewModels
             _hotkeyManager.RegisterAction(HotkeyActions.SavePos2, () => SavePosition(1));
             _hotkeyManager.RegisterAction(HotkeyActions.RestorePos1, () => RestorePosition(0));
             _hotkeyManager.RegisterAction(HotkeyActions.RestorePos2, () => RestorePosition(1));
+            _hotkeyManager.RegisterAction(HotkeyActions.NoDeath,
+                () => { IsNoDeathEnabled = !IsNoDeathEnabled; });
+            _hotkeyManager.RegisterAction(HotkeyActions.NoDamage,
+                () => { IsNoDamageEnabled = !IsNoDamageEnabled; });
             _hotkeyManager.RegisterAction(HotkeyActions.InfiniteStamina,
                 () => { IsInfiniteStaminaEnabled = !IsInfiniteStaminaEnabled; });
             _hotkeyManager.RegisterAction(HotkeyActions.InfiniteConsumables,
@@ -862,14 +873,14 @@ namespace SilkyRing.ViewModels
             };
             _spEffectsWindow.Show();
         }
-        
+
         private void ApplyPrefs()
         {
             _isRememberSpeedEnabled = SettingsManager.Default.RememberPlayerSpeed;
             OnPropertyChanged(nameof(IsRememberSpeedEnabled));
             if (_isRememberSpeedEnabled) _playerDesiredSpeed = SettingsManager.Default.PlayerSpeed;
         }
-        
+
         private void SetNewGame(int value)
         {
             _playerService.SetNewGame(value);
@@ -879,7 +890,7 @@ namespace SilkyRing.ViewModels
                 _eventService.SetEvent(NewGameEventIds[i], i == activeIndex);
             }
         }
-        
+
         #endregion
     }
 }

@@ -17,6 +17,7 @@ public class StateService(MemoryService memoryService) : IStateService
         return memoryService.ReadUInt8((IntPtr)menuMan + Offsets.MenuMan.IsLoaded) == 1;
     }
     
+    
     public void Publish(State eventType)
     {
         if (_eventHandlers.ContainsKey(eventType))

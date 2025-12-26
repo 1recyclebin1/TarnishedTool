@@ -216,15 +216,18 @@ public class EnemyViewModel : BaseViewModel
         {
             SetProperty(ref _isLionPhaseLockEnabled, value);
             _enemyService.ToggleLionCooldownHook(_isLionPhaseLockEnabled);
-            if (_isLionPhaseLockEnabled && AreOptionsEnabled)
+            if (!AreOptionsEnabled) return;
+            if (_isLionPhaseLockEnabled)
             {
                 var chrIns = _enemyService.GetChrInsByEntityId(LionEntityId);
+                if (chrIns == IntPtr.Zero) return;
                 _spEffectService.ApplySpEffect(chrIns, PhaseTransitionCooldownSpEffectId);
                 _spEffectService.ApplySpEffect(chrIns, 20011237); //Some 15sec duration speffect, needed for no triple phase attack in lightning phase
             }
             else
             {
                 var chrIns = _enemyService.GetChrInsByEntityId(LionEntityId);
+                if (chrIns == IntPtr.Zero) return;
                 _spEffectService.RemoveSpEffect(chrIns, PhaseTransitionCooldownSpEffectId);
                 _spEffectService.RemoveSpEffect(chrIns, 20011237);
             }

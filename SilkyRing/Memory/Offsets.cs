@@ -147,6 +147,15 @@ namespace SilkyRing.Memory
                 LastAct = 0xE9C2,
             }
 
+            public enum TargetingSystemOffsets
+            {
+                DebugDrawFlags = 0xC8
+            }
+            
+            public static readonly BitFlag BlueTargetView = new(0x1, 1 << 3);
+            public static readonly BitFlag YellowTargetView = new(0xC8, 1 << 5);
+            public static readonly BitFlag WhiteLineToPlayer = new(0xC8, 1 << 6);
+
             public static readonly int[] NpcParam = [ChrManipulator, 0xC0, 0x18];
             public static readonly int[] NpcThinkParam = [ChrManipulator, 0xC0, 0x30];
 
@@ -166,10 +175,7 @@ namespace SilkyRing.Memory
                 LightningAbsorption = 0x1BC,
                 HolyAbsorption = 0x1C0,
             }
-
-            public static readonly BitFlag BlueTargetView = new(0xC8, 1 << 4);
-            public static readonly BitFlag YellowTargetView = new(0xC8, 1 << 5);
-            public static readonly BitFlag WhiteLineToPlayer = new(0xC8, 1 << 6);
+            
         }
 
         public static class FieldArea

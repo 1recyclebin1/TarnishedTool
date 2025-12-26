@@ -120,7 +120,8 @@ namespace SilkyRing.Services
         {
             var targetingSystem =
                 memoryService.ReadInt64(GetAiThinkPtr() + (int)ChrIns.AiThinkOffsets.TargetingSystem);
-            memoryService.SetBitValue((IntPtr)targetingSystem + ChrIns.BlueTargetView.Offset, ChrIns.BlueTargetView.Bit,
+            var flags = targetingSystem + (int)ChrIns.TargetingSystemOffsets.DebugDrawFlags;
+            memoryService.SetBitValue((IntPtr)flags + ChrIns.BlueTargetView.Offset, ChrIns.BlueTargetView.Bit,
                 isTargetingViewEnabled);
         }
 
@@ -128,7 +129,8 @@ namespace SilkyRing.Services
         {
             var targetingSystem =
                 memoryService.ReadInt64(GetAiThinkPtr() + (int)ChrIns.AiThinkOffsets.TargetingSystem);
-            return memoryService.IsBitSet((IntPtr)targetingSystem + ChrIns.BlueTargetView.Offset,
+            var flags = targetingSystem + (int)ChrIns.TargetingSystemOffsets.DebugDrawFlags;
+            return memoryService.IsBitSet((IntPtr)flags + ChrIns.BlueTargetView.Offset,
                 ChrIns.BlueTargetView.Bit);
         }
 

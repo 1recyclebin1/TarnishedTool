@@ -33,13 +33,16 @@ namespace SilkyRing.Services
             var kbCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.Kb;
             var triggersCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.Triggers;
             var updateCoordsCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.UpdateCoords;
+            var jumpInterceptCode = CodeCaveOffsets.Base + CodeCaveOffsets.NoClipJmpHook;
 
             if (isNoClipEnabled)
             {
+                
                 WriteInAirTimer(inAirTimerCode);
                 WriteKbCode(kbCode);
                 WriteTriggerCode(triggersCode);
                 WriteUpdateCoords(updateCoordsCode);
+                WriteJumpIntercept(jumpInterceptCode);
 
                 hookManager.InstallHook(inAirTimerCode.ToInt64(), Hooks.InAirTimer, new byte[]
                     { 0xF3, 0x0F, 0x11, 0x43, 0x18 });
@@ -49,6 +52,8 @@ namespace SilkyRing.Services
                     { 0x0F, 0xB6, 0x44, 0x24, 0x36 });
                 hookManager.InstallHook(updateCoordsCode.ToInt64(), Hooks.UpdateCoords, new byte[]
                     { 0x0F, 0x11, 0x43, 0x70, 0xC7, 0x43, 0x7C, 0x00, 0x00, 0x80, 0x3F });
+                hookManager.InstallHook(jumpInterceptCode.ToInt64(), Hooks.SetActionRequested,
+                    [0x49, 0x09, 0x41, 0x10, 0xC3]);
             }
             else
             {
@@ -56,11 +61,13 @@ namespace SilkyRing.Services
                 hookManager.UninstallHook(kbCode.ToInt64());
                 hookManager.UninstallHook(triggersCode.ToInt64());
                 hookManager.UninstallHook(updateCoordsCode.ToInt64());
+                hookManager.UninstallHook(jumpInterceptCode.ToInt64());
 
                 playerService.EnableGravity();
             }
         }
 
+        
         private void WriteInAirTimer(IntPtr inAirTimerCode)
         {
             var codeBytes = AsmLoader.GetAsmBytes("NoClip_InAirTimer");
@@ -125,6 +132,12 @@ namespace SilkyRing.Services
                 (updateCoordsCode.ToInt64() + 0x1AA, Hooks.UpdateCoords + 0xB, 5, 0x1AA + 1)
             });
             memoryService.WriteBytes(updateCoordsCode, codeBytes);
+        }
+        
+        private void WriteJumpIntercept(IntPtr jumpInterceptCode)
+        {
+            var bytes = AsmLoader.GetAsmBytes("NoClip_JumpHook");
+            memoryService.WriteBytes(jumpInterceptCode, bytes);
         }
 
         public void WriteNoClipSpeed(float speedMultiplier)

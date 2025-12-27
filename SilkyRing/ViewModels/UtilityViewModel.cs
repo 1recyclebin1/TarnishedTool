@@ -32,12 +32,16 @@ namespace SilkyRing.ViewModels
         private readonly IEmevdService _emevdService;
         private readonly PlayerViewModel _playerViewModel;
         private readonly IDlcService _dlcService;
+        private readonly ISpEffectService _spEffectService;
+
+        private static readonly uint[] DisableGraceWarpIds = [4270, 4271, 4272, 4282, 4286, 4288];
         
         private readonly List<ShopCommand> _allShops;
 
         public UtilityViewModel(IUtilityService utilityService, IStateService stateService,
             IEzStateService ezStateService, IPlayerService playerService, HotkeyManager hotkeyManager,
-            IEmevdService emevdService, PlayerViewModel playerViewModel, IDlcService dlcService)
+            IEmevdService emevdService, PlayerViewModel playerViewModel, IDlcService dlcService,
+            ISpEffectService spEffectService)
         {
             _utilityService = utilityService;
             _ezStateService = ezStateService;
@@ -46,6 +50,7 @@ namespace SilkyRing.ViewModels
             _emevdService = emevdService;
             _playerViewModel = playerViewModel;
             _dlcService = dlcService;
+            _spEffectService = spEffectService;
 
             stateService.Subscribe(State.Loaded, OnGameLoaded);
             stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);
@@ -178,6 +183,14 @@ namespace SilkyRing.ViewModels
             set
             {
                 if (!SetProperty(ref _isDungeonWarpEnabled, value)) return;
+                if (_isDungeonWarpEnabled && AreOptionsEnabled)
+                {
+                    var playerIns = _playerService.GetPlayerIns();
+                    foreach (var disableGraceWarpId in DisableGraceWarpIds)
+                    {
+                        _spEffectService.RemoveSpEffect(playerIns, disableGraceWarpId);
+                    }
+                }
                 _utilityService.ToggleDungeonWarp(_isDungeonWarpEnabled);
             }
         }
@@ -389,6 +402,14 @@ namespace SilkyRing.ViewModels
         {
             AreOptionsEnabled = true;
             GameSpeed = _utilityService.GetSpeed();
+            if (IsDungeonWarpEnabled)
+            {
+                var playerIns = _playerService.GetPlayerIns();
+                foreach (var disableGraceWarpId in DisableGraceWarpIds)
+                {
+                    _spEffectService.RemoveSpEffect(playerIns, disableGraceWarpId);
+                }
+            }
         }
 
         private void OnGameNotLoaded()

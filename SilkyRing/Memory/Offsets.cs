@@ -406,6 +406,7 @@ namespace SilkyRing.Memory
             public static long WarpAngleWrite;
             public static IntPtr HookedDeathFunction;
             public static long LionCooldownHook;
+            public static long SetActionRequested;
         }
 
         public static class Functions

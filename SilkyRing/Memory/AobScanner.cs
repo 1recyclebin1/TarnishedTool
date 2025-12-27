@@ -63,7 +63,7 @@ namespace SilkyRing.Memory
                 addr => Patches.NoLogo = addr, saved);
             TryPatternWithFallback("PlayerSound", Pattern.PlayerSound,
                 addr => Patches.PlayerSound = addr, saved);
-
+            
             Patches.EnableFreeCam = FindAddressByPattern(Pattern.EnableFreeCam);
             Patches.GetShopEvent = FindAddressByPattern(Pattern.GetShopEvent);
             Patches.DebugFont = FindAddressByPattern(Pattern.DebugFont);
@@ -72,7 +72,7 @@ namespace SilkyRing.Memory
                 { addr => Patches.CanDrawEvents1 = (IntPtr)addr, 0x4 },
                 { addr => Patches.CanDrawEvents2 = (IntPtr)addr, 0xD },
             });
-
+  
             TryPatternWithFallback("UpdateCoords", Pattern.UpdateCoords,
                 addr => Hooks.UpdateCoords = addr.ToInt64(), saved);
             TryPatternWithFallback("InAirTimer", Pattern.InAirTimer,
@@ -103,6 +103,8 @@ namespace SilkyRing.Memory
                 addr => Hooks.WarpAngleWrite = addr.ToInt64(), saved);
             TryPatternWithFallback("LionCooldownHook", Pattern.LionCooldownHook,
                 addr => Hooks.LionCooldownHook = addr.ToInt64(), saved);
+            TryPatternWithFallback("SetActionRequested", Pattern.SetActionRequested,
+                addr => Hooks.SetActionRequested = addr.ToInt64(), saved);
 
             using (var writer = new StreamWriter(savePath))
             {
@@ -185,6 +187,7 @@ namespace SilkyRing.Memory
             Console.WriteLine($@"Hooks.WarpAngleWrite: 0x{Hooks.WarpAngleWrite:X}");
             Console.WriteLine($@"Hooks.HookedDeathFunction: 0x{Hooks.HookedDeathFunction.ToInt64():X}");
             Console.WriteLine($@"Hooks.LionCooldownHook: 0x{Hooks.LionCooldownHook:X}");
+            Console.WriteLine($@"Hooks.SetActionRequested: 0x{Hooks.SetActionRequested:X}");
 
             Console.WriteLine($@"Funcs.GraceWarp: 0x{Functions.GraceWarp:X}");
             Console.WriteLine($@"Funcs.SetEvent: 0x{Functions.SetEvent:X}");

@@ -205,6 +205,16 @@
         );
 
         //Hooks
+        
+        public static readonly Pattern SetActionRequested = new Pattern(
+            [0x74, 0x05, 0x49, 0x09, 0x41, 0x10],
+            "xxxxxx",
+            2,
+            AddressingMode.Absolute
+        );
+
+        
+        
         public static readonly Pattern InAirTimer = new(
             [0xF3, 0x0F, 0x11, 0x43, 0x18, 0xC6],
             "xxxxxx",

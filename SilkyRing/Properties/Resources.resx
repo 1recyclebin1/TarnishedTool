@@ -4461,4 +4461,12 @@ c7 41 08 00 00 80 bf    mov    DWORD PTR [rcx+0x8],0xbf800000
 f3 0f 59 71 08          mulss  xmm6,DWORD PTR [rcx+0x8]
 e9 00 00 00 00          jmp    36 &lt;exit+0xa&gt;</value>
   </data>
+  <data name="NoClip_JumpHook" xml:space="preserve">
+    <value>83 fa 06                cmp    edx,0x6
+75 01                   jne    6 &lt;normal&gt;
+c3                      ret
+000000000006 &lt;normal&gt;:
+49 09 41 10             or     QWORD PTR [r9+0x10],rax
+c3                      ret</value>
+  </data>
 </root>

@@ -66,5 +66,8 @@ namespace SilkyRing.Memory
 
         public const int LookedUpChrIns = 0x1900;
         public const int LionCooldownHook = 0x1A00;
+
+        public const int NoClipJmpHook = 0x1B00;
+        
     }
 }

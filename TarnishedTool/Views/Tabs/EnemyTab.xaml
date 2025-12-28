@@ -1,0 +1,254 @@
+﻿<UserControl x:Class="TarnishedTool.Views.Tabs.EnemyTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0"
+                BorderThickness="1"
+                BorderBrush="#333"
+                CornerRadius="3"
+                Margin="0,0,0,5">
+            <StackPanel Margin="10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="All Enemies"
+                               Grid.Column="0" />
+                </Grid>
+
+                <Grid Margin="20,5,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+
+                    <CheckBox Content="No Death"
+                              IsChecked="{Binding IsNoDeathEnabled}"
+                              Grid.Column="0" Grid.Row="0"
+                              Margin="0,2" />
+
+                    <CheckBox Content="No Damage"
+                              IsChecked="{Binding IsNoDamageEnabled}"
+                              Grid.Column="0" Grid.Row="1"
+                              Margin="0,2" />
+
+                    <CheckBox Content="No Hit"
+                              IsChecked="{Binding IsNoHitEnabled}"
+                              Grid.Column="0" Grid.Row="2"
+                              Margin="0,2" />
+
+                    <CheckBox Content="No Attack"
+                              IsChecked="{Binding IsNoAttackEnabled}"
+                              Grid.Column="0" Grid.Row="3"
+                              Margin="0,2" />
+
+                    <CheckBox Content="No Move"
+                              IsChecked="{Binding IsNoMoveEnabled}"
+                              Grid.Column="1" Grid.Row="0"
+                              Margin="0,2" />
+
+                    <CheckBox Content="Disable Ai"
+                              IsChecked="{Binding IsDisableAiEnabled}"
+                              Grid.Column="1" Grid.Row="1"
+                              Margin="0,2" />
+
+                    <CheckBox Content="Targeting View"
+                              IsChecked="{Binding IsTargetingViewEnabled}"
+                              Grid.Column="1" Grid.Row="2"
+                              Margin="0,2" />
+
+                    <CheckBox Content="Reduced Targeting View"
+                              IsChecked="{Binding IsDrawReducedTargetViewEnabled}"
+                              IsEnabled="{Binding IsTargetingViewEnabled}"
+                              Grid.Column="1" Grid.Row="3" Margin="10,2,0,2" />
+
+                    <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="4" Margin="10,2,0,2">
+                        <Slider Name="DistanceSlider"
+                                Minimum="50"
+                                Maximum="150"
+                                Value="{Binding ReducedTargetViewDistance}"
+                                Width="100"
+                                TickFrequency="10"
+                                IsSnapToTickEnabled="True"
+                                IsEnabled="{Binding IsDrawReducedTargetViewEnabled}"
+                                Margin="10,0,5,0">
+                        </Slider>
+                        <TextBlock Text="{Binding ElementName=DistanceSlider, Path=Value, StringFormat='{}{0}'}"
+                                   VerticalAlignment="Center"
+                                   Margin="5,0,5,0" />
+
+                        <Border Background="#3498db"
+                                CornerRadius="10"
+                                Width="12"
+                                Height="12"
+                                Margin="5,0,0,0"
+                                VerticalAlignment="Center"
+                                ToolTip="Filters out target views that are not within a certain&#x0A;distance from the player to improve performance"
+                                ToolTipService.InitialShowDelay="100">
+                            <TextBlock Text="i"
+                                       Foreground="White"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontWeight="Bold"
+                                       FontSize="10" />
+                        </Border>
+                    </StackPanel>
+
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="1"
+                BorderThickness="1"
+                BorderBrush="#333"
+                CornerRadius="3"
+                Margin="0,0,0,5">
+            <StackPanel Margin="10">
+                <StackPanel Orientation=" Horizontal">
+                    <TextBlock Text="Elden Beast"
+                               Margin="0,0,0,10" />
+                    <Border
+                        Background="#3498db"
+                        CornerRadius="10"
+                        Width="12"
+                        Height="12"
+                        Margin="10,0,0,10"
+                        VerticalAlignment="Center"
+                        ToolTip="Force Elden Stars followed up by the selected attack"
+                        ToolTipService.InitialShowDelay='100'>
+                        <TextBlock Text="i"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontWeight="Bold"
+                                   FontSize="10" />
+                    </Border>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+
+                    <ComboBox ItemsSource="{Binding Acts}"
+                              DisplayMemberPath="Name"
+                              SelectedItem="{Binding SelectedAct}"
+                              Width="150" />
+
+                    <Button Content="Force Combo"
+                            IsEnabled="{Binding AreOptionsEnabled}"
+                            Command="{Binding EbForceActSequenceCommand}"
+                            Height="24"
+                            Margin="15,0,0,0" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="2"
+                BorderThickness="1"
+                BorderBrush="#333"
+                CornerRadius="3">
+            <StackPanel Margin="10">
+                <TextBlock Text="Rykard"
+                           Margin="0,0,0,10" />
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox Content="Rykard no Mega Attack"
+                              IsChecked="{Binding IsRykardNoMegaEnabled}"
+                              Margin="0,2" />
+
+                    <Border
+                        Background="#3498db"
+                        CornerRadius="10"
+                        Width="12"
+                        Height="12"
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        ToolTip="Lock his hp if you don't want snake attacks in p2 when he gets past 50%"
+                        ToolTipService.InitialShowDelay='100'>
+                        <TextBlock Text="i"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontWeight="Bold"
+                                   FontSize="10" />
+                    </Border>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="3"
+                BorderThickness="1"
+                BorderBrush="#333"
+                CornerRadius="3">
+            <StackPanel Margin="10">
+                <TextBlock Text="Lion"
+                           Margin="0,0,0,10" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Force Phase"></TextBlock>
+                    <Button Content="Lightning"
+                            Command="{Binding SetLightningPhaseCommand}"
+                            Margin="10,0,0,0">
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                <Binding Path="AreOptionsEnabled" />
+                                <Binding Path="IsDlcAvailable" />
+                            </MultiBinding>
+                        </Button.IsEnabled>
+                    </Button>
+                    <Button Content="Frost"
+                            Command="{Binding SetFrostPhaseCommand}"
+                            Margin="10,0,0,0">
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                <Binding Path="AreOptionsEnabled" />
+                                <Binding Path="IsDlcAvailable" />
+                            </MultiBinding>
+                        </Button.IsEnabled>
+                    </Button>
+
+                    <Button Content="Wind"
+                            Command="{Binding SetWindPhaseCommand}"
+                            Margin="10,0,0,0">
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                <Binding Path="AreOptionsEnabled" />
+                                <Binding Path="IsDlcAvailable" />
+                            </MultiBinding>
+                        </Button.IsEnabled>
+                    </Button>
+
+                    <TextBlock Text="Lock Phase"
+                               Margin="30,0,0,0"     
+                               ></TextBlock>
+                    <CheckBox
+                        IsChecked="{Binding IsLionPhaseLockEnabled}"
+                        IsEnabled="{Binding IsDlcAvailable}"
+                        Margin="15,0,0,0"
+                        ></CheckBox>
+                    
+                    
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

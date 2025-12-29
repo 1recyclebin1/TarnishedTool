@@ -61,7 +61,9 @@ public class SpEffectService(MemoryService memoryService) : ISpEffectService
             int id = memoryService.ReadInt32(current + (int)ChrIns.SpEffectEntry.Id);
             float timeLeft = memoryService.ReadFloat(current + (int)ChrIns.SpEffectEntry.TimeLeft);
             float duration = memoryService.ReadFloat(current + (int)ChrIns.SpEffectEntry.Duration);
-            spEffectList.Add(new SpEffectEntry(id, timeLeft, duration));
+            var paramData = memoryService.ReadInt64(current);
+            ushort stateInfo = memoryService.ReadUInt16((IntPtr) paramData + (int)ChrIns.SpEffectParamData.StateInfo);
+            spEffectList.Add(new SpEffectEntry(id, timeLeft, duration, stateInfo));
             current = (IntPtr)memoryService.ReadInt64(current + (int)ChrIns.SpEffectEntry.Next);
         }
         

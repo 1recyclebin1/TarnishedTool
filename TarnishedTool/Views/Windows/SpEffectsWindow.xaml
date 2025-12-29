@@ -23,10 +23,12 @@
                 <ColumnDefinition Width="80" />
                 <ColumnDefinition Width="60" />
                 <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="60" />
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Text="ID" Foreground="#888" FontWeight="SemiBold" />
             <TextBlock Grid.Column="1" Text="Time Left" Foreground="#888" FontWeight="SemiBold" />
             <TextBlock Grid.Column="2" Text="Duration" Foreground="#888" FontWeight="SemiBold" />
+            <TextBlock Grid.Column="3" Text="State Info" Foreground="#888" FontWeight="SemiBold" />
         </Grid>
 
         <ItemsControl Grid.Row="2" ItemsSource="{Binding ActiveEffects}"
@@ -38,10 +40,12 @@
                             <ColumnDefinition Width="80" />
                             <ColumnDefinition Width="60" />
                             <ColumnDefinition Width="60" />
+                            <ColumnDefinition Width="60" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="{Binding Id}" Foreground="White" />
                         <TextBlock Grid.Column="1" Text="{Binding TimeLeft, StringFormat={}{0:F1}}" Foreground="#aaa" />
                         <TextBlock Grid.Column="2" Text="{Binding Duration, StringFormat={}{0:F1}}" Foreground="#666" />
+                        <TextBlock Grid.Column="3" Text="{Binding StateInfo}" Foreground="White" />
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

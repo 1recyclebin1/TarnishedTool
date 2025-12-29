@@ -34,6 +34,12 @@ namespace TarnishedTool.Services
             return bytes[0];
         }
 
+        public ushort ReadUInt16(nint addr)
+        {
+            var bytes = ReadBytes(addr, 2);
+            return BitConverter.ToUInt16(bytes, 0);
+        }
+
         public uint ReadUInt32(IntPtr addr)
         {
             var bytes = ReadBytes(addr, 4);

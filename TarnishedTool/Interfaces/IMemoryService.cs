@@ -15,6 +15,7 @@ public interface IMemoryService
     void Dispose();
 
     byte ReadUInt8(nint addr);
+    ushort ReadUInt16(nint addr);
     uint ReadUInt32(nint addr);
     ulong ReadUInt64(nint addr);
     int ReadInt32(nint addr);

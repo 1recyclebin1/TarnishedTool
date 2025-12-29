@@ -38,10 +38,16 @@ namespace TarnishedTool.Memory
 
             public enum SpEffectEntry
             {
+                ParamData = 0x0,
                 Id = 0x8,
                 Next = 0x30,
                 TimeLeft = 0x40,
                 Duration = 0x48,
+            }
+
+            public enum SpEffectParamData
+            {
+                StateInfo = 0x156,
             }
 
             public const int Modules = 0x190;

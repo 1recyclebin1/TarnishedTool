@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Input;
 using TarnishedTool.Core;
 using TarnishedTool.Enums;
+using TarnishedTool.GameIds;
 using TarnishedTool.Interfaces;
 using TarnishedTool.Models;
 using TarnishedTool.Utilities;
@@ -18,10 +19,17 @@ public class EnemyViewModel : BaseViewModel
     private readonly IDlcService _dlcService;
     private readonly ISpEffectService _spEffectService;
 
-    public const uint LionEntityId = 20000800;
+    public const uint LionMainBossEntityId = 20000800;
+    public const int LionMainBossNpcParamId = 52100088;
+
+    public const uint LionMinibossEntityId = 2046460800;
+    public const int LionMinibossNpcParamId = 52100094;
+
     public const int LightningAnimationId = 20002;
+    public const int DeathblightAnimationId = 20003;
     public const int FrostAnimationId = 20004;
     public const int WindAnimationId = 20006;
+
     public const int PhaseTransitionCooldownSpEffectId = 20011216;
 
     private const int EbNpcThinkParamId = 22000000;
@@ -43,9 +51,12 @@ public class EnemyViewModel : BaseViewModel
         stateService.Subscribe(State.FirstLoaded, OnGameFirstLoaded);
 
         EbForceActSequenceCommand = new DelegateCommand(ForceEbActSequence);
-        SetLightningPhaseCommand = new DelegateCommand(ForceLightningPhase);
-        SetFrostPhaseCommand = new DelegateCommand(ForceFrostPhase);
-        SetWindPhaseCommand = new DelegateCommand(ForceWindPhase);
+        SetLionMainBossLightningPhaseCommand = new DelegateCommand(ForceLionMainBossLightningPhase);
+        SetLionMainBossFrostPhaseCommand = new DelegateCommand(ForceLionMainBossFrostPhase);
+        SetLionMainBossWindPhaseCommand = new DelegateCommand(ForceLionMainBossWindPhase);
+        SetLionMiniBossDeathblightPhaseCommand = new DelegateCommand(ForceLionMiniBossDeathblightPhase);
+        SetLionMiniBossFrostPhaseCommand = new DelegateCommand(ForceLionMiniBossFrostPhase);
+        SetLionMiniBossWindPhaseCommand = new DelegateCommand(ForceLionMiniBossWindPhase);
 
 
         _acts = new ObservableCollection<Act>(DataLoader.GetEbActs());
@@ -57,9 +68,12 @@ public class EnemyViewModel : BaseViewModel
     #region Commands
 
     public ICommand EbForceActSequenceCommand { get; set; }
-    public ICommand SetLightningPhaseCommand { get; set; }
-    public ICommand SetFrostPhaseCommand { get; set; }
-    public ICommand SetWindPhaseCommand { get; set; }
+    public ICommand SetLionMainBossLightningPhaseCommand { get; set; }
+    public ICommand SetLionMainBossFrostPhaseCommand { get; set; }
+    public ICommand SetLionMainBossWindPhaseCommand { get; set; }
+    public ICommand SetLionMiniBossDeathblightPhaseCommand { get; set; }
+    public ICommand SetLionMiniBossFrostPhaseCommand { get; set; }
+    public ICommand SetLionMiniBossWindPhaseCommand { get; set; }
 
     #endregion
 
@@ -72,9 +86,9 @@ public class EnemyViewModel : BaseViewModel
         get => _areOptionsEnabled;
         set => SetProperty(ref _areOptionsEnabled, value);
     }
-    
+
     private bool _isDlcAvailable;
-        
+
     public bool IsDlcAvailable
     {
         get => _isDlcAvailable;
@@ -206,35 +220,36 @@ public class EnemyViewModel : BaseViewModel
             _enemyService.ToggleRykardMega(_isRykardNoMegaEnabled);
         }
     }
-    
-    private bool _isLionPhaseLockEnabled;
 
-    public bool IsLionPhaseLockEnabled
+    private bool _isLionMainBossPhaseLockEnabled;
+
+    public bool IsLionMainBossPhaseLockEnabled
     {
-        get => _isLionPhaseLockEnabled;
+        get => _isLionMainBossPhaseLockEnabled;
         set
         {
-            SetProperty(ref _isLionPhaseLockEnabled, value);
-            _enemyService.ToggleLionCooldownHook(_isLionPhaseLockEnabled);
-            if (!AreOptionsEnabled) return;
-            if (_isLionPhaseLockEnabled)
-            {
-                var chrIns = _enemyService.GetChrInsByEntityId(LionEntityId);
-                if (chrIns == IntPtr.Zero) return;
-                _spEffectService.ApplySpEffect(chrIns, PhaseTransitionCooldownSpEffectId);
-                _spEffectService.ApplySpEffect(chrIns, 20011237); //Some 15sec duration speffect, needed for no triple phase attack in lightning phase
-            }
-            else
-            {
-                var chrIns = _enemyService.GetChrInsByEntityId(LionEntityId);
-                if (chrIns == IntPtr.Zero) return;
-                _spEffectService.RemoveSpEffect(chrIns, PhaseTransitionCooldownSpEffectId);
-                _spEffectService.RemoveSpEffect(chrIns, 20011237);
-            }
+            SetProperty(ref _isLionMainBossPhaseLockEnabled, value);
+            if (_isLionMainBossPhaseLockEnabled) IsLionMiniBossPhaseLockEnabled = false;
+            _enemyService.ToggleLionCooldownHook(_isLionMainBossPhaseLockEnabled, LionMainBossNpcParamId);
+            if (_isLionMainBossPhaseLockEnabled) ApplyLionSpEffects(LionMainBossEntityId);
+            else RemoveLionSpEffects(LionMainBossEntityId);
         }
     }
-    
-    
+
+    private bool _isLionMiniBossPhaseLockEnabled;
+
+    public bool IsLionMiniBossPhaseLockEnabled
+    {
+        get => _isLionMiniBossPhaseLockEnabled;
+        set
+        {
+            SetProperty(ref _isLionMiniBossPhaseLockEnabled, value);
+            if (_isLionMiniBossPhaseLockEnabled) IsLionMainBossPhaseLockEnabled = false;
+            _enemyService.ToggleLionCooldownHook(_isLionMiniBossPhaseLockEnabled, LionMinibossNpcParamId);
+            if (_isLionMiniBossPhaseLockEnabled) ApplyLionSpEffects(LionMinibossEntityId);
+            else RemoveLionSpEffects(LionMinibossEntityId);
+        }
+    }
 
     private ObservableCollection<Act> _acts;
 
@@ -265,6 +280,8 @@ public class EnemyViewModel : BaseViewModel
     private void OnGameNotLoaded()
     {
         AreOptionsEnabled = false;
+        IsLionMainBossPhaseLockEnabled = false;
+        IsLionMiniBossPhaseLockEnabled = false;
     }
 
     private void OnGameFirstLoaded()
@@ -281,7 +298,6 @@ public class EnemyViewModel : BaseViewModel
             _enemyService.ToggleReducedTargetingView(true);
         if (IsDrawReducedTargetViewEnabled && IsTargetingViewEnabled)
             _enemyService.SetTargetViewMaxDist(ReducedTargetViewDistance);
-        if (IsLionPhaseLockEnabled) _enemyService.ToggleLionCooldownHook(true); 
     }
 
     private void RegisterHotkeys()
@@ -310,18 +326,44 @@ public class EnemyViewModel : BaseViewModel
         _enemyService.ForceActSequence(acts, EbNpcThinkParamId);
     }
 
-    private void ForceLightningPhase() =>
-        _emevdService.ExecuteEmevdCommand(
-            GameIds.Emevd.EmevdCommands.ForcePlaybackAnimation(LionEntityId, LightningAnimationId));
-    
-    
-    private void ForceFrostPhase() =>
-        _emevdService.ExecuteEmevdCommand(
-            GameIds.Emevd.EmevdCommands.ForcePlaybackAnimation(LionEntityId, FrostAnimationId));
+    private void ApplyLionSpEffects(uint entityId)
+    {
+        var chrIns = _enemyService.GetChrInsByEntityId(entityId);
+        if (chrIns == IntPtr.Zero) return;
+        _spEffectService.ApplySpEffect(chrIns, PhaseTransitionCooldownSpEffectId);
+        _spEffectService.ApplySpEffect(chrIns,
+            20011237); //Some 15sec duration speffect, needed for no triple phase attack in lightning phase
+        _spEffectService.ApplySpEffect(chrIns, 20011245); // Phase 2 active
+    }
 
-    private void ForceWindPhase() =>
+    private void RemoveLionSpEffects(uint entityId)
+    {
+        var chrIns = _enemyService.GetChrInsByEntityId(entityId);
+        if (chrIns == IntPtr.Zero) return;
+        _spEffectService.RemoveSpEffect(chrIns, PhaseTransitionCooldownSpEffectId);
+        _spEffectService.RemoveSpEffect(chrIns, 20011237);
+    }
+
+    private void ForceLionMainBossLightningPhase() =>
         _emevdService.ExecuteEmevdCommand(
-            GameIds.Emevd.EmevdCommands.ForcePlaybackAnimation(LionEntityId, WindAnimationId));
+            Emevd.EmevdCommands.ForcePlaybackAnimation(LionMainBossEntityId, LightningAnimationId));
+
+    private void ForceLionMainBossFrostPhase() =>
+        _emevdService.ExecuteEmevdCommand(
+            Emevd.EmevdCommands.ForcePlaybackAnimation(LionMainBossEntityId, FrostAnimationId));
+
+    private void ForceLionMainBossWindPhase() =>
+        _emevdService.ExecuteEmevdCommand(
+            Emevd.EmevdCommands.ForcePlaybackAnimation(LionMainBossEntityId, WindAnimationId));
+
+    private void ForceLionMiniBossDeathblightPhase() => _emevdService.ExecuteEmevdCommand(
+        Emevd.EmevdCommands.ForcePlaybackAnimation(LionMinibossEntityId, DeathblightAnimationId));
+
+    private void ForceLionMiniBossFrostPhase() => _emevdService.ExecuteEmevdCommand(
+        Emevd.EmevdCommands.ForcePlaybackAnimation(LionMinibossEntityId, FrostAnimationId));
+
+    private void ForceLionMiniBossWindPhase() => _emevdService.ExecuteEmevdCommand(
+        Emevd.EmevdCommands.ForcePlaybackAnimation(LionMinibossEntityId, WindAnimationId));
 
     #endregion
 }

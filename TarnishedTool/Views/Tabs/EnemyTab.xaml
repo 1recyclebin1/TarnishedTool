@@ -11,6 +11,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0"
@@ -201,12 +202,12 @@
                 BorderBrush="#333"
                 CornerRadius="3">
             <StackPanel Margin="10">
-                <TextBlock Text="Lion"
+                <TextBlock Text="Lion Main Boss"
                            Margin="0,0,0,10" />
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Force Phase"></TextBlock>
                     <Button Content="Lightning"
-                            Command="{Binding SetLightningPhaseCommand}"
+                            Command="{Binding SetLionMainBossLightningPhaseCommand}"
                             Margin="10,0,0,0">
                         <Button.IsEnabled>
                             <MultiBinding Converter="{StaticResource BooleanAndConverter}">
@@ -216,7 +217,7 @@
                         </Button.IsEnabled>
                     </Button>
                     <Button Content="Frost"
-                            Command="{Binding SetFrostPhaseCommand}"
+                            Command="{Binding SetLionMainBossFrostPhaseCommand}"
                             Margin="10,0,0,0">
                         <Button.IsEnabled>
                             <MultiBinding Converter="{StaticResource BooleanAndConverter}">
@@ -227,7 +228,7 @@
                     </Button>
 
                     <Button Content="Wind"
-                            Command="{Binding SetWindPhaseCommand}"
+                            Command="{Binding SetLionMainBossWindPhaseCommand}"
                             Margin="10,0,0,0">
                         <Button.IsEnabled>
                             <MultiBinding Converter="{StaticResource BooleanAndConverter}">
@@ -238,15 +239,76 @@
                     </Button>
 
                     <TextBlock Text="Lock Phase"
-                               Margin="30,0,0,0"     
-                               ></TextBlock>
+                               Margin="30,0,0,0">
+                    </TextBlock>
                     <CheckBox
-                        IsChecked="{Binding IsLionPhaseLockEnabled}"
-                        IsEnabled="{Binding IsDlcAvailable}"
-                        Margin="15,0,0,0"
-                        ></CheckBox>
-                    
-                    
+                        IsChecked="{Binding IsLionMainBossPhaseLockEnabled}"
+                        Margin="15,0,0,0">
+                        <CheckBox.IsEnabled>
+                            <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                <Binding Path="AreOptionsEnabled" />
+                                <Binding Path="IsDlcAvailable" />
+                            </MultiBinding>
+                        </CheckBox.IsEnabled>
+                    </CheckBox>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="4"
+                BorderThickness="1"
+                BorderBrush="#333"
+                CornerRadius="3">
+            <StackPanel Margin="10">
+                <TextBlock Text="Lion Mini Boss"
+                           Margin="0,0,0,10" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Force Phase"></TextBlock>
+                    <Button Content="Deathblight"
+                            Command="{Binding SetLionMiniBossDeathblightPhaseCommand}"
+                            Margin="10,0,0,0">
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                <Binding Path="AreOptionsEnabled" />
+                                <Binding Path="IsDlcAvailable" />
+                            </MultiBinding>
+                        </Button.IsEnabled>
+                    </Button>
+                    <Button Content="Frost"
+                            Command="{Binding SetLionMiniBossFrostPhaseCommand}"
+                            Margin="10,0,0,0">
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                <Binding Path="AreOptionsEnabled" />
+                                <Binding Path="IsDlcAvailable" />
+                            </MultiBinding>
+                        </Button.IsEnabled>
+                    </Button>
+
+                    <Button Content="Wind"
+                            Command="{Binding SetLionMiniBossWindPhaseCommand}"
+                            Margin="10,0,0,0">
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                <Binding Path="AreOptionsEnabled" />
+                                <Binding Path="IsDlcAvailable" />
+                            </MultiBinding>
+                        </Button.IsEnabled>
+                    </Button>
+
+                    <TextBlock Text="Lock Phase"
+                               Margin="30,0,0,0">
+                    </TextBlock>
+                    <CheckBox
+                        IsChecked="{Binding IsLionMiniBossPhaseLockEnabled}"
+                        Margin="15,0,0,0">
+                        <CheckBox.IsEnabled>
+                            <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                <Binding Path="AreOptionsEnabled" />
+                                <Binding Path="IsDlcAvailable" />
+                            </MultiBinding>
+                        </CheckBox.IsEnabled>
+                    </CheckBox>
                 </StackPanel>
             </StackPanel>
         </Border>

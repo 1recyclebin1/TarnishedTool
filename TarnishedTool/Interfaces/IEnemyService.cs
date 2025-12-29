@@ -17,5 +17,5 @@ public interface IEnemyService
     void ToggleRykardMega(bool isRykardNoMegaEnabled);
     void ForceActSequence(int[] actSequence, int npcThinkParamId);
     void UnhookForceAct();
-    void ToggleLionCooldownHook(bool isEnabled);
+    void ToggleLionCooldownHook(bool isEnabled, int lionMainBossNpcParamId);
 }

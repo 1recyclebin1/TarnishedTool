@@ -666,15 +666,13 @@ namespace TarnishedTool.ViewModels
             {
                 if (SetProperty(ref _isShowSpEffectEnabled, value))
                 {
-                    if (_isShowSpEffectEnabled)
-                    {
-                        OpenSpEffectsWindow();
-                    }
+                    if (_isShowSpEffectEnabled) OpenSpEffectsWindow();
+                    else CloseSpEffectsWindow();
                 }
             }
         }
-        
 
+        
         private float _dist;
 
         public float Dist
@@ -1108,6 +1106,13 @@ namespace TarnishedTool.ViewModels
                 IsShowSpEffectEnabled = false;
             };
             _spEffectsWindow.Show();
+        }
+        
+        private void CloseSpEffectsWindow()
+        {
+            if (_spEffectsWindow == null || !_spEffectsWindow.IsVisible) return;
+            _spEffectsWindow.Close();
+            _spEffectsWindow = null;
         }
 
         #endregion

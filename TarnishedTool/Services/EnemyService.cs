@@ -146,7 +146,7 @@ public class EnemyService(MemoryService memoryService, HookManager hookManager) 
         hookManager.UninstallHook(codeLoc.ToInt64());
     }
 
-    public void ToggleLionCooldownHook(bool isEnabled)
+    public void ToggleLionCooldownHook(bool isEnabled, int lionEntityId)
     {
         var code = CodeCaveOffsets.Base + CodeCaveOffsets.LionCooldownHook;
         if (isEnabled)
@@ -156,6 +156,7 @@ public class EnemyService(MemoryService memoryService, HookManager hookManager) 
             var bytes = AsmHelper.GetJmpOriginOffsetBytes(hook, 5, code + 0x36);
             Array.Copy(bytes, 0, codeBytes, 0x31 + 1, 4);
             memoryService.WriteBytes(code, codeBytes);
+            memoryService.WriteInt32(code + 0x4, lionEntityId);
             hookManager.InstallHook(code.ToInt64(), hook, [0xF3, 0x0F, 0x59, 0x71, 0x08]);
         }
         else

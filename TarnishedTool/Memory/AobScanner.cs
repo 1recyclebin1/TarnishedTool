@@ -47,6 +47,7 @@ namespace TarnishedTool.Memory
             CSDbgEvent.Base = FindAddressByPattern(Pattern.CSDbgEvent);
             UserInputManager.Base = FindAddressByPattern(Pattern.UserInputManager);
             CSTrophy.Base = FindAddressByPattern(Pattern.CSTrophy);
+            MapDebugFlags.Base = FindAddressByPattern(Pattern.MapDebugFlags);
 
 
             TryPatternWithFallback("CanFastTravel", Pattern.CanFastTravel, addr => Patches.CanFastTravel = addr, saved);
@@ -107,6 +108,8 @@ namespace TarnishedTool.Memory
                 addr => Hooks.SetActionRequested = addr.ToInt64(), saved);
             TryPatternWithFallback("TorrentNoStagger", Pattern.TorrentNoStagger,
                 addr => Hooks.TorrentNoStagger = addr.ToInt64(), saved);
+            TryPatternWithFallback("NoMapAcquiredPopup", Pattern.NoMapAcquiredPopup,
+                addr => Hooks.NoMapAcquiredPopup = addr.ToInt64(), saved);
 
             using (var writer = new StreamWriter(savePath))
             {
@@ -160,6 +163,7 @@ namespace TarnishedTool.Memory
             Console.WriteLine($@"CSDbgEvent.Base: 0x{CSDbgEvent.Base.ToInt64():X}");
             Console.WriteLine($@"UserInputManager.Base: 0x{UserInputManager.Base.ToInt64():X}");
             Console.WriteLine($@"CSTrophy.Base: 0x{CSTrophy.Base.ToInt64():X}");
+            Console.WriteLine($@"MapDebugFlags.Base: 0x{MapDebugFlags.Base.ToInt64():X}");
 
             Console.WriteLine($@"Patches.NoLogo: 0x{Patches.NoLogo.ToInt64():X}");
             Console.WriteLine($@"Patches.NoRunesFromEnemies: 0x{Patches.NoRunesFromEnemies.ToInt64():X}");

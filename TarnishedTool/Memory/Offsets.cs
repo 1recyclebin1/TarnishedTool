@@ -379,6 +379,14 @@ namespace TarnishedTool.Memory
             public static IntPtr Base;
             public const int GameSpeed = 0x2CC;
         }
+        
+        public static class MapDebugFlags
+        {
+            public static IntPtr Base;
+            public const int ShowAllMaps = 0x0;
+            public const int ShowAllGraces = 0x1;
+            public const int ShowMapTiles = 0x6;
+        }
 
         public static class WorldChrManDbg
         {
@@ -434,6 +442,7 @@ namespace TarnishedTool.Memory
             public static IntPtr HookedDeathFunction;
             public static long LionCooldownHook;
             public static long SetActionRequested;
+            public static long NoMapAcquiredPopup;
         }
 
         public static class Functions

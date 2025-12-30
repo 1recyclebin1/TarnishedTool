@@ -398,6 +398,20 @@ namespace TarnishedTool.ViewModels
                 _utilityService.ToggleDrawMiniMap(_isDrawMiniMapEnabled);
             }
         }
+        private bool _isDrawTilesOnMapEnabled;
+
+        public bool IsDrawTilesOnMapEnabled
+        {
+            get => _isDrawTilesOnMapEnabled;
+            set
+            {
+                if (!SetProperty(ref _isDrawTilesOnMapEnabled, value)) return;
+                _utilityService.PatchDebugFont();
+                _utilityService.ToggleDrawTilesOnMap(_isDrawTilesOnMapEnabled);
+            }
+        }
+        
+        
 
         
 
@@ -533,6 +547,12 @@ namespace TarnishedTool.ViewModels
             {
                 _utilityService.PatchDebugFont();
                 _utilityService.ToggleDrawMiniMap(true);
+            }
+
+            if (IsDrawTilesOnMapEnabled)
+            {
+                _utilityService.PatchDebugFont();
+                _utilityService.ToggleDrawTilesOnMap(true);
             }
             if (IsHideCharactersEnabled) _utilityService.ToggleHideChr(true);
             if (IsHideMapEnabled) _utilityService.ToggleHideMap(true);

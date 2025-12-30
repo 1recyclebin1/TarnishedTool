@@ -75,5 +75,7 @@ namespace TarnishedTool.Memory
         public const int EnvParams = 0x1C70;
         public const int EnvQueryResult = 0x1CF0;
 
+        public const int NoAcquiredMapPopup = 0x1D50;
+
     }
 }

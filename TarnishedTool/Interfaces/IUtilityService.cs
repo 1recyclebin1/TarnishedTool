@@ -29,4 +29,5 @@ public interface IUtilityService
     void ToggleDrawMiniMap(bool isEnabled);
     void ToggleHideChr(bool isEnabled);
     void ToggleHideMap(bool isEnabled);
+    void ToggleDrawTilesOnMap(bool isEnabled);
 }

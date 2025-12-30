@@ -41,8 +41,6 @@ public class FlaskService(IEzStateService ezStateService, MemoryService memorySe
         ClearDialogResult();
 
         int flaskLevel = ezStateService.EnvQuery(EnvQueries.GetFlaskLevel).IntValue;
-        
-        Console.WriteLine("FlaskLevel: " + flaskLevel);
 
         if (flaskLevel > 13)
         {
@@ -51,7 +49,6 @@ public class FlaskService(IEzStateService ezStateService, MemoryService memorySe
         }
 
         int currentFlaskId = FindFlaskItemId(CrimsonFlaskBaseId);
-        Console.WriteLine("CurrentFlaskId: " + flaskLevel);
         if (currentFlaskId < 0)
         {
             ezStateService.ExecuteTalkCommand(TalkCommands.OpenDialog(7, NoFlasksTextId, 1, 0, 1));
@@ -192,13 +189,10 @@ public class FlaskService(IEzStateService ezStateService, MemoryService memorySe
 
     private void SyncFlaskCharges()
     {
-        // Get actual flask level from item ID, not from GetFlaskLevel
         int flaskId = FindFlaskItemId(CrimsonFlaskBaseId);
         if (flaskId < 0) return;
     
-        int flaskLevel = (flaskId - 1000) / 2; // derive level from item ID
-        
-        Console.WriteLine("Syncing flask charges, flasklevel: " + flaskLevel);
+        int flaskLevel = (flaskId - 1000) / 2;
 
         foreach (int flaskType in new[] { 0, 1 })
         {

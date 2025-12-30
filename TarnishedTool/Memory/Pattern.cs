@@ -204,7 +204,23 @@
             7
         );
 
+        public static readonly Pattern MapDebugFlags = new Pattern(
+            [0x85, 0xD2, 0x78, 0x10, 0x0F],
+            "xxxxx",
+            0x4,
+            AddressingMode.Relative,
+            3,
+            7
+        );
+
         //Hooks
+
+        public static readonly Pattern NoMapAcquiredPopup = new Pattern(
+            [0x74, 0x0D, 0x8B, 0x54],
+            "xxxx",
+            0x2,
+            AddressingMode.Absolute
+        );
 
         public static readonly Pattern SetActionRequested = new Pattern(
             [0x74, 0x05, 0x49, 0x09, 0x41, 0x10],

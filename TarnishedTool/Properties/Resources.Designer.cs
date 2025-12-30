@@ -893,6 +893,26 @@ namespace TarnishedTool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 51                      push   rcx
+        ///52                      push   rdx
+        ///41 50                   push   r8
+        ///41 51                   push   r9
+        ///50                      push   rax
+        ///48 8b 0d 00 00 00 00    mov    rcx,QWORD PTR [rip+0x0]        # e &lt;_main+0xe&gt;
+        ///48 8b 54 24 70          mov    rdx,QWORD PTR [rsp+0x70]
+        ///8b 52 18                mov    edx,DWORD PTR [rdx+0x18]
+        ///41 b8 00 00 00 00       mov    r8d,0x0
+        ///48 83 ec 20             sub    rsp,0x20
+        ///e8 00 00 00 00          call   25 &lt;_main+0x25&gt;
+        ///48 83 c4 20  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string NoAcquiredMapPopup {
+            get {
+                return ResourceManager.GetString("NoAcquiredMapPopup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 50                      push   rax
         ///48 a1 00 00 00 00 00    movabs rax,ds:0x0
         ///00 00 00

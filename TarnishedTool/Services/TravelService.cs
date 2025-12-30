@@ -45,6 +45,35 @@ namespace TarnishedTool.Services
             HookWarpCoordWrites(position);
         }
 
+        public void ToggleShowAllGraces(bool isEnabled) =>
+            memoryService.WriteUInt8(MapDebugFlags.Base + MapDebugFlags.ShowAllGraces, isEnabled ? 1 : 0);
+
+        public void ToggleShowAllMaps(bool isEnabled) =>
+            memoryService.WriteUInt8(MapDebugFlags.Base + MapDebugFlags.ShowAllMaps, isEnabled ? 1 : 0);
+
+        public void ToggleNoMapAcquiredPopups(bool isEnabled)
+        {
+            var code = CodeCaveOffsets.Base + CodeCaveOffsets.NoAcquiredMapPopup;
+            if (isEnabled)
+            {
+                var bytes = AsmLoader.GetAsmBytes("NoAcquiredMapPopup");
+                var hookLoc = Hooks.NoMapAcquiredPopup;
+                var skipDialogCreationJumpTarget = hookLoc + 0xD;
+                AsmHelper.WriteRelativeOffsets(bytes, new[]
+                {
+                    (code.ToInt64() + 0x7, VirtualMemFlag.Base.ToInt64(), 7, 0x7 + 3),
+                    (code.ToInt64() + 0x20, Functions.SetEvent, 5, 0x20 + 1),
+                    (code.ToInt64() + 0x30, skipDialogCreationJumpTarget, 5, 0x30 + 1)
+                });
+                memoryService.WriteBytes(code, bytes);
+                hookManager.InstallHook(code.ToInt64(), hookLoc, [0x8B, 0x54, 0x24, 0x40, 0x48, 0x8B, 0xCE]);
+            }
+            else
+            {
+                hookManager.UninstallHook(code.ToInt64());
+            }
+        }
+
         private void HookWarpCoordWrites(Position position)
         {
             int angleOffsetInStruct = 0xAB0;

@@ -101,6 +101,44 @@ namespace TarnishedTool.ViewModels
             set => SetProperty(ref _isRestOnWarpEnabled, value);
         }
         
+        private bool _isShowAllGracesEnabled;
+
+        public bool IsShowAllGracesEnabled
+        {
+            get => _isShowAllGracesEnabled;
+            set
+            {
+                SetProperty(ref _isShowAllGracesEnabled, value);
+                _travelService.ToggleShowAllGraces(_isShowAllGracesEnabled);
+            }
+        }
+        
+        private bool _isShowAllMapsEnabled;
+
+        public bool IsShowAllMapsEnabled
+        {
+            get => _isShowAllMapsEnabled;
+            set
+            {
+                SetProperty(ref _isShowAllMapsEnabled, value);
+                _travelService.ToggleShowAllMaps(_isShowAllMapsEnabled);
+            }
+        }
+
+        
+        private bool _isNoMapAcquiredPopupsEnabled;
+
+        public bool IsNoMapAcquiredPopupsEnabled
+        {
+            get => _isNoMapAcquiredPopupsEnabled;
+            set
+            {
+                SetProperty(ref _isNoMapAcquiredPopupsEnabled, value);
+                _travelService.ToggleNoMapAcquiredPopups(_isNoMapAcquiredPopupsEnabled);
+            }
+        }
+
+
         #endregion
 
         #region Private Methods
@@ -109,6 +147,9 @@ namespace TarnishedTool.ViewModels
         {
             AreOptionsEnabled = true;
             IsDlcAvailable = _dlcService.IsDlcAvailable;
+            if (IsShowAllGracesEnabled) _travelService.ToggleShowAllGraces(true);
+            if (IsShowAllMapsEnabled) _travelService.ToggleShowAllMaps(true);
+            if (IsNoMapAcquiredPopupsEnabled) _travelService.ToggleNoMapAcquiredPopups(true);
         }
 
         private void OnGameNotLoaded()

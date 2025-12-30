@@ -331,8 +331,7 @@ public class EnemyViewModel : BaseViewModel
         var chrIns = _enemyService.GetChrInsByEntityId(entityId);
         if (chrIns == IntPtr.Zero) return;
         _spEffectService.ApplySpEffect(chrIns, PhaseTransitionCooldownSpEffectId);
-        _spEffectService.ApplySpEffect(chrIns,
-            20011237); //Some 15sec duration speffect, needed for no triple phase attack in lightning phase
+        _spEffectService.ApplySpEffect(chrIns, 20011237); //Some 15sec duration speffect, needed for no triple phase attack in lightning phase
         _spEffectService.ApplySpEffect(chrIns, 20011245); // Phase 2 active
     }
 

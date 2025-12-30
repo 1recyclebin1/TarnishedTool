@@ -9,6 +9,7 @@
         <OutputType>WinExe</OutputType>
         <RootNamespace>TarnishedTool</RootNamespace>
         <AssemblyName>TarnishedTool</AssemblyName>
+        <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
         <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
         <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -25,6 +26,7 @@
         <DefineConstants>DEBUG;TRACE</DefineConstants>
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
+        <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
         <Prefer32bit>false</Prefer32bit>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -34,6 +36,7 @@
         <OutputPath>bin\Release\</OutputPath>
         <DefineConstants>TRACE</DefineConstants>
         <ErrorReport>prompt</ErrorReport>
+        <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
         <WarningLevel>4</WarningLevel>
         <Prefer32bit>false</Prefer32bit>
     </PropertyGroup>
@@ -300,9 +303,7 @@
         <None Include="packages.config" />
     </ItemGroup>
     <ItemGroup>
-      <Resource Include="Assets\Silky.ico" />
-    </ItemGroup>
-    <ItemGroup>
+      <Resource Include="Assets\icon.ico" />
       <Content Include="FodyWeavers.xml" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

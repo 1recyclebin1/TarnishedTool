@@ -226,8 +226,9 @@
 
                         <Grid Margin="10,0,0,0">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
                             <Grid.RowDefinitions>
@@ -282,6 +283,18 @@
                                     </MultiBinding>
                                 </Button.IsEnabled>
                             </Button>
+                            <CheckBox Content="Show All Graces" Grid.Row="0" Grid.Column="2"
+                                      IsChecked="{Binding IsShowAllGracesEnabled}"
+                                      Margin="20,5, 0,2">
+                            </CheckBox>
+                            <CheckBox Content="Show All Maps" Grid.Row="1" Grid.Column="2"
+                                      IsChecked="{Binding IsShowAllMapsEnabled}"
+                                      Margin="20,5, 0,2">
+                            </CheckBox>
+                            <CheckBox Content="No Acquired Map Popups" Grid.Row="2" Grid.Column="2"
+                                      IsChecked="{Binding IsNoMapAcquiredPopupsEnabled}"
+                                      Margin="20,5, 0,2">
+                            </CheckBox>
                         </Grid>
                     </StackPanel>
                 </Border>

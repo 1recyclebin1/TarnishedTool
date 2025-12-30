@@ -4520,4 +4520,24 @@ ff d0                   call   rax
 48 81 c4 98 04 00 00    add    rsp,0x498
 c3                      ret</value>
   </data>
+  <data name="NoAcquiredMapPopup" xml:space="preserve">
+    <value>51                      push   rcx
+52                      push   rdx
+41 50                   push   r8
+41 51                   push   r9
+50                      push   rax
+48 8b 0d 00 00 00 00    mov    rcx,QWORD PTR [rip+0x0]        # e &lt;_main+0xe&gt;
+48 8b 54 24 70          mov    rdx,QWORD PTR [rsp+0x70]
+8b 52 18                mov    edx,DWORD PTR [rdx+0x18]
+41 b8 00 00 00 00       mov    r8d,0x0
+48 83 ec 20             sub    rsp,0x20
+e8 00 00 00 00          call   25 &lt;_main+0x25&gt;
+48 83 c4 20             add    rsp,0x20
+58                      pop    rax
+41 59                   pop    r9
+41 58                   pop    r8
+5a                      pop    rdx
+59                      pop    rcx
+e9 00 00 00 00          jmp    35 &lt;_main+0x35&gt;</value>
+  </data>
 </root>

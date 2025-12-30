@@ -18,13 +18,13 @@ public static class GameLauncher
             string exePath = GetExePath();
             if (exePath == null) return;
 
-            var psi = new ProcessStartInfo(exePath)
+            var psi = new ProcessStartInfo("cmd.exe")
             {
-                EnvironmentVariables = { ["SteamAppId"] = "1245620" },
+                Arguments = $"/c set SteamAppId=1245620 && start \"\" \"{exePath}\"",
                 UseShellExecute = false,
+                CreateNoWindow = true,
                 WorkingDirectory = Path.GetDirectoryName(exePath)
             };
-        
             Process.Start(psi);
         }
         catch (Exception ex)

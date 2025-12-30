@@ -250,6 +250,9 @@ namespace TarnishedTool.Services
             memoryService.WriteUInt8(GroupMask.Base + (int)GroupMask.GroupMasks.ShouldShowMap2, isEnabled ? 0 : 1);
         }
 
+        public void ToggleDrawTilesOnMap(bool isEnabled) => 
+            memoryService.WriteUInt8(MapDebugFlags.Base + MapDebugFlags.ShowMapTiles, isEnabled ? 1 : 0);
+
         private IntPtr GetDbgCamCoordsPtr() =>
             memoryService.FollowPointers(FieldArea.Base,
                 [FieldArea.GameRend, FieldArea.CSDebugCam, FieldArea.CamCoords], false);

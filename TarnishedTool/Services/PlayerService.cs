@@ -388,22 +388,7 @@ namespace TarnishedTool.Services
 
         public int GetCurrentAnimation() =>
             memoryService.ReadInt32(GetChrTimeActPtr() + (int)ChrIns.ChrTimeActOffsets.AnimationId);
-
-        public void ToggleTorrentAnywhere(bool isEnabled)
-        {
-            if (isEnabled)
-            {
-                memoryService.WriteBytes(Patches.IsHorseDisabled, [0x30, 0xC0, 0x48, 0x83, 0xC4, 0x28, 0xC3]);
-                memoryService.WriteBytes(Patches.IsHorseDisabledInDungeons, [0x30, 0xC0, 0x90, 0x90, 0x90, 0x90, 0x90]);
-                SetWhistleEnabled();
-            }
-            else
-            {
-                memoryService.WriteBytes(Patches.IsHorseDisabled, [0x80, 0x79, 0x36, 0x00, 0x0F, 0x95, 0xC0]);
-                memoryService.WriteBytes(Patches.IsHorseDisabledInDungeons, [ 0x80, 0x78, 0x36, 0x00, 0x0F, 0x95, 0xC0 ]);
-            }
-        }
-
+        
         public void SetWhistleEnabled() =>
             memoryService.WriteUInt8(GetChrRidePtr() + (int)ChrIns.ChrRideOffsets.IsHorseWhistleDisabled, 0);
 

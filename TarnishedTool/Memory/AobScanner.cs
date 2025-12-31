@@ -86,11 +86,7 @@ namespace TarnishedTool.Memory
                 () => Functions.GetChrInsByEntityId = FindAddressByPattern(Pattern.GetChrInsByEntityId).ToInt64(),
                 () => Functions.NpcEzStateTalkCtor = FindAddressByPattern(Pattern.NpcEzStateTalkCtor).ToInt64(),
                 () => Functions.EzStateEnvQueryImplCtor =
-                    FindAddressByPattern(Pattern.EzStateEnvQueryImplCtor).ToInt64(),
-                () => Patches.IsHorseDisabledInDungeons = FindAddressByRelativeChain(Pattern.IsHorseDisabledInDungeons,
-                    new RelativeJump(0, 1, 5),
-                    new RelativeJump(4, 1, 5)
-                ) + 0xD6
+                    FindAddressByPattern(Pattern.EzStateEnvQueryImplCtor).ToInt64()
             );
 
 
@@ -107,9 +103,6 @@ namespace TarnishedTool.Memory
                 () => TryPatternWithFallback("CloseMap", Pattern.CloseMap, addr => Patches.CloseMap = addr, saved),
                 () => TryPatternWithFallback("NoLogo", Pattern.NoLogo, addr => Patches.NoLogo = addr, saved),
                 () => TryPatternWithFallback("PlayerSound", Pattern.PlayerSound, addr => Patches.PlayerSound = addr,
-                    saved),
-                () => TryPatternWithFallback("IsHorseDisabled", Pattern.IsHorseDisabled,
-                    addr => Patches.IsHorseDisabled = addr,
                     saved),
                 () => TryPatternWithFallback("UpdateCoords", Pattern.UpdateCoords,
                     addr => Hooks.UpdateCoords = addr.ToInt64(), saved),
@@ -207,8 +200,6 @@ namespace TarnishedTool.Memory
             Console.WriteLine($@"Patches.NoLogo: 0x{Patches.NoLogo.ToInt64():X}");
             Console.WriteLine($@"Patches.DebugFont: 0x{Patches.DebugFont.ToInt64():X}");
             Console.WriteLine($@"Patches.PlayerSound: 0x{Patches.PlayerSound.ToInt64():X}");
-            Console.WriteLine($@"Patches.IsHorseDisabled: 0x{Patches.IsHorseDisabled.ToInt64():X}");
-            Console.WriteLine($@"Patches.IsHorseDisabledInDungeons: 0x{Patches.IsHorseDisabledInDungeons.ToInt64():X}");
 
             Console.WriteLine($@"Hooks.UpdateCoords: 0x{Hooks.UpdateCoords:X}");
             Console.WriteLine($@"Hooks.InAirTimer: 0x{Hooks.InAirTimer:X}");

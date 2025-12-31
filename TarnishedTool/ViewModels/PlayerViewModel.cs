@@ -420,19 +420,6 @@ namespace TarnishedTool.ViewModels
             }
         }       
         
-        private bool _isTorrentAnywhereEnabled;
-
-        public bool IsTorrentAnywhereEnabled
-        {
-            get => _isTorrentAnywhereEnabled;
-            set
-            {
-                if (SetProperty(ref _isTorrentAnywhereEnabled, value))
-                {
-                    _playerService.ToggleTorrentAnywhere(_isTorrentAnywhereEnabled);
-                }
-            }
-        }   
         
         private bool _isTorrentNoStaggerEnabled;
 
@@ -682,7 +669,6 @@ namespace TarnishedTool.ViewModels
             
             if (IsTorrentNoDeathEnabled) _playerService.ToggleTorrentNoDeath(true);
             if (IsNoDamageEnabled) _playerService.ToggleNoDamage(true);
-            if (IsTorrentAnywhereEnabled) _playerService.SetWhistleEnabled();
             
             LoadStats();
             _playerTick.Start();
@@ -710,7 +696,6 @@ namespace TarnishedTool.ViewModels
             if (IsNoRuneArcLossEnabled) _playerService.ToggleNoRuneArcLoss(true);
             if (IsNoRuneLossEnabled) _playerService.ToggleNoRuneLoss(true);
             if (IsNoTimePassOnDeathEnabled) _playerService.ToggleNoTimePassOnDeath(true);
-            if (IsTorrentAnywhereEnabled) _playerService.ToggleTorrentAnywhere(true);
             _pauseUpdates = false;
         }
 

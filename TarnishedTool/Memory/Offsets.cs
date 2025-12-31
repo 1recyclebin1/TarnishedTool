@@ -486,8 +486,6 @@ namespace TarnishedTool.Memory
             public static IntPtr NoLogo;
             public static IntPtr DebugFont;
             public static IntPtr PlayerSound;
-            public static IntPtr IsHorseDisabled;
-            public static IntPtr IsHorseDisabledInDungeons;
         }
     }
 }

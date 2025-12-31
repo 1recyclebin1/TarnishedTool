@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
 using H.Hooks;
@@ -282,11 +283,12 @@ public class SettingsViewModel : BaseViewModel
 
     public void CancelSettingHotkey()
     {
-        if (_currentSettingHotkeyId != null &&
-            _hotkeyLookup.TryGetValue(_currentSettingHotkeyId, out var binding))
+        var actionId = _currentSettingHotkeyId;
+    
+        if (actionId != null && _hotkeyLookup.TryGetValue(actionId, out var binding))
         {
             binding.HotkeyText = "None";
-            _hotkeyManager.SetHotkey(_currentSettingHotkeyId, new Keys());
+            _hotkeyManager.SetHotkey(actionId, new Keys());
         }
 
         StopSettingHotkey();
@@ -403,15 +405,23 @@ public class SettingsViewModel : BaseViewModel
 
     private void StopSettingHotkey()
     {
-        if (_tempHook != null)
-        {
-            _tempHook.Down -= TempHook_Down;
-            _tempHook.Dispose();
-            _tempHook = null;
-        }
-
+        var hook = _tempHook;
+        _tempHook = null;
         _currentSettingHotkeyId = null;
         _currentKeys = null;
+
+        if (hook != null)
+        {
+            hook.Down -= TempHook_Down;
+            try
+            {
+                hook.Dispose();
+            }
+            catch (COMException)
+            {
+                // Already stopped - harmless
+            }
+        }
     }
 
     private void HandleExistingHotkey(Keys currentKeys)
@@ -449,3 +459,4 @@ public class SettingsViewModel : BaseViewModel
 
     #endregion
 }
+

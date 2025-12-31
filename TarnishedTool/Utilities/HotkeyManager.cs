@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using H.Hooks;
 using TarnishedTool.Enums;
 using TarnishedTool.Interfaces;
@@ -49,7 +50,7 @@ public class HotkeyManager
             if (!e.Keys.Are(keys.Values.ToArray())) continue;
             if (_actions.TryGetValue(actionId, out var action))
             {
-                action.Invoke();
+                Application.Current.Dispatcher.BeginInvoke(action); 
             }
 
             break;

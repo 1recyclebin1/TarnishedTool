@@ -320,6 +320,7 @@ public class EnemyViewModel : BaseViewModel
         _hotkeyManager.RegisterAction(HotkeyActions.AllNoAttack, () => { IsNoAttackEnabled = !IsNoAttackEnabled; });
         _hotkeyManager.RegisterAction(HotkeyActions.AllNoMove, () => { IsNoMoveEnabled = !IsNoMoveEnabled; });
         _hotkeyManager.RegisterAction(HotkeyActions.AllDisableAi, () => { IsDisableAiEnabled = !IsDisableAiEnabled; });
+        _hotkeyManager.RegisterAction(HotkeyActions.AllTargetingView, () => { IsTargetingViewEnabled = !IsTargetingViewEnabled; });
         _hotkeyManager.RegisterAction(HotkeyActions.ForceEbActSequence, () => SafeExecute(ForceEbActSequence));
     }
 

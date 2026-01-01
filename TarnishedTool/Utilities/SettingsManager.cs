@@ -12,8 +12,13 @@ public class SettingsManager
 
     public double DefenseWindowLeft { get; set; }
     public double DefenseWindowTop { get; set; }
+    public bool DefensesAlwaysOnTop { get; set; }
     public double AttackInfoWindowLeft { get; set; }
     public double AttackInfoWindowTop { get; set; }
+    public bool AtkInfoAlwaysOnTop { get; set; }
+    public double TargetSpEffectWindowLeft { get; set; }
+    public double TargetSpEffectWindowTop { get; set; }
+    public bool TargetSpEffectAlwaysOnTop { get; set; }
     public double WindowLeft { get; set; }
     public double WindowTop { get; set; }
     public bool AlwaysOnTop { get; set; }
@@ -49,8 +54,13 @@ public class SettingsManager
             {
                 $"DefenseWindowLeft={DefenseWindowLeft}",
                 $"DefenseWindowTop={DefenseWindowTop}",
+                $"DefensesAlwaysOnTop={DefensesAlwaysOnTop}",
                 $"AttackInfoWindowLeft={AttackInfoWindowLeft}",
                 $"AttackInfoWindowTop={AttackInfoWindowTop}",
+                $"AtkInfoAlwaysOnTop={AtkInfoAlwaysOnTop}",
+                $"TargetSpEffectWindowLeft={TargetSpEffectWindowLeft}",
+                $"TargetSpEffectWindowTop={TargetSpEffectWindowTop}",
+                $"TargetSpEffectAlwaysOnTop={TargetSpEffectAlwaysOnTop}",
                 $"WindowLeft={WindowLeft}",
                 $"WindowTop={WindowTop}",
                 $"AlwaysOnTop={AlwaysOnTop}",
@@ -106,6 +116,10 @@ public class SettingsManager
                                 double.TryParse(value, out double dwt);
                                 settings.DefenseWindowTop = dwt;
                                 break;
+                            case "DefensesAlwaysOnTop":
+                                bool.TryParse(value, out bool daot);
+                                settings.DefensesAlwaysOnTop = daot;
+                                break;
                             case "AttackInfoWindowLeft":
                                 double.TryParse(value, out double aiwl);
                                 settings.AttackInfoWindowLeft = aiwl;
@@ -113,6 +127,22 @@ public class SettingsManager
                             case "AttackInfoWindowTop":
                                 double.TryParse(value, out double aiwt);
                                 settings.AttackInfoWindowTop = aiwt;
+                                break;
+                            case "AtkInfoAlwaysOnTop":
+                                bool.TryParse(value, out bool aiaot);
+                                settings.AtkInfoAlwaysOnTop = aiaot;
+                                break;
+                            case "TargetSpEffectWindowLeft":
+                                double.TryParse(value, out double tsewl);
+                                settings.TargetSpEffectWindowLeft = tsewl;
+                                break;
+                            case "TargetSpEffectWindowTop":
+                                double.TryParse(value, out double tsewt);
+                                settings.TargetSpEffectWindowTop = tsewt;
+                                break;
+                            case "TargetSpEffectAlwaysOnTop":
+                                bool.TryParse(value, out bool tseaot);
+                                settings.TargetSpEffectAlwaysOnTop = tseaot;
                                 break;
                             case "WindowLeft":
                                 double.TryParse(value, out double wl);

@@ -1,9 +1,10 @@
-﻿<Window x:Class="TarnishedTool.Views.Windows.DefensesWindow"
+﻿<windows:TopmostWindow x:Class="TarnishedTool.Views.Windows.DefensesWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:controls="clr-namespace:TarnishedTool.Controls"
+        xmlns:windows="clr-namespace:TarnishedTool.Views.Windows"
         Style="{StaticResource DefaultWindowStyle}"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -13,12 +14,22 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <controls:TitleBar Title="Defenses" />
+        
+        <CheckBox x:Name="AlwaysOnTopCheckBox"
+                  Grid.Row="1" 
+                  HorizontalAlignment="Right"
+                  Margin="0,0,10,0"
+                  Checked="AlwaysOnTopCheckBox_Checked"
+                  Unchecked="AlwaysOnTopCheckBox_Unchecked">
+            Always on Top
+        </CheckBox>
 
-        <Grid Grid.Row="1" Margin="20">
+        <Grid Grid.Row="2" Margin="20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -68,4 +79,4 @@
             
         </Grid>
     </Grid>
-</Window>
+</windows:TopmostWindow>

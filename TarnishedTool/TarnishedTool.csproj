@@ -251,6 +251,7 @@
         <Compile Include="Views\Windows\SpEffectsWindow.xaml.cs">
           <DependentUpon>SpEffectsWindow.xaml</DependentUpon>
         </Compile>
+        <Compile Include="Views\Windows\TopmostWindow.cs" />
         <Page Include="Controls\Titlebar.xaml" />
         <Page Include="MainWindow.xaml">
             <Generator>MSBuild:Compile</Generator>

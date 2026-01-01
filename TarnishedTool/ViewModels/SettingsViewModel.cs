@@ -100,7 +100,9 @@ public class SettingsViewModel : BaseViewModel
             new("Targeting View", HotkeyActions.TargetTargetingView),
             new("Open Attack Info", HotkeyActions.ShowAttackInfo),
             new("Open Defenses", HotkeyActions.ShowDefenses),
+            new("Open Special Effects", HotkeyActions.ShowTargetSpEffects),
             new("No Move", HotkeyActions.TargetNoMove),
+            new("No Attack", HotkeyActions.TargetNoAttack),
             new("Force Act Sequence", HotkeyActions.ForceActSequence),
             new("Kill All Except Target", HotkeyActions.KillAllExceptTarget),
         ];

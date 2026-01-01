@@ -775,12 +775,16 @@ namespace TarnishedTool.ViewModels
                 () => ExecuteTargetAction(() => IsRepeatActEnabled = !IsRepeatActEnabled));
             _hotkeyManager.RegisterAction(HotkeyActions.TargetTargetingView,
                 () => ExecuteTargetAction(() => IsTargetingViewEnabled = !IsTargetingViewEnabled));
-            // _hotkeyManager.RegisterAction(HotkeyActions.ShowAttackInfo,
-            //     () => ExecuteTargetAction(() => IsShowAttackInfoEnabled = !IsTargetingViewEnabled));
-            // _hotkeyManager.RegisterAction(HotkeyActions.ShowDefenses,
-            //     () => ExecuteTargetAction(() =>  = !IsTargetingViewEnabled));
+            _hotkeyManager.RegisterAction(HotkeyActions.ShowAttackInfo,
+                () => ExecuteTargetAction(() => IsShowAttackInfoEnabled = !IsShowAttackInfoEnabled));
+            _hotkeyManager.RegisterAction(HotkeyActions.ShowDefenses,
+                () => ExecuteTargetAction(() => IsShowDefensesEnabled = !IsShowDefensesEnabled));
+            _hotkeyManager.RegisterAction(HotkeyActions.ShowTargetSpEffects,
+                () => ExecuteTargetAction(() => IsShowSpEffectEnabled = !IsShowSpEffectEnabled));
             _hotkeyManager.RegisterAction(HotkeyActions.TargetNoMove,
-                () => ExecuteTargetAction(() => IsNoMoveEnabled = !IsTargetingViewEnabled));
+                () => ExecuteTargetAction(() => IsNoMoveEnabled = !IsNoMoveEnabled));
+            _hotkeyManager.RegisterAction(HotkeyActions.TargetNoAttack,
+                () => ExecuteTargetAction(() => IsNoAttackEnabled = !IsNoAttackEnabled));
             _hotkeyManager.RegisterAction(HotkeyActions.ForceActSequence,
                 () => ExecuteTargetAction(ForceActSequence));
             _hotkeyManager.RegisterAction(HotkeyActions.KillAllExceptTarget,

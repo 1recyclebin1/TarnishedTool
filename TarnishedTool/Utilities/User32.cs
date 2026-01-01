@@ -6,6 +6,7 @@ namespace TarnishedTool.Utilities
     internal static class User32
     {
         public static readonly IntPtr HwndTopmost = new IntPtr(-1);
+        public static readonly IntPtr HwndNoTopmost = new IntPtr(-2);
         public const uint SwpNosize = 0x0001;
         public const uint SwpNomove = 0x0002;
         public const uint SwpNoactivate = 0x0010;
@@ -24,5 +25,11 @@ namespace TarnishedTool.Utilities
         {
             SetWindowPos(hwnd, HwndTopmost, 0, 0, 0, 0, SwpNomove | SwpNosize | SwpNoactivate);
         }
+        
+        public static void RemoveTopmost(IntPtr hwnd)
+        {
+            SetWindowPos(hwnd, HwndNoTopmost, 0, 0, 0, 0, SwpNomove | SwpNosize | SwpNoactivate);
+        }
+        
     }
 }

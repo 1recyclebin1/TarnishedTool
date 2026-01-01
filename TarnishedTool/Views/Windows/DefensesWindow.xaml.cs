@@ -5,7 +5,7 @@ using TarnishedTool.Utilities;
 
 namespace TarnishedTool.Views.Windows;
 
-public partial class DefensesWindow : Window
+public partial class DefensesWindow : TopmostWindow
 {
     public DefensesWindow()
     {
@@ -23,6 +23,8 @@ public partial class DefensesWindow : Window
         
             if (SettingsManager.Default.DefenseWindowTop > 0)
                 Top = SettingsManager.Default.DefenseWindowTop;
+            
+            AlwaysOnTopCheckBox.IsChecked = SettingsManager.Default.DefensesAlwaysOnTop;
         };
     }
     
@@ -33,6 +35,7 @@ public partial class DefensesWindow : Window
 
         SettingsManager.Default.DefenseWindowLeft = Left;
         SettingsManager.Default.DefenseWindowTop = Top;
+        SettingsManager.Default.DefensesAlwaysOnTop = AlwaysOnTopCheckBox.IsChecked ?? false;
         SettingsManager.Default.Save();
     }
 }

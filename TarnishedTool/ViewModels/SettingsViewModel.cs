@@ -30,6 +30,7 @@ public class SettingsViewModel : BaseViewModel
     public ObservableCollection<HotkeyBindingViewModel> EnemiesHotkeys { get; }
     public ObservableCollection<HotkeyBindingViewModel> TargetHotkeys { get; }
     public ObservableCollection<HotkeyBindingViewModel> UtilityHotkeys { get; }
+    public ObservableCollection<HotkeyBindingViewModel> EventHotkeys { get; }
 
     public SettingsViewModel(ISettingsService settingsService, HotkeyManager hotkeyManager, IStateService stateService)
     {
@@ -87,6 +88,7 @@ public class SettingsViewModel : BaseViewModel
             new("Set Custom Hp", HotkeyActions.SetTargetCustomHp),
             new("Freeze Hp", HotkeyActions.FreezeTargetHp),
             new("Show all resistances", HotkeyActions.ShowAllResistances),
+            new("Pop out resistances", HotkeyActions.PopoutResistances),
             new("Increase Speed", HotkeyActions.IncreaseTargetSpeed),
             new("Decrease Speed", HotkeyActions.DecreaseTargetSpeed),
             new("Toggle Speed", HotkeyActions.ToggleTargetSpeed),
@@ -121,6 +123,33 @@ public class SettingsViewModel : BaseViewModel
             new("Toggle Freeze World", HotkeyActions.ToggleFreezeWorld),
             new("Move Free Cam to Player", HotkeyActions.MoveCamToPlayer),
             new("Move Player to Free Cam", HotkeyActions.MovePlayerToCam),
+            new("Set Morning", HotkeyActions.SetMorning),
+            new("Set Noon", HotkeyActions.SetNoon),
+            new("Set Night", HotkeyActions.SetNight),
+            new("Draw Hitbox", HotkeyActions.DrawHitbox),
+            new("Draw Player Sound", HotkeyActions.DrawPlayerSound),
+            new("Draw Ragdolls", HotkeyActions.DrawRagdolls),
+            new("Draw Low Hit", HotkeyActions.DrawLowHit),
+            new("Draw High Hit", HotkeyActions.DrawHighHit),
+            new("Level Up", HotkeyActions.LevelUp),
+            new("Allot Flasks", HotkeyActions.AllotFlasks),
+            new("Memorize Spells", HotkeyActions.MemorizeSpells),
+            new("Mix Physick", HotkeyActions.MixPhysick),
+            new("Open Chest", HotkeyActions.OpenChest),
+            new("Great Runes", HotkeyActions.GreatRunes),
+            new("Ashes of War", HotkeyActions.AshesOfWar),
+            new("Alter Garments", HotkeyActions.AlterGarments),
+            new("Upgrade", HotkeyActions.Upgrade),
+            new("Sell", HotkeyActions.Sell),
+            new("Rebirth", HotkeyActions.Rebirth),
+            new("Upgrade Flask", HotkeyActions.UpgradeFlask),
+            new("Increase Flask Charges", HotkeyActions.IncreaseFlaskCharges),
+            new("Open Shop Window", HotkeyActions.OpenShopWindow),
+        ];
+
+        EventHotkeys =
+        [
+            new("Draw Events", HotkeyActions.DrawEvent)
         ];
 
 
@@ -128,6 +157,7 @@ public class SettingsViewModel : BaseViewModel
             .Concat(EnemiesHotkeys)
             .Concat(TargetHotkeys)
             .Concat(UtilityHotkeys)
+            .Concat(EventHotkeys)
             .ToDictionary(h => h.ActionId);
 
         LoadHotkeyDisplays();

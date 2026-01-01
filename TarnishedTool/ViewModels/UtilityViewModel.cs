@@ -22,7 +22,7 @@ namespace TarnishedTool.ViewModels
         private const float Epsilon = 0.0001f;
 
         private bool _wasNoDeathEnabled;
-        
+
         private ShopSelectorWindow _shopSelectorWindow;
 
         private readonly IUtilityService _utilityService;
@@ -36,7 +36,7 @@ namespace TarnishedTool.ViewModels
         private readonly IFlaskService _flaskService;
 
         private static readonly uint[] DisableGraceWarpIds = [4270, 4271, 4272, 4282, 4286, 4288];
-        
+
         private readonly List<ShopCommand> _allShops;
 
         public UtilityViewModel(IUtilityService utilityService, IStateService stateService,
@@ -83,12 +83,10 @@ namespace TarnishedTool.ViewModels
 
             _allShops = DataLoader.GetShops();
             FilteredShops = new ObservableCollection<ShopCommand>();
-            
+
             RegisterHotkeys();
             ApplyPrefs();
         }
-
-    
 
         #region Commands
 
@@ -126,9 +124,9 @@ namespace TarnishedTool.ViewModels
             get => _areOptionsEnabled;
             set => SetProperty(ref _areOptionsEnabled, value);
         }
-        
+
         private bool _isDlcAvailable;
-        
+
         public bool IsDlcAvailable
         {
             get => _isDlcAvailable;
@@ -201,6 +199,7 @@ namespace TarnishedTool.ViewModels
                         _spEffectService.RemoveSpEffect(playerIns, disableGraceWarpId);
                     }
                 }
+
                 _utilityService.ToggleDungeonWarp(_isDungeonWarpEnabled);
             }
         }
@@ -343,7 +342,7 @@ namespace TarnishedTool.ViewModels
                 _utilityService.ToggleDrawRagdolls(_isDrawRagdollEnabled);
             }
         }
-        
+
         private bool _isDrawPlayerSoundEnabled;
 
         public bool IsDrawPlayerSoundEnabled
@@ -356,8 +355,8 @@ namespace TarnishedTool.ViewModels
                 {
                     _utilityService.PatchDebugFont();
                 }
+
                 _utilityService.TogglePlayerSound(_isDrawPlayerSoundEnabled);
-                
             }
         }
 
@@ -372,7 +371,7 @@ namespace TarnishedTool.ViewModels
                 _utilityService.ToggleDrawMapTiles1(_isDrawMapTiles1Enabled);
             }
         }
-        
+
         private bool _isDrawMapTiles2Enabled;
 
         public bool IsDrawMapTiles2Enabled
@@ -385,7 +384,7 @@ namespace TarnishedTool.ViewModels
                 _utilityService.ToggleDrawMapTiles2(_isDrawMapTiles2Enabled);
             }
         }
-        
+
         private bool _isDrawMiniMapEnabled;
 
         public bool IsDrawMiniMapEnabled
@@ -398,6 +397,7 @@ namespace TarnishedTool.ViewModels
                 _utilityService.ToggleDrawMiniMap(_isDrawMiniMapEnabled);
             }
         }
+
         private bool _isDrawTilesOnMapEnabled;
 
         public bool IsDrawTilesOnMapEnabled
@@ -410,13 +410,9 @@ namespace TarnishedTool.ViewModels
                 _utilityService.ToggleDrawTilesOnMap(_isDrawTilesOnMapEnabled);
             }
         }
-        
-        
-
-        
 
         private bool _isHideCharactersEnabled;
-        
+
         public bool IsHideCharactersEnabled
         {
             get => _isHideCharactersEnabled;
@@ -428,7 +424,7 @@ namespace TarnishedTool.ViewModels
         }
 
         private bool _isHideMapEnabled;
-        
+
         public bool IsHideMapEnabled
         {
             get => _isHideMapEnabled;
@@ -439,7 +435,6 @@ namespace TarnishedTool.ViewModels
             }
         }
 
-        
         private string _shopsSearchText = string.Empty;
 
         public string ShopsSearchText
@@ -453,9 +448,9 @@ namespace TarnishedTool.ViewModels
                 }
             }
         }
-        
+
         public ObservableCollection<ShopCommand> FilteredShops { get; }
-        
+
         private ShopCommand _selectedShop;
 
         public ShopCommand SelectedShop
@@ -463,7 +458,7 @@ namespace TarnishedTool.ViewModels
             get => _selectedShop;
             set => SetProperty(ref _selectedShop, value);
         }
-        
+
         private bool _isShowFullShopLineupEnabled;
 
         public bool IsShowFullShopLineupEnabled
@@ -475,7 +470,7 @@ namespace TarnishedTool.ViewModels
                 _utilityService.ToggleFullShopLineup(_isShowFullShopLineupEnabled);
             }
         }
-        
+
         private bool _isUpgradingFlask;
 
         public bool IsUpgradingFlask
@@ -483,7 +478,7 @@ namespace TarnishedTool.ViewModels
             get => _isUpgradingFlask;
             set => SetProperty(ref _isUpgradingFlask, value);
         }
-        
+
         private bool _isIncreasingCharges;
 
         public bool IsIncreasingCharges
@@ -533,6 +528,7 @@ namespace TarnishedTool.ViewModels
                 _utilityService.PatchDebugFont();
                 _utilityService.TogglePlayerSound(true);
             }
+
             if (IsDrawRagdollsEnabled) _utilityService.ToggleDrawRagdolls(true);
             if (IsDrawLowHitEnabled) _utilityService.ToggleDrawLowHit(true);
             if (IsDrawHighHitEnabled) _utilityService.ToggleDrawHighHit(true);
@@ -554,6 +550,7 @@ namespace TarnishedTool.ViewModels
                 _utilityService.PatchDebugFont();
                 _utilityService.ToggleDrawTilesOnMap(true);
             }
+
             if (IsHideCharactersEnabled) _utilityService.ToggleHideChr(true);
             if (IsHideMapEnabled) _utilityService.ToggleHideMap(true);
             IsDlcAvailable = _dlcService.IsDlcAvailable;
@@ -578,7 +575,7 @@ namespace TarnishedTool.ViewModels
                 () => SetSpeed(Math.Min(10, GameSpeed + 0.50f)));
             _hotkeyManager.RegisterAction(HotkeyActions.DecreaseGameSpeed,
                 () => SetSpeed(Math.Max(0.5f, GameSpeed - 0.50f)));
-            
+
             _hotkeyManager.RegisterAction(HotkeyActions.ToggleFreeCam, () => IsFreeCamEnabled = !IsFreeCamEnabled);
             _hotkeyManager.RegisterAction(HotkeyActions.ToggleFreezeWorld, () =>
             {
@@ -595,6 +592,43 @@ namespace TarnishedTool.ViewModels
                 if (!IsFreeCamEnabled) return;
                 MovePlayerToCam();
             });
+            _hotkeyManager.RegisterAction(HotkeyActions.SetMorning, () => SafeExecute(SetMorning));
+            _hotkeyManager.RegisterAction(HotkeyActions.SetNoon, () => SafeExecute(SetNoon));
+            _hotkeyManager.RegisterAction(HotkeyActions.SetNight, () => SafeExecute(SetNight));
+            _hotkeyManager.RegisterAction(HotkeyActions.DrawHitbox, () => IsDrawHitboxEnabled = !IsDrawHitboxEnabled);
+            _hotkeyManager.RegisterAction(HotkeyActions.DrawPlayerSound,
+                () => IsDrawPlayerSoundEnabled = !IsDrawPlayerSoundEnabled);
+            _hotkeyManager.RegisterAction(HotkeyActions.DrawRagdolls,
+                () => IsDrawRagdollsEnabled = !IsDrawRagdollsEnabled);
+            _hotkeyManager.RegisterAction(HotkeyActions.DrawLowHit, () => IsDrawLowHitEnabled = !IsDrawLowHitEnabled);
+            _hotkeyManager.RegisterAction(HotkeyActions.DrawHighHit,
+                () => IsDrawHighHitEnabled = !IsDrawHighHitEnabled);
+            _hotkeyManager.RegisterAction(HotkeyActions.LevelUp, () => SafeExecute(OpenLevelUp));
+            _hotkeyManager.RegisterAction(HotkeyActions.AllotFlasks, () => SafeExecute(OpenAllot));
+            _hotkeyManager.RegisterAction(HotkeyActions.MemorizeSpells, () => SafeExecute(OpenAttunement));
+            _hotkeyManager.RegisterAction(HotkeyActions.MixPhysick, () => SafeExecute(OpenPhysick));
+            _hotkeyManager.RegisterAction(HotkeyActions.OpenChest, () => SafeExecute(OpenChest));
+            _hotkeyManager.RegisterAction(HotkeyActions.GreatRunes, () => SafeExecute(OpenGreatRunes));
+            _hotkeyManager.RegisterAction(HotkeyActions.AshesOfWar, () => SafeExecute(OpenAow));
+            _hotkeyManager.RegisterAction(HotkeyActions.AlterGarments, () => SafeExecute(OpenAlterGarments));
+            _hotkeyManager.RegisterAction(HotkeyActions.Upgrade, () => SafeExecute(OpenUpgrade));
+            _hotkeyManager.RegisterAction(HotkeyActions.Sell, () => SafeExecute(OpenSell));
+            _hotkeyManager.RegisterAction(HotkeyActions.Rebirth, () => SafeExecute(OpenRebirth));
+            _hotkeyManager.RegisterAction(HotkeyActions.UpgradeFlask, () => SafeExecuteIfNotBusy(UpgradeFlask, IsUpgradingFlask));
+            _hotkeyManager.RegisterAction(HotkeyActions.IncreaseFlaskCharges, () => SafeExecuteIfNotBusy(IncreaseCharges, IsIncreasingCharges));
+            _hotkeyManager.RegisterAction(HotkeyActions.OpenShopWindow, OpenShopSelector);
+        }
+
+        private void SafeExecute(Action action)
+        {
+            if (!AreOptionsEnabled) return;
+            action();
+        }
+        
+        private void SafeExecuteIfNotBusy(Action action, bool isBusy)
+        {
+            if (!AreOptionsEnabled || isBusy) return;
+            action();
         }
 
         private void ApplyPrefs()
@@ -665,7 +699,7 @@ namespace TarnishedTool.ViewModels
             var playerHandle = _playerService.GetHandle();
             _ezStateService.ExecuteTalkCommand(EzState.TalkCommands.OpenSell, playerHandle);
         }
-        
+
         private void OpenShopSelector()
         {
             if (_shopSelectorWindow != null && _shopSelectorWindow.IsVisible)
@@ -683,7 +717,7 @@ namespace TarnishedTool.ViewModels
             _shopSelectorWindow.Closed += (sender, args) => _shopSelectorWindow = null;
             _shopSelectorWindow.Show();
         }
-        
+
         private void ApplyFilter()
         {
             FilteredShops.Clear();
@@ -698,7 +732,7 @@ namespace TarnishedTool.ViewModels
             if (!string.IsNullOrWhiteSpace(ShopsSearchText))
             {
                 var searchLower = ShopsSearchText.ToLowerInvariant();
-                filtered = filtered.Where(s => 
+                filtered = filtered.Where(s =>
                     s.Name.ToLowerInvariant().Contains(searchLower));
             }
 
@@ -712,9 +746,10 @@ namespace TarnishedTool.ViewModels
 
         private void MoveCamToPlayer() => _utilityService.MoveCamToPlayer();
         private void MovePlayerToCam() => _utilityService.MovePlayerToCam();
+
         private async void UpgradeFlask()
         {
-            IsUpgradingFlask = true; 
+            IsUpgradingFlask = true;
             try
             {
                 await _flaskService.TryUpgradeFlask();
@@ -724,10 +759,10 @@ namespace TarnishedTool.ViewModels
                 IsUpgradingFlask = false;
             }
         }
-        
+
         private async void IncreaseCharges()
         {
-            IsIncreasingCharges = true; 
+            IsIncreasingCharges = true;
             try
             {
                 await _flaskService.TryIncreaseCharges();
@@ -739,6 +774,5 @@ namespace TarnishedTool.ViewModels
         }
 
         #endregion
-
     }
 }

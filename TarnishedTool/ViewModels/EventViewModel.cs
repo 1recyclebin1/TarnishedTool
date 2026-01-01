@@ -17,6 +17,7 @@ namespace TarnishedTool.ViewModels
         private readonly IDlcService _dlcService;
         private readonly IEzStateService _ezStateService;
         private readonly IEmevdService _emevdService;
+        private readonly HotkeyManager _hotkeyManager;
         public const int WhetstoneBladeId = 0x4000218E;
         
         private readonly List<int> _baseGameGestureIds; 
@@ -25,13 +26,15 @@ namespace TarnishedTool.ViewModels
         
 
         public EventViewModel(IEventService eventService, IStateService stateService, IItemService itemService,
-            IDlcService dlcService, IEzStateService ezStateService, IEmevdService emevdService)
+            IDlcService dlcService, IEzStateService ezStateService, IEmevdService emevdService,
+            HotkeyManager hotkeyManager)
         {
             _eventService = eventService;
             _itemService = itemService;
             _dlcService = dlcService;
             _ezStateService = ezStateService;
             _emevdService = emevdService;
+            _hotkeyManager = hotkeyManager;
 
 
             stateService.Subscribe(State.Loaded, OnGameLoaded);
@@ -47,9 +50,11 @@ namespace TarnishedTool.ViewModels
             
             _baseGameGestureIds = DataLoader.GetSimpleList("BaseGestures", int.Parse);
             _dlcGestureIds = DataLoader.GetSimpleList("DlcGestures", int.Parse);
-        }
 
+            RegisterHotkeys();
+        }
         
+
         #region Commands
         
         public ICommand SetEventCommand { get; set; }
@@ -162,6 +167,11 @@ namespace TarnishedTool.ViewModels
         private void OnGameNotLoaded()
         {
             AreOptionsEnabled = false;
+        }
+        
+        private void RegisterHotkeys()
+        {
+            _hotkeyManager.RegisterAction(HotkeyActions.DrawEvent, () => IsDrawEventsEnabled = !IsDrawEventsEnabled);
         }
         
         private void SetEvent()

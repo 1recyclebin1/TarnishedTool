@@ -776,15 +776,17 @@ namespace TarnishedTool.ViewModels
             _hotkeyManager.RegisterAction(HotkeyActions.TargetTargetingView,
                 () => ExecuteTargetAction(() => IsTargetingViewEnabled = !IsTargetingViewEnabled));
             _hotkeyManager.RegisterAction(HotkeyActions.ShowAttackInfo,
-                () => ExecuteTargetAction(() => IsShowAttackInfoEnabled = !IsShowAttackInfoEnabled));
+                () => ExecuteWindowAction(() => IsShowAttackInfoEnabled = !IsShowAttackInfoEnabled));
             _hotkeyManager.RegisterAction(HotkeyActions.ShowDefenses,
-                () => ExecuteTargetAction(() => IsShowDefensesEnabled = !IsShowDefensesEnabled));
+                () => ExecuteWindowAction(() => IsShowDefensesEnabled = !IsShowDefensesEnabled));
             _hotkeyManager.RegisterAction(HotkeyActions.ShowTargetSpEffects,
-                () => ExecuteTargetAction(() => IsShowSpEffectEnabled = !IsShowSpEffectEnabled));
+                () => ExecuteWindowAction(() => IsShowSpEffectEnabled = !IsShowSpEffectEnabled));
             _hotkeyManager.RegisterAction(HotkeyActions.TargetNoMove,
                 () => ExecuteTargetAction(() => IsNoMoveEnabled = !IsNoMoveEnabled));
             _hotkeyManager.RegisterAction(HotkeyActions.TargetNoAttack,
                 () => ExecuteTargetAction(() => IsNoAttackEnabled = !IsNoAttackEnabled));
+            _hotkeyManager.RegisterAction(HotkeyActions.PopoutResistances,
+                () => ExecuteWindowAction(() => IsResistancesWindowOpen = !IsResistancesWindowOpen));
             _hotkeyManager.RegisterAction(HotkeyActions.ForceActSequence,
                 () => ExecuteTargetAction(ForceActSequence));
             _hotkeyManager.RegisterAction(HotkeyActions.KillAllExceptTarget,
@@ -805,6 +807,15 @@ namespace TarnishedTool.ViewModels
             }
 
             if (!IsValidTarget) return;
+            action();
+        }
+        
+        private void ExecuteWindowAction(Action action)
+        {
+            if (!IsTargetOptionsEnabled)
+            {
+                IsTargetOptionsEnabled = true;
+            }
             action();
         }
 

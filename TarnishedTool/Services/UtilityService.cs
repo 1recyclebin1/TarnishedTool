@@ -166,7 +166,6 @@ namespace TarnishedTool.Services
                 memoryService.WriteUInt8(camMode, 0);
             }
 
-            MoveCamToPlayer();
         }
 
         public void MoveCamToPlayer()

@@ -148,7 +148,7 @@
                                 Height="12"
                                 Margin="10,0,0,10"
                                 VerticalAlignment="Center"
-                                ToolTip="Force Elden Stars followed up by the selected attack"
+                                ToolTip="Force Elden Stars followed up by the selected attack&#x0A;Not entirely consistent but should work most of the time if you&#x0A;use a keybind and try to time the attack as EB is finishing another move"
                                 ToolTipService.InitialShowDelay='100'>
                                 <TextBlock Text="i"
                                            Foreground="White"

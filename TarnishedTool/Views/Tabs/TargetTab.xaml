@@ -639,7 +639,7 @@
                                 Command="{Binding ForActSequenceCommand}" Height="35" Margin="10,0,0,0" />
                         <Border Background="#3498db" CornerRadius="10" Width="12" Height="12" Margin="5,0,0,0"
                                 VerticalAlignment="Center"
-                                ToolTip="Enter a sequence of acts separated by spaces, max 10 acts"
+                                ToolTip="Enter a sequence of acts separated by spaces, max 10 acts&#x0A;Not entirely consistent but should work most of the time if you&#x0A;use a keybind and try to time the attack as the enemy is is finishing another move"
                                 ToolTipService.InitialShowDelay="100">
                             <TextBlock Text="i" Foreground="White" HorizontalAlignment="Center"
                                        VerticalAlignment="Center" FontWeight="Bold" FontSize="10" />

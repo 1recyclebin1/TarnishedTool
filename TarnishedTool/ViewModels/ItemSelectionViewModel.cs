@@ -200,6 +200,14 @@ public class ItemSelectionViewModel : BaseViewModel
         get => _showAowOptions;
         private set => SetProperty(ref _showAowOptions, value);
     }
+    
+    private bool _showAffinityOptions;
+
+    public bool ShowAffinityOptions
+    {
+        get => _showAffinityOptions;
+        private set => SetProperty(ref _showAffinityOptions, value);
+    }
 
     private ObservableCollection<AshOfWar> _availableAshesOfWar = new();
 
@@ -220,11 +228,13 @@ public class ItemSelectionViewModel : BaseViewModel
 
             if (value == AshOfWar.None)
             {
+                ShowAffinityOptions = false;
                 AvailableAffinities = new ObservableCollection<Affinity>();
                 _selectedAffinity = 0;
             }
             else
             {
+                ShowAffinityOptions = true;
                 var affinities = value.GetAvailableAffinities().ToList();
                 AvailableAffinities = new ObservableCollection<Affinity>(affinities);
                 _selectedAffinity = affinities.FirstOrDefault();
@@ -294,11 +304,12 @@ public class ItemSelectionViewModel : BaseViewModel
             var aows = _allAshesOfWar.Where(aow => aow.SupportsWeaponType(weapon.WeaponType));
 
             AvailableAshesOfWar = new ObservableCollection<AshOfWar>(aows.Prepend(AshOfWar.None));
-            SelectedAshOfWar = AvailableAshesOfWar[1];
+            SelectedAshOfWar = AvailableAshesOfWar.FirstOrDefault();
         }
         else
         {
             ShowAowOptions = false;
+            ShowAffinityOptions = false;
             SelectedAshOfWar = null;
             AvailableAffinities = new ObservableCollection<Affinity>();
         }

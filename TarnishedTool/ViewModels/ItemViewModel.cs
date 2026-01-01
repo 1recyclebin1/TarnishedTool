@@ -27,6 +27,14 @@ public class ItemViewModel : BaseViewModel
     private readonly List<Item> _allItems;
 
     private Dictionary<string, LoadoutTemplate> _customLoadoutTemplates;
+    public ObservableCollection<KeyValuePair<string, uint>> EquipTypes { get; } = new()
+    {
+        new("Accessory", 0x20000000),
+        new("Gem", 0x80000000),
+        new("Goods", 0x40000000),
+        new("Protector", 0x10000000),
+        new("Weapon", 0x00000000)
+    };
 
     public ItemSelectionViewModel ItemSelection { get; }
 
@@ -68,15 +76,19 @@ public class ItemViewModel : BaseViewModel
         MassSpawnCommand = new DelegateCommand(MassSpawn);
         OpenCreateLoadoutCommand = new DelegateCommand(OpenCreateLoadoutWindow);
         SpawnLoadoutCommand = new DelegateCommand(SpawnLoadout);
-    }
-    
+        SpawnWithEquipIdCommand = new DelegateCommand(SpawnWithEquipId);
 
+        SelectedEquipType = EquipTypes.FirstOrDefault().Value;
+    }
+
+    
     #region Commands
 
     public ICommand SpawnItemCommand { get; set; }
     public ICommand MassSpawnCommand { get; set; }
     public ICommand OpenCreateLoadoutCommand { get; set; }
     public ICommand SpawnLoadoutCommand { get; set; }
+    public ICommand SpawnWithEquipIdCommand { get; set; }
 
     #endregion
 
@@ -136,6 +148,21 @@ public class ItemViewModel : BaseViewModel
     {
         get => _weaponList;
         private set => SetProperty(ref _weaponList, value);
+    }
+    
+    private uint _selectedEquipType;
+    public uint SelectedEquipType
+    {
+        get => _selectedEquipType;
+        set { _selectedEquipType = value; OnPropertyChanged(); }
+    }
+    
+    private string _equipId;
+    
+    public string EquipId
+    {
+        get => _equipId;
+        set => SetProperty(ref _equipId, value);
     }
 
     #endregion
@@ -331,6 +358,18 @@ public class ItemViewModel : BaseViewModel
 
             _itemService.SpawnItem(itemId, quantity, aowId, shouldQuantityAdjust, maxQuantity);
         }
+    }
+    
+    private void SpawnWithEquipId()
+    {
+        if (!uint.TryParse(EquipId.Trim(), out uint equipId))
+        {
+            MsgBox.Show("Invalid Equip ID");
+            return;
+        }
+
+        uint itemId = equipId + SelectedEquipType;
+        _itemService.SpawnItem((int)itemId, 1, -1, false, 1);
     }
 
     #endregion

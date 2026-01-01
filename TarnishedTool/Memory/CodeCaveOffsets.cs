@@ -78,5 +78,7 @@ namespace TarnishedTool.Memory
         public const int NoGrab = 0x1D90; //0x28
         
         
+        
+        
     }
 }

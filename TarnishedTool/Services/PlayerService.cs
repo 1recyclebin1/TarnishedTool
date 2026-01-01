@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TarnishedTool.Interfaces;
 using TarnishedTool.Memory;
@@ -187,17 +188,17 @@ namespace TarnishedTool.Services
         private void HookPoiseDamage(IntPtr code)
         {
             var hook = Hooks.InfinitePoise;
-            var codeBytes = AsmLoader.GetAsmBytes("InfinitePoise");
-            var bytes = BitConverter.GetBytes(WorldChrMan.Base.ToInt64());
-            Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
-            AsmHelper.WriteJumpOffsets(codeBytes, new[]
+            var bytes = AsmLoader.GetAsmBytes("InfinitePoise");
+            AsmHelper.WriteRelativeOffsets(bytes, new []
             {
-                (hook, 7, code + 0x1D, 0x1D + 1),
-                (hook, 7, code + 0x2A, 0x2A + 1),
+                (code.ToInt64() + 0x8, WorldChrMan.Base.ToInt64(), 7, 0x8 + 3),
+                (code.ToInt64() + 0x3D, WorldChrMan.Base.ToInt64(), 7, 0x3D + 3),
+                (code.ToInt64() + 0x53, Functions.GetChrInsByEntityId, 5, 0x53 + 1),
+                (code.ToInt64() + 0x6A, hook + 0x7, 5, 0x6A + 1)
             });
-            memoryService.WriteBytes(code, codeBytes);
-            hookManager.InstallHook(code.ToInt64(), hook, new byte[]
-                { 0x80, 0xBF, 0x5F, 0x02, 0x00, 0x00, 0x00 });
+            
+            memoryService.WriteBytes(code, bytes);
+            hookManager.InstallHook(code.ToInt64(), hook, [0x49, 0x89, 0xF8, 0x40, 0x0F, 0xB6, 0xD5]);
         }
 
         private void HookGrab(IntPtr noGrabCode)
@@ -370,30 +371,7 @@ namespace TarnishedTool.Services
 
         public int GetSpiritAsh() =>
             memoryService.ReadUInt8(GetGameDataPtr() + (int)GameDataMan.PlayerGameDataOffsets.SpiritAsh);
-
-        public void ToggleTorrentNoStagger(bool isEnabled)
-        {
-            var code = CodeCaveOffsets.Base + CodeCaveOffsets.TorrentNoStagger;
-            if (isEnabled)
-            {
-                var bytes = AsmLoader.GetAsmBytes("TorrentNoStagger");
-                var hook = Hooks.TorrentNoStagger;
-                var skipOffset = hook + 0x14;
-                AsmHelper.WriteRelativeOffsets(bytes, new[]
-                {
-                    (code.ToInt64() + 0x1, WorldChrMan.Base.ToInt64(), 7, 0x1 + 3),
-                    (code.ToInt64() + 0x17, skipOffset, 5, 0x17 + 1),
-                    (code.ToInt64() + 0x23, hook + 7, 5, 0x23 + 1)
-                });
-                memoryService.WriteBytes(code, bytes);
-                hookManager.InstallHook(code.ToInt64(), hook, [0x48, 0x8B, 0x88, 0x90, 0x01, 0x00, 0x00]);
-            }
-            else
-            {
-                hookManager.UninstallHook(code.ToInt64());
-            }
-        }
-
+        
         public int GetCurrentAnimation() =>
             memoryService.ReadInt32(GetChrTimeActPtr() + (int)ChrIns.ChrTimeActOffsets.AnimationId);
         

@@ -26,6 +26,8 @@ public enum HotkeyActions
     DecreasePlayerSpeed,
     ApplySpEffect,
     RemoveSpEffect,
+    Rest,
+    RuneArc,
     AllNoDeath,
     AllNoDamage,
     AllNoHit,
@@ -34,8 +36,6 @@ public enum HotkeyActions
     AllDisableAi,
     AllTargetingView,
     ForceEbActSequence,
-    
-    
     EnableTargetOptions,
     KillTarget,
     SetTargetMaxHp,

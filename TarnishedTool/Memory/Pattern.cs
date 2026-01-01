@@ -290,7 +290,7 @@
         public static readonly Pattern InfinitePoise = new(
             [0x80, 0xBF, 0x5F, 0x02],
             "xxxx",
-            0,
+            0x26,
             AddressingMode.Absolute
         );
 
@@ -312,13 +312,6 @@
             [0x48, 0x8B, 0x41, 0x08, 0x83, 0x48, 0x2C, 0x08, 0x0F],
             "xxxxxxxxx",
             0,
-            AddressingMode.Absolute
-        );
-
-        public static readonly Pattern TorrentNoStagger = new Pattern(
-            [0xF3, 0x0F, 0x2C, 0xF8, 0xE9, 0x9A],
-            "xxxxxx",
-            -0x10,
             AddressingMode.Absolute
         );
 

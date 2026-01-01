@@ -781,19 +781,16 @@ namespace TarnishedTool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 50                      push   rax
-        ///48 a1 00 00 00 00 00    movabs rax,ds:0x0
-        ///00 00 00
+        ///   Looks up a localized string similar to 49 89 f8                mov    r8,rdi
+        ///40 0f b6 d5             movzx  edx,bpl
+        ///50                      push   rax
+        ///48 8b 05 00 00 00 00    mov    rax,QWORD PTR [rip+0x0]        # f &lt;_main+0xf&gt;
+        ///48 3b 88 08 e5 01 00    cmp    rcx,QWORD PTR [rax+0x1e508]
+        ///74 4f                   je     67 &lt;invalidatePoise&gt;
         ///48 8b 80 08 e5 01 00    mov    rax,QWORD PTR [rax+0x1e508]
-        ///48 3b 46 08             cmp    rax,QWORD PTR [rsi+0x8]
-        ///75 0a                   jne    22 &lt;normal&gt;
-        ///58                      pop    rax
-        ///48 83 fe 00             cmp    rsi,0x0
-        ///e9 00 00 00 00          jmp    22 &lt;normal&gt;
-        ///000000000022 &lt;normal&gt;:
-        ///58                      pop    rax
-        ///80 bf 5f 02 00 00 00    cmp    BYTE PTR [rdi+0x25f],0x0
-        ///e9 00 00 00 00          jm [rest of string was truncated]&quot;;.
+        ///48 8b 80 90 01 00 00    mov    rax,QWORD PTR [rax+0x190]
+        ///48 8b 80 e8 00 00 00    mov    rax,QWORD PTR [rax+0xe8]
+        ///48 8b 40 10             mov    [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InfinitePoise {
             get {

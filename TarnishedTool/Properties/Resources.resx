@@ -808,19 +808,39 @@ e9 00 00 00 00          jmp    cf &lt;skip_render+0x6&gt;</value>
 e9 00 00 00 00          jmp    13 &lt;_main+0x13&gt;</value>
   </data>
   <data name="InfinitePoise" xml:space="preserve">
-    <value>50                      push   rax
-48 a1 00 00 00 00 00    movabs rax,ds:0x0
-00 00 00
+    <value>49 89 f8                mov    r8,rdi
+40 0f b6 d5             movzx  edx,bpl
+50                      push   rax
+48 8b 05 00 00 00 00    mov    rax,QWORD PTR [rip+0x0]        # f &lt;_main+0xf&gt;
+48 3b 88 08 e5 01 00    cmp    rcx,QWORD PTR [rax+0x1e508]
+74 4f                   je     67 &lt;invalidatePoise&gt;
 48 8b 80 08 e5 01 00    mov    rax,QWORD PTR [rax+0x1e508]
-48 3b 46 08             cmp    rax,QWORD PTR [rsi+0x8]
-75 0a                   jne    22 &lt;normal&gt;
+48 8b 80 90 01 00 00    mov    rax,QWORD PTR [rax+0x190]
+48 8b 80 e8 00 00 00    mov    rax,QWORD PTR [rax+0xe8]
+48 8b 40 10             mov    rax,QWORD PTR [rax+0x10]
+83 78 50 00             cmp    DWORD PTR [rax+0x50],0x0
+74 32                   je     69 &lt;exit&gt;
+51                      push   rcx
+52                      push   rdx
+41 50                   push   r8
+41 51                   push   r9
+48 8b 0d 00 00 00 00    mov    rcx,QWORD PTR [rip+0x0]        # 44 &lt;_main+0x44&gt;
+48 83 ec 28             sub    rsp,0x28
+48 8d 54 24 24          lea    rdx,[rsp+0x24]
+c7 02 40 9c 00 00       mov    DWORD PTR [rdx],0x9c40
+e8 00 00 00 00          call   58 &lt;_main+0x58&gt;
+48 83 c4 28             add    rsp,0x28
+41 59                   pop    r9
+41 58                   pop    r8
+5a                      pop    rdx
+59                      pop    rcx
+48 39 c8                cmp    rax,rcx
+75 02                   jne    69 &lt;exit&gt;
+000000000067 &lt;invalidatePoise&gt;:
+31 d2                   xor    edx,edx
+000000000069 &lt;exit&gt;:
 58                      pop    rax
-48 83 fe 00             cmp    rsi,0x0
-e9 00 00 00 00          jmp    22 &lt;normal&gt;
-000000000022 &lt;normal&gt;:
-58                      pop    rax
-80 bf 5f 02 00 00 00    cmp    BYTE PTR [rdi+0x25f],0x0
-e9 00 00 00 00          jmp    2f &lt;normal+0xd&gt;</value>
+e9 00 00 00 00          jmp    6f &lt;exit+0x6&gt;</value>
   </data>
   <data name="GiveRunes" xml:space="preserve">
     <value>48 b9 00 00 00 00 00    movabs rcx,0x0
@@ -1054,6 +1074,7 @@ e9 00 00 00 00          jmp    13 &lt;_main+0x13&gt;</value>
 0,Liurnia of the Lakes,Crystalian Duo,520486912,163.71|216.60|101.76|1,-1.63
 0,Liurnia of the Lakes,Crystalian,537001984,23.46|112.06|-3.61|1,3.13
 0,Liurnia of the Lakes,Deathbird,1009068800,-123.38|237.66|-120.99|1,-0.99
+0,Liurnia of the Lakes,Death Rite Bird,1009003776,-35.33|237.66|-6.22|1,2.36
 0,Liurnia of the Lakes,Erdtree Avatar (Northeast),1009135616,20.92|409.59|-89.99|1,1.33
 0,Liurnia of the Lakes,Erdtree Avatar (Southwest),1008806656,60.53|284.65|-3.74|1,2.63
 0,Liurnia of the Lakes,Erdtree Burial Watchdog,503709696,18.78|194.62|5.14|1,-0.11
@@ -2565,6 +2586,7 @@ c3                      ret</value>
 0,4000069A,Shield Grease,10,600
 0,401E8944,Silver Horn Tender,10,999
 0,400004A6,Silver-Pickled Fowl Foot,10,999
+0,40000848,Soap,99,600
 0,40000834,Soft Cotton,99,600
 0,400005AA,Soporific Grease,10,600
 0,4000047E,Spellproof Dried Liver,5,999

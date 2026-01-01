@@ -80,7 +80,7 @@
                                       Grid.Column="1" Grid.Row="0"
                                       Margin="0,2" />
 
-                            <CheckBox Content="Disable Ai"
+                            <CheckBox Content="Disable AI"
                                       IsChecked="{Binding IsDisableAiEnabled}"
                                       Grid.Column="1" Grid.Row="1"
                                       Margin="0,2" />

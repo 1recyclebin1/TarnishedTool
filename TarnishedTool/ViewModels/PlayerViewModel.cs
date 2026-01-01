@@ -421,21 +421,8 @@ namespace TarnishedTool.ViewModels
                 }
             }
         }
-
-        private bool _isTorrentNoStaggerEnabled;
-
-        public bool IsTorrentNoStaggerEnabled
-        {
-            get => _isTorrentNoStaggerEnabled;
-            set
-            {
-                if (SetProperty(ref _isTorrentNoStaggerEnabled, value))
-                {
-                    _playerService.ToggleTorrentNoStagger(_isTorrentNoStaggerEnabled);
-                }
-            }
-        }
-
+        
+        
         private int _runeLevel;
 
         public int RuneLevel
@@ -753,6 +740,8 @@ namespace TarnishedTool.ViewModels
                 () => SetSpeed(Math.Max(0, PlayerSpeed - 0.25f)));
             _hotkeyManager.RegisterAction(HotkeyActions.ApplySpEffect, () => SafeExecute(ApplySpEffect));
             _hotkeyManager.RegisterAction(HotkeyActions.RemoveSpEffect, () => SafeExecute(RemoveSpEffect));
+            _hotkeyManager.RegisterAction(HotkeyActions.RuneArc, () => SafeExecute(ApplyRuneArc));
+            _hotkeyManager.RegisterAction(HotkeyActions.Rest, () => SafeExecute(Rest));
             _hotkeyManager.RegisterAction(HotkeyActions.PlayerSetCustomHp, SetCustomHp);
         }
 

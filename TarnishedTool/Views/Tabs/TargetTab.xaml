@@ -490,7 +490,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Last Act:" VerticalAlignment="Center" />
                                 <TextBlock Text="{Binding LastAct}" VerticalAlignment="Center" Width="20"
-                                           TextAlignment="Right" Margin="5,0,15,0" />
+                                           TextAlignment="Right" Margin="5,0,15,0" Foreground="Gold" FontFamily="Bold" />
                                 <TextBlock Text="Force Act:" VerticalAlignment="Center" Margin="0,0,10,0" />
                                 <xctk:IntegerUpDown Width="50" Height="20"
                                                     Value="{Binding ForceAct, UpdateSourceTrigger=PropertyChanged}"
@@ -515,7 +515,8 @@
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Top"
                                         Margin="0,10,20,0">
                                 <TextBlock Text="Current Animation:" VerticalAlignment="Center" />
-                                <TextBlock Text="{Binding CurrentAnimation}" VerticalAlignment="Center" Width="35"
+                                <TextBlock Text="{Binding CurrentAnimation}" VerticalAlignment="Center" Width="60"
+                                           Foreground="Gold"
                                            TextAlignment="Right" Margin="5,0,15,0" />
                             </StackPanel>
                         </StackPanel>
@@ -524,7 +525,7 @@
                         <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="130" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -534,35 +535,8 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <CheckBox Grid.Row="0" Grid.Column="1" Content="Disable AI" Margin="0,2,20,2"
-                                      IsChecked="{Binding IsFreezeAiEnabled}">
-                                <CheckBox.IsEnabled>
-                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                        <Binding Path="AreOptionsEnabled" />
-                                        <Binding Path="IsValidTarget" />
-                                    </MultiBinding>
-                                </CheckBox.IsEnabled>
-                            </CheckBox>
-                            <CheckBox Grid.Row="1" Grid.Column="1" Content="Targeting View" Margin="0,2,0,2"
-                                      IsChecked="{Binding IsTargetingViewEnabled}">
-                                <CheckBox.IsEnabled>
-                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                        <Binding Path="AreOptionsEnabled" />
-                                        <Binding Path="IsValidTarget" />
-                                    </MultiBinding>
-                                </CheckBox.IsEnabled>
-                            </CheckBox>
-
-                            <CheckBox Grid.Row="0" Grid.Column="0" Content="Disable All AI Besides Target"
-                                      Margin="0,2,20,2" IsChecked="{Binding IsDisableAllExceptTargetEnabled}">
-                                <CheckBox.IsEnabled>
-                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                        <Binding Path="AreOptionsEnabled" />
-                                        <Binding Path="IsValidTarget" />
-                                    </MultiBinding>
-                                </CheckBox.IsEnabled>
-                            </CheckBox>
-                            <CheckBox Grid.Row="1" Grid.Column="0" Content="Show Attack Info" Margin="0,2,0,2"
+                            
+                            <CheckBox Grid.Row="0" Grid.Column="0" Content="Show Attack Info" Margin="0,2,0,2"
                                       IsChecked="{Binding IsShowAttackInfoEnabled}">
                                 <CheckBox.IsEnabled>
                                     <MultiBinding Converter="{StaticResource BooleanAndConverter}">
@@ -572,16 +546,8 @@
                                 </CheckBox.IsEnabled>
                             </CheckBox>
 
-                            <CheckBox Grid.Row="2" Grid.Column="1" Content="No Stagger" Margin="0,2,20,2"
-                                      IsChecked="{Binding IsNoStaggerEnabled}">
-                                <CheckBox.IsEnabled>
-                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                        <Binding Path="AreOptionsEnabled" />
-                                        <Binding Path="IsValidTarget" />
-                                    </MultiBinding>
-                                </CheckBox.IsEnabled>
-                            </CheckBox>
-                            <CheckBox Grid.Row="2" Grid.Column="0" Content="Show Defenses" Margin="0,2,0,2"
+                            
+                            <CheckBox Grid.Row="1" Grid.Column="0" Content="Show Defenses" Margin="0,2,0,2"
                                       IsChecked="{Binding IsShowDefensesEnabled}">
                                 <CheckBox.IsEnabled>
                                     <MultiBinding Converter="{StaticResource BooleanAndConverter}">
@@ -590,8 +556,9 @@
                                     </MultiBinding>
                                 </CheckBox.IsEnabled>
                             </CheckBox>
-                            
-                            <CheckBox Grid.Row="3" Grid.Column="0" Content="Show Active Special Effects" Margin="0,2,0,2"
+
+                            <CheckBox Grid.Row="2" Grid.Column="0" Content="Show Active Special Effects"
+                                      Margin="0,2,0,2"
                                       IsChecked="{Binding IsShowSpEffectEnabled}">
                                 <CheckBox.IsEnabled>
                                     <MultiBinding Converter="{StaticResource BooleanAndConverter}">
@@ -601,27 +568,8 @@
                                 </CheckBox.IsEnabled>
                             </CheckBox>
 
-                            <CheckBox Grid.Row="3" Grid.Column="1" Content="No Attack" Margin="0,2,20,2"
-                                      IsChecked="{Binding IsNoAttackEnabled}">
-                                <CheckBox.IsEnabled>
-                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                        <Binding Path="AreOptionsEnabled" />
-                                        <Binding Path="IsValidTarget" />
-                                    </MultiBinding>
-                                </CheckBox.IsEnabled>
-                            </CheckBox>
-
-                            <CheckBox Grid.Row="4" Grid.Column="1" Content="No Move" Margin="0,2,20,2"
-                                      IsChecked="{Binding IsNoMoveEnabled}">
-                                <CheckBox.IsEnabled>
-                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                        <Binding Path="AreOptionsEnabled" />
-                                        <Binding Path="IsValidTarget" />
-                                    </MultiBinding>
-                                </CheckBox.IsEnabled>
-                            </CheckBox>
-
-                            <CheckBox Grid.Row="4" Grid.Column="0" Content="Repeat Last Act" Margin="0,2,20,2"
+                            
+                            <CheckBox Grid.Row="3" Grid.Column="0" Content="Repeat Last Act" Margin="0,2,0,2"
                                       IsChecked="{Binding IsRepeatActEnabled}">
                                 <CheckBox.IsEnabled>
                                     <MultiBinding Converter="{StaticResource BooleanAndConverter}">
@@ -630,6 +578,56 @@
                                     </MultiBinding>
                                 </CheckBox.IsEnabled>
                             </CheckBox>
+                            
+                            <CheckBox Grid.Row="0" Grid.Column="1" Content="Disable AI" Margin="10,2,0,2"
+                                      IsChecked="{Binding IsFreezeAiEnabled}">
+                                <CheckBox.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                        <Binding Path="AreOptionsEnabled" />
+                                        <Binding Path="IsValidTarget" />
+                                    </MultiBinding>
+                                </CheckBox.IsEnabled>
+                            </CheckBox>
+                            <CheckBox Grid.Row="1" Grid.Column="1" Content="Targeting View" Margin="10,2,0,2"
+                                      IsChecked="{Binding IsTargetingViewEnabled}">
+                                <CheckBox.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                        <Binding Path="AreOptionsEnabled" />
+                                        <Binding Path="IsValidTarget" />
+                                    </MultiBinding>
+                                </CheckBox.IsEnabled>
+                            </CheckBox>
+
+                            <CheckBox Grid.Row="2" Grid.Column="1" Content="No Stagger" Margin="10,2,0,2"
+                                      IsChecked="{Binding IsNoStaggerEnabled}">
+                                <CheckBox.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                        <Binding Path="AreOptionsEnabled" />
+                                        <Binding Path="IsValidTarget" />
+                                    </MultiBinding>
+                                </CheckBox.IsEnabled>
+                            </CheckBox>
+                            
+                            <CheckBox Grid.Row="3" Grid.Column="1" Content="No Attack" Margin="10,2,0,2"
+                                      IsChecked="{Binding IsNoAttackEnabled}">
+                                <CheckBox.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                        <Binding Path="AreOptionsEnabled" />
+                                        <Binding Path="IsValidTarget" />
+                                    </MultiBinding>
+                                </CheckBox.IsEnabled>
+                            </CheckBox>
+                            
+                            <CheckBox Grid.Row="4" Grid.Column="1" Content="No Move" Margin="10,2,0,2"
+                                      IsChecked="{Binding IsNoMoveEnabled}">
+                                <CheckBox.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                        <Binding Path="AreOptionsEnabled" />
+                                        <Binding Path="IsValidTarget" />
+                                    </MultiBinding>
+                                </CheckBox.IsEnabled>
+                            </CheckBox>
+                            
                         </Grid>
                     </Grid>
 
@@ -646,21 +644,33 @@
                             <TextBlock Text="i" Foreground="White" HorizontalAlignment="Center"
                                        VerticalAlignment="Center" FontWeight="Bold" FontSize="10" />
                         </Border>
-                        
+
                         <TextBlock FontSize="16" Text="Dist:" Margin="40,10,0,0" />
                         <TextBlock Text="{Binding Dist, StringFormat={}{0:F2}}" Width="40" FontSize="16"
                                    TextAlignment="Right" Margin="5,10,0,0" />
                     </StackPanel>
 
-                    <Button Content="Kill All Enemies Besides Target" Command="{Binding KillAllCommand}"
-                            Margin="10,10,0,0" HorizontalAlignment="Left">
-                        <Button.IsEnabled>
-                            <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                <Binding Path="AreOptionsEnabled" />
-                                <Binding Path="IsValidTarget" />
-                            </MultiBinding>
-                        </Button.IsEnabled>
-                    </Button>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Kill All Enemies Besides Target" Command="{Binding KillAllCommand}"
+                                Margin="10,10,0,0" HorizontalAlignment="Left">
+                            <Button.IsEnabled>
+                                <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                    <Binding Path="AreOptionsEnabled" />
+                                    <Binding Path="IsValidTarget" />
+                                </MultiBinding>
+                            </Button.IsEnabled>
+                        </Button>
+                        
+                        <CheckBox Content="Disable All AI Besides Target"
+                                  Margin="20,10,0,0" IsChecked="{Binding IsDisableAllExceptTargetEnabled}">
+                            <CheckBox.IsEnabled>
+                                <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                    <Binding Path="AreOptionsEnabled" />
+                                    <Binding Path="IsValidTarget" />
+                                </MultiBinding>
+                            </CheckBox.IsEnabled>
+                        </CheckBox>
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
         </Border>

@@ -441,7 +441,6 @@ namespace TarnishedTool.Memory
             public static long ShouldUpdateAi;
             public static long GetForceActIdx;
             public static long TargetNoStagger;
-            public static long TorrentNoStagger;
             public static long AttackInfo;
             public static long WarpCoordWrite;
             public static long WarpAngleWrite;

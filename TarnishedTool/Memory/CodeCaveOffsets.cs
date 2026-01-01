@@ -26,9 +26,7 @@ namespace TarnishedTool.Memory
 
         public const int TargetPtr = 0x560;
         public const int SaveTargetPtrCode = 0x570;
-            
-        public const int InfinitePoise = 0x590;
-
+        
         public const int DisableAllExceptTarget = 0x600;
 
         public const int ActArray = 0x650;
@@ -69,7 +67,7 @@ namespace TarnishedTool.Memory
 
         public const int NoClipJmpHook = 0x1B00;
 
-        public const int TorrentNoStagger = 0x1b30;
+        public const int InfinitePoise = 0x1b30; // 0x6F
 
         public const int SavedNpcTalk = 0x1C00;
         public const int EnvParams = 0x1C70;

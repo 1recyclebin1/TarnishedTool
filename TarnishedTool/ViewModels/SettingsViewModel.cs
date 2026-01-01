@@ -67,7 +67,10 @@ public class SettingsViewModel : BaseViewModel
             new("Decrease Speed", HotkeyActions.DecreasePlayerSpeed),
             new("Apply Special Effect", HotkeyActions.ApplySpEffect),
             new("Remove Special Effect", HotkeyActions.RemoveSpEffect),
+            new("Rune Arc", HotkeyActions.RuneArc),
+            new("Rest Character", HotkeyActions.Rest),
         ];
+        
         EnemiesHotkeys =
         [
             new("All No Death", HotkeyActions.AllNoDeath),
@@ -165,7 +168,7 @@ public class SettingsViewModel : BaseViewModel
 
         ClearHotkeysCommand = new DelegateCommand(ClearHotkeys);
     }
-    
+
     #region Commands
 
     public ICommand ClearHotkeysCommand { get; set; }
@@ -243,7 +246,7 @@ public class SettingsViewModel : BaseViewModel
             if (AreOptionsEnabled) _settingsService.ToggleStutterFix(_isStutterFixEnabled);
         }
     }
-    
+
     private bool _isDisableAchievementsEnabled;
 
     public bool IsDisableAchievementsEnabled
@@ -257,7 +260,7 @@ public class SettingsViewModel : BaseViewModel
             if (AreOptionsEnabled) _settingsService.ToggleDisableAchievements(_isDisableAchievementsEnabled);
         }
     }
-    
+
     private bool _isMuteMusicEnabled;
 
     public bool IsMuteMusicEnabled
@@ -316,7 +319,7 @@ public class SettingsViewModel : BaseViewModel
     public void CancelSettingHotkey()
     {
         var actionId = _currentSettingHotkeyId;
-    
+
         if (actionId != null && _hotkeyLookup.TryGetValue(actionId, out var binding))
         {
             binding.HotkeyText = "None";
@@ -341,10 +344,10 @@ public class SettingsViewModel : BaseViewModel
 
         _isStutterFixEnabled = SettingsManager.Default.StutterFix;
         OnPropertyChanged(nameof(IsStutterFixEnabled));
-        
+
         _isDisableAchievementsEnabled = SettingsManager.Default.DisableAchievements;
         OnPropertyChanged(nameof(IsDisableAchievementsEnabled));
-        
+
         _isNoLogoEnabled = SettingsManager.Default.NoLogo;
         OnPropertyChanged(nameof(IsNoLogoEnabled));
         _isMuteMusicEnabled = SettingsManager.Default.MuteMusic;
@@ -363,12 +366,11 @@ public class SettingsViewModel : BaseViewModel
     {
         AreOptionsEnabled = false;
     }
-    
+
     private void OnGameAttached()
     {
         if (IsNoLogoEnabled) _settingsService.ToggleNoLogo(true);
     }
-    
 
     private void LoadHotkeyDisplays()
     {
@@ -491,4 +493,3 @@ public class SettingsViewModel : BaseViewModel
 
     #endregion
 }
-

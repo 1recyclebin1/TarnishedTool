@@ -39,6 +39,8 @@ public class SettingsManager
     public bool RememberGameSpeed { get; set; }
     public float GameSpeed { get; set; }
     public bool IsNoClipKeyboardDisabled { get; set; }
+    public bool BlockHotkeysFromGame  { get; set; }
+    
 
     private static string SettingsPath => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -82,6 +84,7 @@ public class SettingsManager
                 $"RememberGameSpeed={RememberGameSpeed}",
                 $"GameSpeed={GameSpeed}",
                 $"IsNoClipKeyboardDisabled={IsNoClipKeyboardDisabled}",
+                $"BlockHotkeysFromGame={BlockHotkeysFromGame}",
             };
 
             File.WriteAllLines(SettingsPath, lines);
@@ -222,6 +225,10 @@ public class SettingsManager
                             case "IsNoClipKeyboardDisabled":
                                 bool.TryParse(value, out bool inkd);
                                 settings.IsNoClipKeyboardDisabled = inkd;
+                                break;
+                            case "BlockHotkeysFromGame":
+                                bool.TryParse(value, out bool bhfg);
+                                settings.BlockHotkeysFromGame = bhfg;
                                 break;
                         }
                     }

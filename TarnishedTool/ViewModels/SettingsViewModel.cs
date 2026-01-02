@@ -201,6 +201,22 @@ public class SettingsViewModel : BaseViewModel
             }
         }
     }
+    
+    private bool _isBlockGameHotkeysEnabled;
+
+    public bool IsBlockGameHotkeysEnabled
+    {
+        get => _isBlockGameHotkeysEnabled;
+        set
+        {
+            if (SetProperty(ref _isBlockGameHotkeysEnabled, value))
+            {
+                SettingsManager.Default.BlockHotkeysFromGame = value;
+                SettingsManager.Default.Save();
+                _hotkeyManager.SetKeyboardHandling(_isBlockGameHotkeysEnabled);
+            }
+        }
+    }
 
     private bool _isNoLogoEnabled;
 
@@ -341,6 +357,7 @@ public class SettingsViewModel : BaseViewModel
         OnPropertyChanged(nameof(IsEnableHotkeysEnabled));
 
         IsAlwaysOnTopEnabled = SettingsManager.Default.AlwaysOnTop;
+        IsBlockGameHotkeysEnabled = SettingsManager.Default.BlockHotkeysFromGame;
 
         _isStutterFixEnabled = SettingsManager.Default.StutterFix;
         OnPropertyChanged(nameof(IsStutterFixEnabled));

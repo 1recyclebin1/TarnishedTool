@@ -48,6 +48,7 @@ public class HotkeyManager
             string actionId = mapping.Key;
             Keys keys = mapping.Value;
             if (!e.Keys.Are(keys.Values.ToArray())) continue;
+            if (_keyboardHook.Handling) e.IsHandled = true;
             if (_actions.TryGetValue(actionId, out var action))
             {
                 Application.Current.Dispatcher.BeginInvoke(action); 
@@ -145,4 +146,8 @@ public class HotkeyManager
         _hotkeyMappings.Clear();
         SaveHotkeys();
     }
+
+    public void SetKeyboardHandling(bool isEnabled) => _keyboardHook.Handling = isEnabled;
+
+
 }

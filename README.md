@@ -44,3 +44,4 @@ Includes:
 - [Recycle](https://www.youtube.com/@1recyclebin1) - For helping with providing a huge amount of ids, the app icon and testing in general.
 - [Marshaal](https://www.twitch.tv/marshaal04) - For help with all the boss warp locations.
 - [Oppai](https://www.youtube.com/channel/UCFfKUbX6L8a3IO4fbWEIlYw) - For providing lists of graces needed for All Remembrances runs.
+- [Bender](https://www.twitch.tv/benderzgreat) - For lots of thorough testing and feedback

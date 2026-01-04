@@ -194,6 +194,7 @@ namespace TarnishedTool
                 _appliedOneTimeFeatures = false;
                 _hasPublishedLoaded = false;
                 _hasPublishedFadedIn = false;
+                _stateService.Publish(State.Detached);
                 IsAttachedText.Text = "Not attached";
                 IsAttachedText.Foreground = (SolidColorBrush)Application.Current.Resources["NotAttachedBrush"];
                 LaunchGameButton.IsEnabled = true;

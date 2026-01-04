@@ -324,7 +324,7 @@
                 </Border>
             </Grid>
         </TabItem>
-        <TabItem Header="Boss Revives">
+        <TabItem Header="Boss Revives (WIP)">
             <Grid Margin="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -536,21 +536,20 @@
                                 <RowDefinition Height="*"></RowDefinition>
                                 <RowDefinition Height="*"></RowDefinition>
                             </Grid.RowDefinitions>
-                            
-                            <Button Grid.Row="0"  Grid.Column="0" Content="Revive Boss"
+
+                            <Button Grid.Row="0" Grid.Column="0" Content="Revive Boss"
                                     Command="{Binding ReviveBossCommand}"
                                     IsEnabled="{Binding AreOptionsEnabled}"
                                     Margin="0,5, 20, 5" />
-                            <Button Grid.Row="0"  Grid.Column="1" Content="Revive Boss as First Encounter"
+                            <Button Grid.Row="0" Grid.Column="1" Content="Revive Boss as First Encounter"
                                     Command="{Binding ReviveBossFirstEncounterCommand}"
                                     IsEnabled="{Binding AreOptionsEnabled}"
                                     Margin="0,2" />
-                            <Button Grid.Row="1"  Grid.Column="0" Content="Revive All Bosses"
+                            <Button Grid.Row="1" Grid.Column="0" Content="Revive All Bosses"
                                     Command="{Binding ReviveAllBossesCommand}"
                                     IsEnabled="{Binding AreOptionsEnabled}"
-                                    Margin="0,0, 20, 5"
-                                    />
-                            <Button Grid.Row="1"  Grid.Column="1" Content="Revive All Bosses as First Encounter"
+                                    Margin="0,0, 20, 5" />
+                            <Button Grid.Row="1" Grid.Column="1" Content="Revive All Bosses as First Encounter"
                                     Command="{Binding ReviveAllBossesAsFirstEncounterCommand}"
                                     IsEnabled="{Binding AreOptionsEnabled}"
                                     Margin="0,2" />

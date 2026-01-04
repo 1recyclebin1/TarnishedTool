@@ -1,7 +1,10 @@
 ﻿// 
 
+using System;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
+using TarnishedTool.Utilities;
 
 namespace TarnishedTool.Views.Windows;
 
@@ -19,6 +22,18 @@ public partial class CustomMessageBox : Window
         {
             CancelButton.Visibility = Visibility.Visible;
         }
+        
+        Loaded += (s, e) =>
+        {
+            IntPtr hwnd = new WindowInteropHelper(this).Handle;
+            User32.SetTopmost(hwnd);
+
+            if (Application.Current.MainWindow != null)
+            {
+                Application.Current.MainWindow.Closing += (sender, args) => { Close(); };
+            }
+            
+        };
     }
 
     private void OkButton_Click(object sender, RoutedEventArgs e)

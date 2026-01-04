@@ -41,6 +41,7 @@ public class SettingsViewModel : BaseViewModel
         stateService.Subscribe(State.Loaded, OnGameLoaded);
         stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);
         stateService.Subscribe(State.Attached, OnGameAttached);
+        stateService.Subscribe(State.GameStart, OnGameStart);
 
 
         PlayerHotkeys =
@@ -174,6 +175,7 @@ public class SettingsViewModel : BaseViewModel
         ClearHotkeysCommand = new DelegateCommand(ClearHotkeys);
     }
 
+    
     #region Commands
 
     public ICommand ClearHotkeysCommand { get; set; }
@@ -203,6 +205,21 @@ public class SettingsViewModel : BaseViewModel
                 SettingsManager.Default.Save();
                 if (_isEnableHotkeysEnabled) _hotkeyManager.Start();
                 else _hotkeyManager.Stop();
+            }
+        }
+    }
+    
+    private bool _isHotkeyReminderEnabled;
+
+    public bool IsHotkeyReminderEnabled
+    {
+        get => _isHotkeyReminderEnabled;
+        set
+        {
+            if (SetProperty(ref _isHotkeyReminderEnabled, value))
+            {
+                SettingsManager.Default.HotkeyReminder = value;
+                SettingsManager.Default.Save();
             }
         }
     }
@@ -374,6 +391,9 @@ public class SettingsViewModel : BaseViewModel
         OnPropertyChanged(nameof(IsNoLogoEnabled));
         _isMuteMusicEnabled = SettingsManager.Default.MuteMusic;
         OnPropertyChanged(nameof(IsMuteMusicEnabled));
+        
+        _isHotkeyReminderEnabled = SettingsManager.Default.HotkeyReminder;
+        OnPropertyChanged(nameof(IsHotkeyReminderEnabled));
     }
 
     private void OnGameLoaded()
@@ -392,6 +412,13 @@ public class SettingsViewModel : BaseViewModel
     private void OnGameAttached()
     {
         if (IsNoLogoEnabled) _settingsService.ToggleNoLogo(true);
+    }
+    
+    private void OnGameStart()
+    {
+        if (!IsHotkeyReminderEnabled) return;
+        if (!IsEnableHotkeysEnabled) return;
+        MsgBox.Show("Hotkeys are enabled");
     }
 
     private void LoadHotkeyDisplays()

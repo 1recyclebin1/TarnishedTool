@@ -40,6 +40,8 @@ public class SettingsManager
     public float GameSpeed { get; set; }
     public bool IsNoClipKeyboardDisabled { get; set; }
     public bool BlockHotkeysFromGame  { get; set; }
+    public bool HotkeyReminder { get; set; }
+    public bool EnableUpdateChecks { get; set; } = true;
     
 
     private static string SettingsPath => Path.Combine(
@@ -85,6 +87,8 @@ public class SettingsManager
                 $"GameSpeed={GameSpeed}",
                 $"IsNoClipKeyboardDisabled={IsNoClipKeyboardDisabled}",
                 $"BlockHotkeysFromGame={BlockHotkeysFromGame}",
+                $"EnableUpdateChecks={EnableUpdateChecks}",
+                $"HotkeyReminder={HotkeyReminder}",
             };
 
             File.WriteAllLines(SettingsPath, lines);
@@ -229,6 +233,14 @@ public class SettingsManager
                             case "BlockHotkeysFromGame":
                                 bool.TryParse(value, out bool bhfg);
                                 settings.BlockHotkeysFromGame = bhfg;
+                                break;
+                            case "EnableUpdateChecks":
+                                bool.TryParse(value, out bool euc);
+                                settings.EnableUpdateChecks = euc;
+                                break;
+                            case "HotkeyReminder":
+                                bool.TryParse(value, out bool hr);
+                                settings.HotkeyReminder = hr;
                                 break;
                         }
                     }

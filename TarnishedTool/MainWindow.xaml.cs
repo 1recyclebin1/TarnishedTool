@@ -114,14 +114,16 @@ namespace TarnishedTool
             };
             _gameLoadedTimer.Tick += Timer_Tick;
             _gameLoadedTimer.Start();
+            
+            VersionChecker.UpdateVersionText(AppVersion);
+        
+            if (SettingsManager.Default.EnableUpdateChecks)
+            {
+                VersionChecker.CheckForUpdates(this);
+            }
         }
 
-        // VersionChecker.UpdateVersionText(AppVersion);
-        //
-        // if (SettingsManager.Default.EnableUpdateChecks)
-        // {
-        //     VersionChecker.CheckForUpdates(this);
-        // }
+        
         private bool _loaded;
         private bool _hasScanned;
         private bool _hasAllocatedMemory;
@@ -186,7 +188,6 @@ namespace TarnishedTool
             }
             else
             {
-                // _hookManager.ClearHooks();
                 _hasScanned = false;
                 _loaded = false;
                 _hasAllocatedMemory = false;
@@ -216,6 +217,6 @@ namespace TarnishedTool
         }
 
         private void LaunchGame_Click(object sender, RoutedEventArgs e) => Task.Run(GameLauncher.LaunchGame);
-        // private void CheckUpdate_Click(object sender, RoutedEventArgs e) => VersionChecker.CheckForUpdates(this, true);
+        private void CheckUpdate_Click(object sender, RoutedEventArgs e) => VersionChecker.CheckForUpdates(this, true);
     }
 }

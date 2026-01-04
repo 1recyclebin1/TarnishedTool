@@ -94,6 +94,7 @@ public enum HotkeyActions
     IncreaseFlaskCharges,
     OpenShopWindow,
     ToggleGameSpeed,
+    ToggleSevenSpeed,
     ToggleFreeCam,
     ToggleFreezeWorld,
     MoveCamToPlayer,

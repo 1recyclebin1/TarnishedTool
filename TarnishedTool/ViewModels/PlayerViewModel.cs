@@ -143,9 +143,9 @@ namespace TarnishedTool.ViewModels
             set => SetProperty(ref _currentMaxHp, value);
         }
 
-        private int _customHp;
+        private string _customHp;
 
-        public int CustomHp
+        public string CustomHp
         {
             get => _customHp;
             set
@@ -240,8 +240,7 @@ namespace TarnishedTool.ViewModels
                 }
             }
         }
-        
-        
+
         private bool _isNoHitEnabled;
 
         public bool IsNoHitEnabled
@@ -663,7 +662,7 @@ namespace TarnishedTool.ViewModels
             get => _isResetWorldIncluded;
             set => SetProperty(ref _isResetWorldIncluded, value);
         }
-        
+
         private MapLocation _mapLocation;
 
         public MapLocation MapLocation
@@ -671,7 +670,7 @@ namespace TarnishedTool.ViewModels
             get => _mapLocation;
             set => SetProperty(ref _mapLocation, value);
         }
-        
+
         private bool _showPlayerLocation;
 
         public bool ShowPlayerLocation
@@ -810,7 +809,7 @@ namespace TarnishedTool.ViewModels
             SpiritAsh = _playerService.GetSpiritAsh();
             CurrentAnimation = _playerService.GetCurrentAnimation();
             if (ShowPlayerLocation) MapLocation = _playerService.GetMapLocation();
-            
+
             if (IsSpEffectWindowOpen)
             {
                 var spEffects = _spEffectService.GetActiveSpEffectList(_playerService.GetPlayerIns());
@@ -845,8 +844,36 @@ namespace TarnishedTool.ViewModels
         private void SetCustomHp()
         {
             if (!_customHpHasBeenSet) return;
-            if (CustomHp > CurrentMaxHp) CustomHp = CurrentMaxHp;
-            _playerService.SetHp(CustomHp);
+            var (customHp, error) = ParseCustomHp();
+            if (customHp == null)
+            {
+                MsgBox.Show(error, "Invalid Input");
+                return;
+            }
+
+            if (customHp > CurrentMaxHp)
+                customHp = CurrentMaxHp;
+
+            _playerService.SetHp(customHp.Value);
+        }
+
+        private (int? value, string error) ParseCustomHp()
+        {
+            var input = CustomHp?.Trim();
+            if (string.IsNullOrEmpty(input))
+                return (null, "Please enter a value");
+
+            if (input.EndsWith("%"))
+            {
+                if (double.TryParse(input.TrimEnd('%'), out var percent))
+                    return ((int)(percent / 100.0 * CurrentMaxHp), null);
+                return (null, "Invalid percentage format");
+            }
+
+            if (int.TryParse(input, out var absolute))
+                return (absolute, null);
+
+            return (null, "Enter a number or percentage (e.g. 545 or 40%)");
         }
 
         private void SavePosition(object parameter)

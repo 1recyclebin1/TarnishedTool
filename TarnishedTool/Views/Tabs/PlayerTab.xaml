@@ -61,16 +61,37 @@
                         IsEnabled="{Binding AreOptionsEnabled}"
                         Margin="10,0,0,0"
                         Width="40" />
-                    <xctk:IntegerUpDown Width="70"
-                                        Margin="20,0,0,0"
-                                        Value="{Binding CustomHp}"
-                                        Minimum="0" />
+                    <TextBox Width="70" Height="20"
+                                        Margin="10,0,0,0"
+                                        Text="{Binding CustomHp, UpdateSourceTrigger=PropertyChanged}"
+                                        FontSize="11"
+                                        Padding="-0.2"
+                                        VerticalContentAlignment="Center"
+                                        HorizontalContentAlignment="Center"
+                                        MaxLength="5"
+                                        />
                     <Button
                         Command="{Binding SetCustomHpCommand}"
                         Content="Set Custom Hp"
                         IsEnabled="{Binding AreOptionsEnabled}"
                         Margin="5,0,0,0"
                         Width="100" />
+                    
+                    <Border Background="#3498db"
+                            CornerRadius="10"
+                            Width="12"
+                            Height="12"
+                            Margin="5,0,0,0"
+                            VerticalAlignment="Center"
+                            ToolTip="End with % for setting percentage"
+                            ToolTipService.InitialShowDelay='100'>
+                        <TextBlock Text="i"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontWeight="Bold"
+                                   FontSize="10" />
+                    </Border>
                 </StackPanel>
             </Grid>
 

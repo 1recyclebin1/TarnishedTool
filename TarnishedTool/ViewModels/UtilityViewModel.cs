@@ -545,6 +545,25 @@ namespace TarnishedTool.ViewModels
             get => _isIncreasingCharges;
             set => SetProperty(ref _isIncreasingCharges, value);
         }
+        
+        private const float FastGameSpeed = 7f;
+        private bool _is7xSpeedActive;
+
+        private void Toggle7xSpeed()
+        {
+            if (!AreOptionsEnabled) return;
+
+            if (_is7xSpeedActive)
+            {
+                SetSpeed(DefaultGameSpeed);
+                _is7xSpeedActive = false;
+            }
+            else
+            {
+                SetSpeed(FastGameSpeed);
+                _is7xSpeedActive = true;
+            }
+        }
 
         #endregion
 
@@ -644,6 +663,7 @@ namespace TarnishedTool.ViewModels
 
             _hotkeyManager.RegisterAction(HotkeyActions.ForceSave, () => _utilityService.ForceSave());
             _hotkeyManager.RegisterAction(HotkeyActions.ToggleGameSpeed, ToggleSpeed);
+            _hotkeyManager.RegisterAction(HotkeyActions.ToggleSevenSpeed, Toggle7xSpeed);
             _hotkeyManager.RegisterAction(HotkeyActions.IncreaseGameSpeed,
                 () => SetSpeed(Math.Min(10, GameSpeed + 0.50f)));
             _hotkeyManager.RegisterAction(HotkeyActions.DecreaseGameSpeed,

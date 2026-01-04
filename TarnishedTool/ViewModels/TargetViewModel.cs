@@ -799,6 +799,8 @@ namespace TarnishedTool.ViewModels
                 () => ExecuteTargetAction(ForceActSequence));
             _hotkeyManager.RegisterAction(HotkeyActions.KillAllExceptTarget,
                 () => ExecuteTargetAction(KillAllBesidesTarget));
+            _hotkeyManager.RegisterAction(HotkeyActions.ResetTargetPosition,
+                () => ExecuteTargetAction(ResetPosition));
         }
 
         private void ExecuteTargetAction(Action action)

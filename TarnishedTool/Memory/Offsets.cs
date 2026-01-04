@@ -494,6 +494,7 @@ namespace TarnishedTool.Memory
             public static IntPtr IsTorrentDisabledInUnderworld;
             public static IntPtr IsWhistleDisabled;
             public static IntPtr IsWorldPaused;
+            public static IntPtr GetItemChance;
         }
     }
 }

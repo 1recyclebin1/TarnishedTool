@@ -529,6 +529,13 @@
 
         //Patches
 
+        public static readonly Pattern GetItemChance = new Pattern(
+            [0x41, 0x0F, 0xB7, 0xC0, 0xC3, 0x45, 0x0F, 0xB7, 0x41, 0x42],
+            "xxxxxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
         public static readonly Pattern IsWorldPaused = new Pattern(
             new byte[] { 0x0F, 0x84, 0x87, 0x00, 0x00, 0x00, 0xC6, 0x83 },
             "xxxxxxxx",

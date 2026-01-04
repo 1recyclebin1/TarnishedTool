@@ -98,7 +98,7 @@
                                   Margin="20,0,0,0"
                                   VerticalAlignment="Center"
                                   IsEnabled="{Binding AreOptionsEnabled}" />
-                        
+
                         <Border
                             Background="#3498db"
                             CornerRadius="10"
@@ -116,76 +116,71 @@
                                        FontSize="10" />
                         </Border>
                     </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+
+                        <CheckBox Content="100% Drop"
+                                  IsChecked="{Binding IsGuaranteedDropEnabled}"
+
+                                  VerticalAlignment="Center" />
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
         </Border>
 
-        <Border Grid.Row="1"
-                BorderThickness="1"
-                BorderBrush="#333"
-                CornerRadius="3"
-                Margin="0,0,0,5">
-            <StackPanel Margin="10">
-                <Grid>
+        <TabControl Grid.Row="2" Height="170">
+            <TabItem Header="No Clip / Camera">
+                <Grid Margin="10">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <Border Grid.Column="0"
                             BorderThickness="1"
-                            BorderBrush="#444"
+                            BorderBrush="#333"
                             CornerRadius="3"
-                            Margin="0,0,5,0"
+                            Margin="0,0,10,0"
                             Padding="10">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0">
-                                <TextBlock Text="No Clip" FontWeight="SemiBold" Margin="0,0,0,5" />
-
-                                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                    <CheckBox Content="No Clip"
-                                              IsChecked="{Binding IsNoClipEnabled}"
-                                              IsEnabled="{Binding AreOptionsEnabled}"
-                                              VerticalAlignment="Center"
-                                              Margin="0,0,5,0" />
-
-                                    <Border
-                                        Background="#3498db"
-                                        CornerRadius="10"
-                                        Width="12"
-                                        Height="12"
-                                        Margin="5,0,10,0"
-                                        VerticalAlignment="Center"
-                                        ToolTip="Vertical movement with Ctrl/Space or L2/R2 on controller"
-                                        ToolTipService.InitialShowDelay='100'>
-                                        <TextBlock Text="i"
-                                                   Foreground="White"
-                                                   HorizontalAlignment="Center"
-                                                   VerticalAlignment="Center"
-                                                   FontWeight="Bold"
-                                                   FontSize="10" />
-                                    </Border>
-                                </StackPanel>
-
-                                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                                    <xctk:DoubleUpDown
-                                        Value="{Binding NoClipSpeed}"
-                                        TextAlignment="Center"
-                                        Width="80"
-                                        Minimum="0.5"
-                                        Maximum="5.0"
-                                        Increment="0.50"
-                                        FormatString="F2"
-                                        IsEnabled="{Binding IsNoClipEnabled}"
-                                        BorderBrush="#3F3F46" />
-                                    <TextBlock Text="Speed" VerticalAlignment="Center" Margin="5,0,0,0" />
-                                </StackPanel>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox Content="No Clip"
+                                          IsChecked="{Binding IsNoClipEnabled}"
+                                          IsEnabled="{Binding AreOptionsEnabled}"
+                                          VerticalAlignment="Center"
+                                          Margin="0,0,5,0" />
+                                <Border
+                                    Background="#3498db"
+                                    CornerRadius="10"
+                                    Width="12"
+                                    Height="12"
+                                    Margin="5,0,0,0"
+                                    VerticalAlignment="Center"
+                                    ToolTip="Vertical movement with Ctrl/Space or L2/R2 on controller"
+                                    ToolTipService.InitialShowDelay="100">
+                                    <TextBlock Text="i"
+                                               Foreground="White"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               FontWeight="Bold"
+                                               FontSize="10" />
+                                </Border>
                             </StackPanel>
-                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <xctk:DoubleUpDown
+                                    Value="{Binding NoClipSpeed}"
+                                    TextAlignment="Center"
+                                    Width="80"
+                                    Minimum="0.5"
+                                    Maximum="5.0"
+                                    Increment="0.50"
+                                    FormatString="F2"
+                                    IsEnabled="{Binding IsNoClipEnabled}"
+                                    BorderBrush="#3F3F46" />
+                                <TextBlock Text="Speed" VerticalAlignment="Center" Margin="5,0,0,0" />
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                                 <CheckBox Content="Disable KB"
                                           IsChecked="{Binding IsNoClipKeyboardDisableEnabled}"
                                           IsEnabled="{Binding AreOptionsEnabled}"
@@ -196,10 +191,10 @@
                                     CornerRadius="10"
                                     Width="12"
                                     Height="12"
-                                    Margin="5,0,10,0"
+                                    Margin="5,0,0,0"
                                     VerticalAlignment="Center"
                                     ToolTip="Option to disable CTRL and space for vertical movement on keyboard"
-                                    ToolTipService.InitialShowDelay='100'>
+                                    ToolTipService.InitialShowDelay="100">
                                     <TextBlock Text="i"
                                                Foreground="White"
                                                HorizontalAlignment="Center"
@@ -208,120 +203,67 @@
                                                FontSize="10" />
                                 </Border>
                             </StackPanel>
-                        </Grid>
+                        </StackPanel>
                     </Border>
+
                     <Border Grid.Column="1"
                             BorderThickness="1"
-                            BorderBrush="#444"
+                            BorderBrush="#333"
                             CornerRadius="3"
-                            Margin="5,0,0,0"
                             Padding="10">
                         <StackPanel>
-                            <TextBlock Text="Set Time" FontWeight="SemiBold" Margin="0,0,0,5" />
-
-                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                <Button
-                                    Content="Morning"
-                                    Margin="10,0,0,0"
-                                    IsEnabled="{Binding AreOptionsEnabled}"
-                                    Command="{Binding SetMorningCommand}" />
-                                <Button
-                                    Content="Noon"
-                                    Margin="10,0,0,0"
-                                    IsEnabled="{Binding AreOptionsEnabled}"
-                                    Command="{Binding SetNoonCommand}" />
-                                <Button
-                                    Content="Night"
-                                    Margin="10,0,0,0"
-                                    IsEnabled="{Binding AreOptionsEnabled}"
-                                    Command="{Binding SetNightCommand}" />
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                                <CheckBox Content="Free Cam"
+                                          IsChecked="{Binding IsFreeCamEnabled}"
+                                          IsEnabled="{Binding AreOptionsEnabled}"
+                                          VerticalAlignment="Center" />
+                                <Border
+                                    Background="#3498db"
+                                    CornerRadius="10"
+                                    Width="12"
+                                    Height="12"
+                                    Margin="5,0,10,0"
+                                    VerticalAlignment="Center"
+                                    ToolTip="Only works with controller for now"
+                                    ToolTipService.InitialShowDelay="100">
+                                    <TextBlock Text="i"
+                                               Foreground="White"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               FontWeight="Bold"
+                                               FontSize="10" />
+                                </Border>
                             </StackPanel>
+
+                            <CheckBox Content="Player Movement"
+                                      IsChecked="{Binding IsPlayerMovementEnabled}"
+                                      Margin="0,0,0,10"
+                                      VerticalAlignment="Center">
+                                <CheckBox.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                        <Binding Path="AreOptionsEnabled" />
+                                        <Binding Path="IsFreeCamEnabled" />
+                                    </MultiBinding>
+                                </CheckBox.IsEnabled>
+                            </CheckBox>
+
+                            <Button Content="Move Free Cam to Player"
+                                    Command="{Binding MoveCamToPlayerCommand}"
+                                    IsEnabled="{Binding IsFreeCamEnabled}"
+                                    Padding="5,0"
+                                    Margin="0,0,0,5"
+                                    HorizontalAlignment="Left" />
+                            <Button Content="Move Player to Free Cam"
+                                    Command="{Binding MovePlayerToCamCommand}"
+                                    IsEnabled="{Binding IsFreeCamEnabled}"
+                                    Padding="5,0"
+                                    HorizontalAlignment="Left" />
                         </StackPanel>
                     </Border>
                 </Grid>
-            </StackPanel>
-        </Border>
+            </TabItem>
+        </TabControl>
 
-        <Border Grid.Row="2"
-                BorderThickness="1"
-                BorderBrush="#333"
-                CornerRadius="3"
-                Margin="0,0,0,5">
-            <StackPanel Margin="10">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Text="Camera"
-                               Grid.Column="0" />
-                </Grid>
-
-                <Grid Margin="10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <StackPanel Grid.Column="0">
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                            <CheckBox Content="Free Cam"
-                                      IsChecked="{Binding IsFreeCamEnabled}"
-                                      IsEnabled="{Binding AreOptionsEnabled}"
-                                      Margin="0,0,0,0"
-                                      VerticalAlignment="Center" />
-
-                            <Border
-                                Background="#3498db"
-                                CornerRadius="10"
-                                Width="12"
-                                Height="12"
-                                Margin="5,0,10,0"
-                                VerticalAlignment="Center"
-                                ToolTip="Only works with controller for now"
-                                ToolTipService.InitialShowDelay='100'>
-                                <TextBlock Text="i"
-                                           Foreground="White"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center"
-                                           FontWeight="Bold"
-                                           FontSize="10" />
-                            </Border>
-
-                        </StackPanel>
-
-                        <CheckBox Content="Player Movement"
-                                  IsChecked="{Binding IsPlayerMovementEnabled}"
-                                  Margin="0,0,0,0"
-                                  VerticalAlignment="Center">
-                            <CheckBox.IsEnabled>
-                                <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                    <Binding Path="AreOptionsEnabled" />
-                                    <Binding Path="IsFreeCamEnabled"/>
-                                </MultiBinding>
-                            </CheckBox.IsEnabled>
-                        </CheckBox>
-
-                    </StackPanel>
-                    <StackPanel Grid.Column="1">
-
-                        <Button Content="Move Free Cam to Player"
-                                Command="{Binding MoveCamToPlayerCommand}"
-                                IsEnabled="{Binding IsFreeCamEnabled}"
-                                Padding="5,0"
-                                Margin="10,0,0, 0"
-                                HorizontalAlignment="Left" />
-                        <Button Content="Move Player to Free Cam"
-                                Command="{Binding MovePlayerToCamCommand}"
-                                IsEnabled="{Binding IsFreeCamEnabled}"
-                                Padding="5,0"
-                                Margin="10,5,0,0"
-                                HorizontalAlignment="Left" />
-                    </StackPanel>
-                </Grid>
-            </StackPanel>
-        </Border>
 
         <Border Grid.Row="3"
                 BorderThickness="1"

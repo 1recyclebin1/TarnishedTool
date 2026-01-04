@@ -110,6 +110,7 @@ public class SettingsViewModel : BaseViewModel
             new("No Attack", HotkeyActions.TargetNoAttack),
             new("Force Act Sequence", HotkeyActions.ForceActSequence),
             new("Kill All Except Target", HotkeyActions.KillAllExceptTarget),
+            new("Reset Position", HotkeyActions.ResetTargetPosition),
         ];
 
         UtilityHotkeys =
@@ -127,9 +128,6 @@ public class SettingsViewModel : BaseViewModel
             new("Move Free Cam to Player", HotkeyActions.MoveCamToPlayer),
             new("Move Player to Free Cam", HotkeyActions.MovePlayerToCam),
             new("Move Player when Free Cam", HotkeyActions.ToggleFreeCamPlayerMovement),
-            new("Set Morning", HotkeyActions.SetMorning),
-            new("Set Noon", HotkeyActions.SetNoon),
-            new("Set Night", HotkeyActions.SetNight),
             new("Draw Hitbox", HotkeyActions.DrawHitbox),
             new("Draw Player Sound", HotkeyActions.DrawPlayerSound),
             new("Draw Ragdolls", HotkeyActions.DrawRagdolls),
@@ -153,7 +151,10 @@ public class SettingsViewModel : BaseViewModel
 
         EventHotkeys =
         [
-            new("Draw Events", HotkeyActions.DrawEvent)
+            new("Draw Events", HotkeyActions.DrawEvent),
+            new("Set Morning", HotkeyActions.SetMorning),
+            new("Set Noon", HotkeyActions.SetNoon),
+            new("Set Night", HotkeyActions.SetNight),
         ];
 
 

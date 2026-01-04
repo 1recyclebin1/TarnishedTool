@@ -14,4 +14,6 @@ public static class Event
     public static readonly long[] UnlockMetyr = [2051450180, 9440]; //Invader + quest
 
     public static readonly long FightFortissax = 12032859;
+    public static readonly long FightEldenBeast = 19002802;
+    
 }

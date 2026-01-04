@@ -32,4 +32,5 @@ public interface IUtilityService
     void ToggleHideMap(bool isEnabled);
     void ToggleDrawTilesOnMap(bool isEnabled);
     void ToggleNoclipKeyboardHook(bool isEnabled);
+    void ToggleGuaranteedDrop(bool isGuaranteedDropEnabled);
 }

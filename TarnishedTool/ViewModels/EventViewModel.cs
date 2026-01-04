@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 using System.Windows.Media;
 using TarnishedTool.Core;
@@ -18,6 +19,7 @@ namespace TarnishedTool.ViewModels
         private readonly IEzStateService _ezStateService;
         private readonly IEmevdService _emevdService;
         private readonly HotkeyManager _hotkeyManager;
+        private readonly IUtilityService _utilityService;
         public const int WhetstoneBladeId = 0x4000218E;
         
         private readonly List<int> _baseGameGestureIds; 
@@ -27,7 +29,7 @@ namespace TarnishedTool.ViewModels
 
         public EventViewModel(IEventService eventService, IStateService stateService, IItemService itemService,
             IDlcService dlcService, IEzStateService ezStateService, IEmevdService emevdService,
-            HotkeyManager hotkeyManager)
+            HotkeyManager hotkeyManager, IUtilityService utilityService)
         {
             _eventService = eventService;
             _itemService = itemService;
@@ -35,10 +37,12 @@ namespace TarnishedTool.ViewModels
             _ezStateService = ezStateService;
             _emevdService = emevdService;
             _hotkeyManager = hotkeyManager;
+            _utilityService = utilityService;
 
 
             stateService.Subscribe(State.Loaded, OnGameLoaded);
             stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);
+            stateService.Subscribe(State.FirstLoaded, OnGameFirstLoaded);
 
             SetEventCommand = new DelegateCommand(SetEvent);
             GetEventCommand = new DelegateCommand(GetEvent);
@@ -47,6 +51,10 @@ namespace TarnishedTool.ViewModels
             UnlockMetyrCommand = new DelegateCommand(UnlockMetyr);
             FightFortissaxCommand = new DelegateCommand(FightFortissax);
             UnlockGesturesCommand = new DelegateCommand(UnlockGestures);
+            FightEldenBeastCommand = new DelegateCommand(FightEldenBeast);
+            SetMorningCommand = new DelegateCommand(SetMorning);
+            SetNoonCommand = new DelegateCommand(SetNoon);
+            SetNightCommand = new DelegateCommand(SetNight);
             
             _baseGameGestureIds = DataLoader.GetSimpleList("BaseGestures", int.Parse);
             _dlcGestureIds = DataLoader.GetSimpleList("DlcGestures", int.Parse);
@@ -64,6 +72,10 @@ namespace TarnishedTool.ViewModels
         public ICommand UnlockMetyrCommand { get; set; }
         public ICommand FightFortissaxCommand { get; set; }
         public ICommand UnlockGesturesCommand { get; set; }
+        public ICommand FightEldenBeastCommand { get; set; }
+        public ICommand SetMorningCommand { get; set; }
+        public ICommand SetNoonCommand { get; set; }
+        public ICommand SetNightCommand { get; set; }
 
         #endregion
 
@@ -134,7 +146,11 @@ namespace TarnishedTool.ViewModels
             set
             {
                 if (!SetProperty(ref _isDrawEventsEnabled, value)) return;
-                if (_isDrawEventsEnabled) _eventService.PatchEventEnable();
+                if (_isDrawEventsEnabled)
+                {
+                    _utilityService.PatchDebugFont();
+                    _eventService.PatchEventEnable();
+                }
                 _eventService.ToggleDrawEvents(_isDrawEventsEnabled);
                 
             }
@@ -152,7 +168,6 @@ namespace TarnishedTool.ViewModels
                 
             }
         }
-
         
         #endregion
 
@@ -169,10 +184,31 @@ namespace TarnishedTool.ViewModels
             AreOptionsEnabled = false;
         }
         
+        private void OnGameFirstLoaded()
+        {
+            if (IsDrawEventsEnabled)
+            {
+                _utilityService.PatchDebugFont();
+                _eventService.PatchEventEnable();
+                _eventService.ToggleDrawEvents(true);
+            }
+            if (IsDisableEventsEnabled) _eventService.ToggleDisableEvents(false);
+        }
+        
         private void RegisterHotkeys()
         {
             _hotkeyManager.RegisterAction(HotkeyActions.DrawEvent, () => IsDrawEventsEnabled = !IsDrawEventsEnabled);
+            _hotkeyManager.RegisterAction(HotkeyActions.SetMorning, () => SafeExecute(SetMorning));
+            _hotkeyManager.RegisterAction(HotkeyActions.SetNoon, () => SafeExecute(SetNoon));
+            _hotkeyManager.RegisterAction(HotkeyActions.SetNight, () => SafeExecute(SetNight));
         }
+        
+        private void SafeExecute(Action action)
+        {
+            if (!AreOptionsEnabled) return;
+            action();
+        }
+
         
         private void SetEvent()
         {
@@ -229,6 +265,7 @@ namespace TarnishedTool.ViewModels
         }
         
         private void FightFortissax() => _eventService.SetEvent(Event.FightFortissax, true);
+        private void FightEldenBeast() => _eventService.SetEvent(Event.FightEldenBeast, true);
         
         private void UnlockGestures()
         {
@@ -244,6 +281,10 @@ namespace TarnishedTool.ViewModels
                 _ezStateService.ExecuteTalkCommand(EzState.TalkCommands.AcquireGesture(dlcGestureId));
             }
         }
+        
+        private void SetMorning() => _emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetMorning);
+        private void SetNoon() => _emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetNoon);
+        private void SetNight() => _emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetNight);
 
         #endregion
     }

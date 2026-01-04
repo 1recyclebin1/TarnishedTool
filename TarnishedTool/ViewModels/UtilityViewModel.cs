@@ -61,9 +61,6 @@ namespace TarnishedTool.ViewModels
 
             SaveCommand = new DelegateCommand(Save);
             TriggerNgCycleCommand = new DelegateCommand(TriggerNgCycle);
-            SetMorningCommand = new DelegateCommand(SetMorning);
-            SetNoonCommand = new DelegateCommand(SetNoon);
-            SetNightCommand = new DelegateCommand(SetNight);
             OpenLevelUpCommand = new DelegateCommand(OpenLevelUp);
             OpenAllotCommand = new DelegateCommand(OpenAllot);
             AttunementCommand = new DelegateCommand(OpenAttunement);
@@ -93,9 +90,7 @@ namespace TarnishedTool.ViewModels
 
         public ICommand SaveCommand { get; set; }
         public ICommand TriggerNgCycleCommand { get; set; }
-        public ICommand SetMorningCommand { get; set; }
-        public ICommand SetNoonCommand { get; set; }
-        public ICommand SetNightCommand { get; set; }
+        
         public ICommand OpenLevelUpCommand { get; set; }
         public ICommand OpenAllotCommand { get; set; }
         public ICommand AttunementCommand { get; set; }
@@ -312,6 +307,18 @@ namespace TarnishedTool.ViewModels
             {
                 if (!SetProperty(ref _isFreezeWorldEnabled, value)) return;
                 _utilityService.ToggleFreezeWorld(_isFreezeWorldEnabled);
+            }
+        }
+        
+        private bool _isGuaranteedDropEnabled;
+
+        public bool IsGuaranteedDropEnabled
+        {
+            get => _isGuaranteedDropEnabled;
+            set
+            {
+                if (!SetProperty(ref _isGuaranteedDropEnabled, value)) return;
+                _utilityService.ToggleGuaranteedDrop(_isGuaranteedDropEnabled);
             }
         }
 
@@ -562,6 +569,7 @@ namespace TarnishedTool.ViewModels
         {
             if (IsCombatMapEnabled) _utilityService.ToggleCombatMap(true);
             if (IsDungeonWarpEnabled) _utilityService.ToggleDungeonWarp(true);
+            if (IsGuaranteedDropEnabled) _utilityService.ToggleGuaranteedDrop(true);
             if (IsDrawHitboxEnabled) _utilityService.ToggleDrawHitbox(true);
             if (IsShowFullShopLineupEnabled) _utilityService.ToggleFullShopLineup(true);
             if (IsDrawPlayerSoundEnabled)
@@ -629,9 +637,6 @@ namespace TarnishedTool.ViewModels
                 if (!IsFreeCamEnabled) return;
                 MovePlayerToCam();
             });
-            _hotkeyManager.RegisterAction(HotkeyActions.SetMorning, () => SafeExecute(SetMorning));
-            _hotkeyManager.RegisterAction(HotkeyActions.SetNoon, () => SafeExecute(SetNoon));
-            _hotkeyManager.RegisterAction(HotkeyActions.SetNight, () => SafeExecute(SetNight));
             _hotkeyManager.RegisterAction(HotkeyActions.DrawHitbox, () => IsDrawHitboxEnabled = !IsDrawHitboxEnabled);
             _hotkeyManager.RegisterAction(HotkeyActions.DrawPlayerSound,
                 () => IsDrawPlayerSoundEnabled = !IsDrawPlayerSoundEnabled);
@@ -703,10 +708,7 @@ namespace TarnishedTool.ViewModels
             return Math.Abs(a - b) < Epsilon;
         }
 
-        private void SetMorning() => _emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetMorning);
-        private void SetNoon() => _emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetNoon);
-        private void SetNight() => _emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetNight);
-
+        
         private void OpenLevelUp() => _ezStateService.ExecuteTalkCommand(EzState.TalkCommands.LevelUp);
         private void OpenAllot() => _ezStateService.ExecuteTalkCommand(EzState.TalkCommands.OpenAllot);
 

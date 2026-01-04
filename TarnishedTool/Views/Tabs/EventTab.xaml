@@ -119,6 +119,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <Button Grid.Row="0" Grid.Column="0" Content="Unlock All Affinities"
@@ -195,6 +196,31 @@
                     </StackPanel>
 
                     <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal">
+                        <Button Content="Fight Elden Beast"
+                                Width="120"
+                                Command="{Binding FightEldenBeastCommand}"
+                                IsEnabled="{Binding AreOptionsEnabled}"
+                                Margin="0,2">
+
+                        </Button>
+
+                        <Border Background="#3498db"
+                                CornerRadius="10"
+                                Width="12"
+                                Height="12"
+                                Margin="10,0,0,0"
+                                VerticalAlignment="Center"
+                                ToolTip="Must be in general area"
+                                ToolTipService.InitialShowDelay="100">
+                            <TextBlock Text="i"
+                                       Foreground="White"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontWeight="Bold"
+                                       FontSize="10" />
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Grid.Row="4" Grid.Column="0" Orientation="Horizontal">
                         <Button Content="Fight Fortissax"
                                 Width="120"
                                 Command="{Binding FightFortissaxCommand}"
@@ -222,34 +248,80 @@
                 </Grid>
             </StackPanel>
         </Border>
+       
+        
         <Border Grid.Row="3"
                 BorderThickness="1"
                 BorderBrush="#333"
                 CornerRadius="3"
-                Margin="0,10,0,0">
+                Margin="0,0,0,5">
             <StackPanel Margin="10">
-                <TextBlock Text="Additional Options"
-                           FontWeight="Bold"
-                           Margin="0,0,0,10" />
-
-                <Grid Margin="10,0,0,0">
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Column="0" Orientation="Vertical">
-                        <CheckBox
-                            Content="Draw Events"
-                            IsChecked="{Binding IsDrawEventsEnabled}">
-                        </CheckBox>
+                    <Border Grid.Column="0"
+                            BorderThickness="1"
+                            BorderBrush="#444"
+                            CornerRadius="3"
+                            Margin="0,0,5,0"
+                            >
+                        <StackPanel Margin="10">
+                            <TextBlock Text="Additional Options"
+                                       FontWeight="Bold"
+                                       Margin="0,0,0,10" />
 
-                        <CheckBox
-                            Content="Disable Events"
-                            IsChecked="{Binding IsDisableEventsEnabled}">
+                            <Grid Margin="10,0,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
 
-                        </CheckBox>
-                    </StackPanel>
+                                <StackPanel Grid.Column="0" Orientation="Vertical">
+                                    <CheckBox
+                                        Content="Draw Events"
+                                        IsChecked="{Binding IsDrawEventsEnabled}">
+                                    </CheckBox>
+
+                                    <CheckBox
+                                        Content="Disable Events"
+                                        IsChecked="{Binding IsDisableEventsEnabled}">
+
+                                    </CheckBox>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    <Border Grid.Column="1"
+                            BorderThickness="1"
+                            BorderBrush="#444"
+                            CornerRadius="3"
+                            Margin="5,0,0,0"
+                            Padding="10">
+                        <StackPanel>
+                            <TextBlock Text="Set Time" FontWeight="SemiBold" Margin="0,0,0,5" />
+
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Button
+                                    Content="Morning"
+                                    Margin="10,0,0,0"
+                                    IsEnabled="{Binding AreOptionsEnabled}"
+                                    Command="{Binding SetMorningCommand}" />
+                                <Button
+                                    Content="Noon"
+                                    Margin="10,0,0,0"
+                                    IsEnabled="{Binding AreOptionsEnabled}"
+                                    Command="{Binding SetNoonCommand}" />
+                                <Button
+                                    Content="Night"
+                                    Margin="10,0,0,0"
+                                    IsEnabled="{Binding AreOptionsEnabled}"
+                                    Command="{Binding SetNightCommand}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
                 </Grid>
             </StackPanel>
         </Border>

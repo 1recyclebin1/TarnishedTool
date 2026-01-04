@@ -77,7 +77,7 @@ namespace TarnishedTool
                 attackInfoService, hotkeyManager, spEffectService, emevdService);
             EventViewModel eventViewModel =
                 new EventViewModel(eventService, _stateService, itemService, _dlcService, ezStateService, emevdService,
-                    hotkeyManager);
+                    hotkeyManager, utilityService);
             UtilityViewModel utilityViewModel = new UtilityViewModel(utilityService, _stateService, ezStateService,
                 playerService, hotkeyManager, emevdService, playerViewModel, _dlcService, spEffectService,
                 flaskService);

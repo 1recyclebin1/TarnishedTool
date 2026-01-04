@@ -151,6 +151,10 @@ namespace TarnishedTool.Services
             }
         }
 
+        public void ToggleGuaranteedDrop(bool isEnabled) =>
+            memoryService.WriteBytes(Patches.GetItemChance,
+                isEnabled ? [0x66, 0xB8, 0x01, 0x00] : [0x41, 0x0F, 0xB7, 0xC0]);
+
         private void WriteJumpIntercept(IntPtr jumpInterceptCode)
         {
             var bytes = AsmLoader.GetAsmBytes("NoClip_JumpHook");

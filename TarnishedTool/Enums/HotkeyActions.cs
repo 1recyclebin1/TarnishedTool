@@ -61,6 +61,7 @@ public enum HotkeyActions
     TargetNoAttack,
     ForceActSequence,
     KillAllExceptTarget,
+    ResetTargetPosition,
     Quitout,
     ForceSave,
     Noclip,

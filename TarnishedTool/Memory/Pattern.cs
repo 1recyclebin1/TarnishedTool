@@ -604,9 +604,9 @@
         );
 
         public static readonly Pattern NoRuneLossOnDeath = new(
-            [0x48, 0x0F, 0x4C, 0xC1, 0x44],
-            "xxxxx",
-            0xB,
+            [0x0F, 0x84, 0xE4, 0x01, 0x00, 0x00, 0x45, 0x84],
+            "xxxxxxxx",
+            0,
             AddressingMode.Absolute
         );
 

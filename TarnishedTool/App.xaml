@@ -10,7 +10,7 @@
         <Color x:Key="PanelColor">#1A1A1A</Color>
         <Color x:Key="TextColor">#EAEAEA</Color>
         <Color x:Key="AccentColor">#b37c07 </Color>
-        <Color x:Key="HoverColor">#d1832a  </Color>
+        <Color x:Key="HoverColor">#C27927 </Color>
         <Color x:Key="BorderColor">#333333</Color>
         <Color x:Key="ControlBackgroundColor">#252525</Color>
         <Color x:Key="TitleBarColor">#92400E  </Color>

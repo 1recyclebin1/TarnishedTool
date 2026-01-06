@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using TarnishedTool.Interfaces;
 using TarnishedTool.Memory;
 using TarnishedTool.Utilities;
@@ -56,5 +57,9 @@ namespace TarnishedTool.Services
             var ptr = memoryService.ReadInt64(CSDbgEvent.Base) + CSDbgEvent.DisableEvent;
             memoryService.WriteUInt8((IntPtr)ptr, isEnabled ? 1 : 0);
         }
+
+        public bool AreAllEventsTrue(long[] eventToCheck) => eventToCheck.All(GetEvent);
+        
+        public void ToggleEvent(long eventId) => SetEvent(eventId, !GetEvent(eventId));
     }
 }

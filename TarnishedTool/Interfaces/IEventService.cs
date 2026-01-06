@@ -9,4 +9,6 @@ public interface IEventService
     void PatchEventEnable();
     void ToggleDrawEvents(bool isEnabled);
     void ToggleDisableEvents(bool isEnabled);
+    bool AreAllEventsTrue(long[] unlockMetyr);
+    void ToggleEvent(long clearDlc);
 }

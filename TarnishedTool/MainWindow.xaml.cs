@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -103,8 +104,14 @@ namespace TarnishedTool
             MainTabControl.Items.Add(new TabItem { Header = "Event", Content = eventTab });
             MainTabControl.Items.Add(new TabItem { Header = "Items", Content = itemTab });
             MainTabControl.Items.Add(new TabItem { Header = "Settings", Content = settingsTab });
+            
+            MainTabControl.SelectionChanged += MainTabControl_SelectionChanged;
 
             _stateService.Publish(State.AppStart);
+            
+            var versionInfo = FileVersionInfo.GetVersionInfo(ExeManager.GetExePath());
+            var fileVersion = versionInfo.FileVersion;
+            Console.WriteLine($"Version: {fileVersion}");
 
             Closing += MainWindow_Closing;
 
@@ -130,6 +137,7 @@ namespace TarnishedTool
         private bool _appliedOneTimeFeatures;
         private bool _hasPublishedLoaded;
         private bool _hasPublishedFadedIn;
+        private bool _hasCheckedPatch;
 
         private void Timer_Tick(object sender, EventArgs e)
         {
@@ -139,6 +147,15 @@ namespace TarnishedTool
                 IsAttachedText.Foreground = (SolidColorBrush)Application.Current.Resources["AttachedBrush"];
 
                 LaunchGameButton.IsEnabled = false;
+
+                // if (!_hasCheckedPatch)
+                // {
+                //     if (!PatchManager.Initialize())
+                //     {
+                //         throw new Exception();
+                //     }
+                //     _hasCheckedPatch = true;
+                // }
 
                 if (!_hasScanned)
                 {
@@ -217,7 +234,7 @@ namespace TarnishedTool
             SettingsManager.Default.Save();
         }
 
-        private void LaunchGame_Click(object sender, RoutedEventArgs e) => Task.Run(GameLauncher.LaunchGame);
+        private void LaunchGame_Click(object sender, RoutedEventArgs e) => Task.Run(ExeManager.LaunchGame);
         private void CheckUpdate_Click(object sender, RoutedEventArgs e) => VersionChecker.CheckForUpdates(this, true);
         private void MainTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

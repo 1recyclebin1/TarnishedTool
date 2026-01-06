@@ -9,7 +9,7 @@ using Microsoft.Win32;
 
 namespace TarnishedTool.Utilities;
 
-public static class GameLauncher
+public static class ExeManager
 {
     public static void LaunchGame()
     {
@@ -17,7 +17,8 @@ public static class GameLauncher
         {
             string exePath = GetExePath();
             if (exePath == null) return;
-
+            
+            
             var psi = new ProcessStartInfo("cmd.exe")
             {
                 Arguments = $"/c set SteamAppId=1245620 && start \"\" \"{exePath}\"",
@@ -33,7 +34,7 @@ public static class GameLauncher
         }
     }
 
-    private static string GetExePath()
+    public static string GetExePath()
     {
         string steamPath =
             Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Valve\Steam", "InstallPath",
@@ -61,6 +62,5 @@ public static class GameLauncher
         }
 
         return null;
-
     }
 }

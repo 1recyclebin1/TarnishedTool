@@ -264,6 +264,7 @@ namespace TarnishedTool.Services
             _autoAttachTimer.Start();
         }
 
+        public void StopAutoAttach() => _autoAttachTimer.Stop();
 
         private void TryAttachToProcess()
         {

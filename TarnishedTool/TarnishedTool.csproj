@@ -126,6 +126,7 @@
         <Compile Include="Converters\Vector3ToStringConverter.cs" />
         <Compile Include="Core\DelegateCommand.cs" />
         <Compile Include="Enums\Affinity.cs" />
+        <Compile Include="Enums\GameVersion.cs" />
         <Compile Include="Enums\HotkeyActions.cs" />
         <Compile Include="Enums\State.cs" />
         <Compile Include="GameIds\Emevd.cs" />
@@ -192,9 +193,10 @@
         <Compile Include="Services\UtilityService.cs" />
         <Compile Include="Utilities\AsmHelper.cs" />
         <Compile Include="Utilities\AsmLoader.cs" />
+        <Compile Include="Utilities\PatchManager.cs" />
         <Compile Include="Utilities\PositionUtils.cs" />
         <Compile Include="Utilities\DataLoader.cs" />
-        <Compile Include="Utilities\GameLauncher.cs" />
+        <Compile Include="Utilities\ExeManager.cs" />
         <Compile Include="Utilities\HotkeyManager.cs" />
         <Compile Include="Utilities\MsgBox.cs" />
         <Compile Include="Utilities\SettingsManager.cs" />

@@ -1,9 +1,21 @@
 ﻿using System;
+using TarnishedTool.Enums;
 
 namespace TarnishedTool.Memory
 {
     public static class Offsets
     {
+        private static GameVersion? _version;
+
+        public static GameVersion Version => _version
+                                             ?? throw new InvalidOperationException(
+                                                 "Offsets not initialized. Call PatchManager.Initialize() first.");
+        
+        public static bool Initialize(string fileVersion)
+        {
+            return false;
+        }
+
         public static class WorldChrMan
         {
             public static IntPtr Base;
@@ -159,7 +171,7 @@ namespace TarnishedTool.Memory
             {
                 DebugDrawFlags = 0xC8
             }
-            
+
             public static readonly BitFlag BlueTargetView = new(0x1, 1 << 3);
             public static readonly BitFlag YellowTargetView = new(0xC8, 1 << 5);
             public static readonly BitFlag WhiteLineToPlayer = new(0xC8, 1 << 6);
@@ -183,7 +195,6 @@ namespace TarnishedTool.Memory
                 LightningAbsorption = 0x1BC,
                 HolyAbsorption = 0x1C0,
             }
-            
         }
 
         public static class FieldArea
@@ -195,7 +206,6 @@ namespace TarnishedTool.Memory
             public const int CSDebugCam = 0xD0;
             public const int CamCoords = 0x40;
 
-            
             public const int DrawTiles1 = 0x61C;
             public const int DrawTiles2 = 0x61E;
 
@@ -207,12 +217,11 @@ namespace TarnishedTool.Memory
         {
             public static IntPtr Base;
         }
-        
+
         public static class DrawPathing
         {
             public static IntPtr Base;
         }
-
 
         public static class LuaEventMan
         {
@@ -241,7 +250,6 @@ namespace TarnishedTool.Memory
         {
             public static IntPtr Base;
 
-
             public enum GroupMasks
             {
                 // MasterFlag = 0x0,
@@ -263,7 +271,6 @@ namespace TarnishedTool.Memory
                 Unk10 = 0x10,
                 ShouldShowGrass = 0x11,
             }
-       
         }
 
         public static class DamageManager
@@ -366,12 +373,12 @@ namespace TarnishedTool.Memory
         {
             public static IntPtr Base;
         }
-        
+
         public static class SoloParamRepositoryImp
         {
             public static IntPtr Base;
         }
-        
+
         public static class MsgRepository
         {
             public static IntPtr Base;
@@ -383,7 +390,7 @@ namespace TarnishedTool.Memory
 
             public const int SteamInputEnum = 0x88B;
         }
-        
+
         public static class CSTrophy
         {
             public static IntPtr Base;
@@ -397,7 +404,7 @@ namespace TarnishedTool.Memory
             public static IntPtr Base;
             public const int GameSpeed = 0x2CC;
         }
-        
+
         public static class MapDebugFlags
         {
             public static IntPtr Base;

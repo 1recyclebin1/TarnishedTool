@@ -148,15 +148,15 @@ namespace TarnishedTool
 
                 LaunchGameButton.IsEnabled = false;
 
-                // if (!_hasCheckedPatch)
-                // {
-                //     if (!PatchManager.Initialize(_memoryService))
-                //     {
-                //         MsgBox.Show($"Unsupported game version");
-                //         return;
-                //     }
-                //     _hasCheckedPatch = true;
-                // }
+                if (!_hasCheckedPatch)
+                {
+                    if (!PatchManager.Initialize(_memoryService))
+                    {
+                        MsgBox.Show($"Unsupported game version");
+                        return;
+                    }
+                    _hasCheckedPatch = true;
+                }
 
                 if (!_hasScanned)
                 {

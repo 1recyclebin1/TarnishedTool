@@ -124,7 +124,7 @@ namespace TarnishedTool.Services
             var playerGameData =
                 memoryService.ReadInt64((IntPtr)memoryService.ReadInt64(GameDataMan.Base) + GameDataMan.PlayerGameData);
             var handle =
-                memoryService.ReadInt32((IntPtr)playerGameData + (int)GameDataMan.PlayerGameDataOffsets.TorrentHandle);
+                memoryService.ReadInt32((IntPtr)playerGameData + GameDataMan.TorrentHandle);
             var torrentChrIns = ChrInsLookup(handle);
             return memoryService.FollowPointers(torrentChrIns, [..ChrIns.ChrPhysicsModule], true, false);
         }
@@ -381,7 +381,7 @@ namespace TarnishedTool.Services
             var playerGameData =
                 memoryService.ReadInt64((IntPtr)memoryService.ReadInt64(GameDataMan.Base) + GameDataMan.PlayerGameData);
             var handle =
-                memoryService.ReadInt32((IntPtr)playerGameData + (int)GameDataMan.PlayerGameDataOffsets.TorrentHandle);
+                memoryService.ReadInt32((IntPtr)playerGameData + GameDataMan.TorrentHandle);
             var torrentChrIns = ChrInsLookup(handle);
             var bitFlags = memoryService.FollowPointers(torrentChrIns,
                 [..ChrIns.ChrDataModule, (int)ChrIns.ChrDataOffsets.Flags],

@@ -15,6 +15,10 @@ namespace TarnishedTool.Memory
         {
             _version = fileVersion switch
             {
+                var v when v.StartsWith("2.0.1.") => GameVersion.Version2_0_1,
+                var v when v.StartsWith("2.2.0.") => GameVersion.Version2_2_0,
+                var v when v.StartsWith("2.2.3.") => GameVersion.Version2_2_3,
+                var v when v.StartsWith("2.3.0.") => GameVersion.Version2_3_0,
                 var v when v.StartsWith("2.4.0.") => GameVersion.Version2_4_0,
                 var v when v.StartsWith("2.6.0.") => GameVersion.Version2_6_0,
                 var v when v.StartsWith("2.6.1.") => GameVersion.Version2_6_1,
@@ -213,12 +217,26 @@ namespace TarnishedTool.Memory
             public const int CamMode = 0xC8; // 1 for free cam
             public const int CSDebugCam = 0xD0;
             public const int CamCoords = 0x40;
+            
+            public static int DrawTiles1 => Version switch
+            {
+                GameVersion.Version2_0_1 => 0x60C,
+                _ => 0x61C,
+            };
 
-            public const int DrawTiles1 = 0x61C;
-            public const int DrawTiles2 = 0x61E;
-
+            public static int DrawTiles2 => Version switch
+            {
+                GameVersion.Version2_0_1 => 0x60E,
+                _ => 0x61E,
+            };
+            
             public const int WorldInfoOwner = 0x10;
-            public const int ShouldDrawMiniMap = 0xB3368;
+            
+            public static int ShouldDrawMiniMap => Version switch
+            {
+                GameVersion.Version2_0_1 => 0xB3918,
+                _ => 0xB3368,
+            };
         }
 
         public static class FD4PadManager
@@ -325,6 +343,12 @@ namespace TarnishedTool.Memory
             public static IntPtr Base;
 
             public const int PlayerGameData = 0x8;
+            
+            public static int TorrentHandle => Version switch
+            {
+                GameVersion.Version2_0_1 => 0x930,
+                _ => 0x950,
+            };
 
             public enum PlayerGameDataOffsets
             {
@@ -341,7 +365,6 @@ namespace TarnishedTool.Memory
                 RuneMemory = 0x70,
                 Scadutree = 0xFC,
                 SpiritAsh = 0xFD,
-                TorrentHandle = 0x950,
             }
 
             public const int Options = 0x58;
@@ -368,8 +391,20 @@ namespace TarnishedTool.Memory
             public static IntPtr Base;
 
             public const int ShouldQuitout = 0x10;
-            public const int ForceSave = 0xb72;
-            public const int ShouldStartNewGame = 0xB7D;
+    
+            public static int ForceSave => Version switch
+            {
+                GameVersion.Version2_0_1 => 0xB42,
+                _ => 0xb72,
+            };
+            
+            
+            public static int ShouldStartNewGame => Version switch
+            {
+                GameVersion.Version2_0_1 => 0xB4D,
+                _ => 0xB7D,
+            };
+      
         }
 
         public static class MapItemManImpl
@@ -410,7 +445,12 @@ namespace TarnishedTool.Memory
         public static class CSFlipperImp
         {
             public static IntPtr Base;
-            public const int GameSpeed = 0x2CC;
+            
+            public static int GameSpeed => Version switch
+            {
+                GameVersion.Version2_0_1 => 0x2D4,
+                _ => 0x2CC,
+            };
         }
 
         public static class MapDebugFlags
@@ -418,7 +458,13 @@ namespace TarnishedTool.Memory
             public static IntPtr Base;
             public const int ShowAllMaps = 0x0;
             public const int ShowAllGraces = 0x1;
-            public const int ShowMapTiles = 0x6;
+            
+            
+            public static int ShowMapTiles => Version switch
+            {
+                GameVersion.Version2_0_1 => 0x5,
+                _ => 0x6,
+            };
         }
 
         public static class WorldChrManDbg

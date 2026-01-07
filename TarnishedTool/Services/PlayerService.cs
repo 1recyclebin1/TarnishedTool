@@ -267,8 +267,8 @@ namespace TarnishedTool.Services
         public void ToggleNoRuneLoss(bool isNoRuneLossEnabled) =>
             memoryService.WriteBytes(Patches.NoRuneLossOnDeath,
                 isNoRuneLossEnabled
-                    ? [0xE9, 0xE5, 0x01, 0x00, 0x00, 0x90]
-                    : [0x0F, 0x84, 0xE4, 0x01, 0x00, 0x00]);
+                    ? [0x90, 0x90, 0x90]
+                    : [0x89, 0x45, 0x6C]);
 
         public void ToggleNoTimePassOnDeath(bool isNoTimePassOnDeathEnabled)
         {

@@ -179,7 +179,7 @@ namespace TarnishedTool.Memory
             Console.WriteLine($@"GameDataMan.Base: 0x{GameDataMan.Base.ToInt64():X} (base+0x{GameDataMan.Base.ToInt64() - baseAddr:X})");
             Console.WriteLine($@"CsDlcImp.Base: 0x{CsDlcImp.Base.ToInt64():X} (base+0x{CsDlcImp.Base.ToInt64() - baseAddr:X})");
             Console.WriteLine($@"MapItemManImpl.Base: 0x{MapItemManImpl.Base.ToInt64():X} (base+0x{MapItemManImpl.Base.ToInt64() - baseAddr:X})");
-            Console.WriteLine($@"InputManager.Base: 0x{FD4PadManager.Base.ToInt64():X} (base+0x{FD4PadManager.Base.ToInt64() - baseAddr:X})");
+            Console.WriteLine($@"FD4PadManager.Base: 0x{FD4PadManager.Base.ToInt64():X} (base+0x{FD4PadManager.Base.ToInt64() - baseAddr:X})");
             Console.WriteLine($@"CSEmkSystem.Base: 0x{CSEmkSystem.Base.ToInt64():X} (base+0x{CSEmkSystem.Base.ToInt64() - baseAddr:X})");
             Console.WriteLine($@"WorldAreaTimeImpl.Base: 0x{WorldAreaTimeImpl.Base.ToInt64():X} (base+0x{WorldAreaTimeImpl.Base.ToInt64() - baseAddr:X})");
             Console.WriteLine($@"GroupMask.Base: 0x{GroupMask.Base.ToInt64():X} (base+0x{GroupMask.Base.ToInt64() - baseAddr:X})");
@@ -209,6 +209,7 @@ namespace TarnishedTool.Memory
             Console.WriteLine($@"Patches.IsWhistleDisabled: 0x{Patches.IsWhistleDisabled.ToInt64():X} (base+0x{Patches.IsWhistleDisabled.ToInt64() - baseAddr:X})");
             Console.WriteLine($@"Patches.IsWorldPaused: 0x{Patches.IsWorldPaused.ToInt64():X} (base+0x{Patches.IsWorldPaused.ToInt64() - baseAddr:X})");
             Console.WriteLine($@"Patches.GetItemChance: 0x{Patches.GetItemChance.ToInt64():X} (base+0x{Patches.GetItemChance.ToInt64() - baseAddr:X})");
+            Console.WriteLine($@"Patches.GetShopEvent: 0x{Patches.GetShopEvent.ToInt64():X} (base+0x{Patches.GetShopEvent.ToInt64() - baseAddr:X})");
 
             Console.WriteLine($@"Hooks.UpdateCoords: 0x{Hooks.UpdateCoords:X} (base+0x{Hooks.UpdateCoords - baseAddr:X})");
             Console.WriteLine($@"Hooks.InAirTimer: 0x{Hooks.InAirTimer:X} (base+0x{Hooks.InAirTimer - baseAddr:X})");
@@ -229,6 +230,8 @@ namespace TarnishedTool.Memory
             Console.WriteLine($@"Hooks.SetActionRequested: 0x{Hooks.SetActionRequested:X} (base+0x{Hooks.SetActionRequested - baseAddr:X})");
             Console.WriteLine($@"Hooks.NoGrab: 0x{Hooks.NoGrab:X} (base+0x{Hooks.NoGrab - baseAddr:X})");
             Console.WriteLine($@"Hooks.LoadScreenMsgLookup: 0x{Hooks.LoadScreenMsgLookup:X} (base+0x{Hooks.LoadScreenMsgLookup - baseAddr:X})");
+            Console.WriteLine($@"Hooks.TargetNoStagger: 0x{Hooks.TargetNoStagger:X} (base+0x{Hooks.TargetNoStagger - baseAddr:X})");
+            Console.WriteLine($@"Hooks.NoMapAcquiredPopup: 0x{Hooks.NoMapAcquiredPopup:X} (base+0x{Hooks.NoMapAcquiredPopup - baseAddr:X})");
 
             Console.WriteLine($@"Funcs.GraceWarp: 0x{Functions.GraceWarp:X} (base+0x{Functions.GraceWarp - baseAddr:X})");
             Console.WriteLine($@"Funcs.SetEvent: 0x{Functions.SetEvent:X} (base+0x{Functions.SetEvent - baseAddr:X})");
@@ -248,6 +251,8 @@ namespace TarnishedTool.Memory
             Console.WriteLine($@"Funcs.GetChrInsByEntityId: 0x{Functions.GetChrInsByEntityId:X} (base+0x{Functions.GetChrInsByEntityId - baseAddr:X})");
             Console.WriteLine($@"Funcs.NpcEzStateTalkCtor: 0x{Functions.NpcEzStateTalkCtor:X} (base+0x{Functions.NpcEzStateTalkCtor - baseAddr:X})");
             Console.WriteLine($@"Funcs.EzStateEnvQueryImplCtor: 0x{Functions.EzStateEnvQueryImplCtor:X} (base+0x{Functions.EzStateEnvQueryImplCtor - baseAddr:X})");
+            Console.WriteLine($@"Funcs.ExternalEventTempCtor: 0x{Functions.ExternalEventTempCtor:X} (base+0x{Functions.ExternalEventTempCtor - baseAddr:X})");
+            Console.WriteLine($@"Funcs.ExecuteTalkCommand: 0x{Functions.ExecuteTalkCommand:X} (base+0x{Functions.ExecuteTalkCommand - baseAddr:X})");
 #endif
         }
 

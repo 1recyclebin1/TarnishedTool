@@ -150,13 +150,26 @@ namespace TarnishedTool
 
                 if (!_hasCheckedPatch)
                 {
+                    var sw = Stopwatch.StartNew();
                     if (!PatchManager.Initialize(_memoryService))
                     {
+                        sw.Stop();
+                        Console.WriteLine($"PatchManager.Initialize failed: {sw.ElapsedMilliseconds}ms");
+        
+                        sw.Restart();
                         _aobScanner.Scan();
+                        sw.Stop();
+                        Console.WriteLine($"AoBScanner.Scan: {sw.ElapsedMilliseconds}ms");
+        
                         _stateService.Publish(State.Attached);
 #if DEBUG
                         Console.WriteLine($@"Base: 0x{_memoryService.BaseAddress.ToInt64():X}");
 #endif
+                    }
+                    else
+                    {
+                        sw.Stop();
+                        Console.WriteLine($"PatchManager.Initialize succeeded: {sw.ElapsedMilliseconds}ms");
                     }
 
                     _hasCheckedPatch = true;
@@ -165,7 +178,11 @@ namespace TarnishedTool
 
                 if (!_hasScanned)
                 {
+                    var sw = Stopwatch.StartNew();
                     _aobScanner.Scan();
+                    sw.Stop();
+                    Console.WriteLine($"AoBScanner.Scan (fallback): {sw.ElapsedMilliseconds}ms");
+    
                     _hasScanned = true;
                     _stateService.Publish(State.Attached);
 #if DEBUG

@@ -197,6 +197,7 @@ namespace TarnishedTool.Services
                 var lockedTargetPtr = CodeCaveOffsets.Base + CodeCaveOffsets.TargetPtr;
                 var hookLoc = Hooks.ShouldUpdateAi;
                 var bytes = AsmLoader.GetAsmBytes("DisableAllExceptTarget");
+                
                 AsmHelper.WriteRelativeOffsets(bytes, new[]
                 {
                     (code.ToInt64() + 0x5, lockedTargetPtr.ToInt64(), 7, 0x5 + 3),

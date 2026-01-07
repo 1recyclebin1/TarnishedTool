@@ -1,4 +1,5 @@
 using System;
+using H.Hooks;
 using TarnishedTool.Enums;
 
 namespace TarnishedTool.Memory
@@ -396,6 +397,12 @@ namespace TarnishedTool.Memory
             public static IntPtr Base;
 
             public const int ShouldQuitout = 0x10;
+            
+            public static int StoredTime => Version switch
+            {
+                GameVersion.Version2_0_1 => 0x18,
+                _ => 0x20,
+            };
 
             public static int ForceSave => Version switch
             {
@@ -538,7 +545,7 @@ namespace TarnishedTool.Memory
             public static long AttackInfo;
             public static long WarpCoordWrite;
             public static long WarpAngleWrite;
-            public static IntPtr HookedDeathFunction;
+            public static IntPtr NoTimePassOnDeath;
             public static long LionCooldownHook;
             public static long SetActionRequested;
             public static long NoMapAcquiredPopup;
@@ -609,7 +616,6 @@ namespace TarnishedTool.Memory
             FieldArea.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C53470,
-                
                 GameVersion.Version2_0_1 => 0x3CDFFC0,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -623,8 +629,6 @@ namespace TarnishedTool.Memory
             LuaEventMan.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C520F8,
-                
-                
                 GameVersion.Version2_0_1 => 0x3CDEC38,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -638,7 +642,6 @@ namespace TarnishedTool.Memory
             VirtualMemFlag.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C526E8,
-                
                 GameVersion.Version2_0_1 => 0x3CDF238,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -652,7 +655,6 @@ namespace TarnishedTool.Memory
             DamageManager.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C50658,
-                
                 GameVersion.Version2_0_1 => 0x3CDD1A8,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -666,7 +668,6 @@ namespace TarnishedTool.Memory
             MenuMan.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C55B30,
-                
                 GameVersion.Version2_0_1 => 0x3CE2580,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -680,7 +681,6 @@ namespace TarnishedTool.Memory
             TargetView.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C4C4EA,
-                
                 GameVersion.Version2_0_1 => 0x3CD90BA,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -694,7 +694,6 @@ namespace TarnishedTool.Memory
             GameMan.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C53B88,
-                
                 GameVersion.Version2_0_1 => 0x3CE0708,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -708,7 +707,6 @@ namespace TarnishedTool.Memory
             WorldHitMan.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C54320,
-                
                 GameVersion.Version2_0_1 => 0x3CE0EB0,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -722,7 +720,6 @@ namespace TarnishedTool.Memory
             WorldChrManDbg.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C50478,
-                
                 GameVersion.Version2_0_1 => 0x3CDD010,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -736,7 +733,6 @@ namespace TarnishedTool.Memory
             GameDataMan.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C481B8,
-                
                 GameVersion.Version2_0_1 => 0x3CD4D88,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -750,7 +746,6 @@ namespace TarnishedTool.Memory
             CsDlcImp.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C705D8,
-                
                 GameVersion.Version2_0_1 => 0x3CFD838,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -765,7 +760,6 @@ namespace TarnishedTool.Memory
             {
 
                 GameVersion.Version1_2_0 => 0x3C51CF0,
-                
                 GameVersion.Version2_0_1 => 0x3CDE840,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -793,7 +787,6 @@ namespace TarnishedTool.Memory
             CSEmkSystem.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C51E78,
-                
                 GameVersion.Version2_0_1 => 0x3CDE9C0,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -807,7 +800,6 @@ namespace TarnishedTool.Memory
             WorldAreaTimeImpl.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C535A0,
-                
                 GameVersion.Version2_0_1 => 0x3CE00F0,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -821,7 +813,6 @@ namespace TarnishedTool.Memory
             GroupMask.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3A367E0,
-                
                 GameVersion.Version2_0_1 => 0x3AC2AE8,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -835,7 +826,6 @@ namespace TarnishedTool.Memory
             SoloParamRepositoryImp.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x4473138,
-                
                 GameVersion.Version2_0_1 => 0x3CF8BC8,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -849,7 +839,6 @@ namespace TarnishedTool.Memory
             MsgRepository.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C66D48,
-                
                 GameVersion.Version2_0_1 => 0x3CF4218,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -863,7 +852,6 @@ namespace TarnishedTool.Memory
             CSFlipperImp.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x4473138,
-                
                 GameVersion.Version2_0_1 => 0x4500708,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -877,7 +865,6 @@ namespace TarnishedTool.Memory
             CSDbgEvent.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C522A0,
-                
                 GameVersion.Version2_0_1 => 0x3CDEDE8,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -891,7 +878,6 @@ namespace TarnishedTool.Memory
             ChrDbgFlags.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C50480,
-                
                 GameVersion.Version2_0_1 => 0x3CDCFE8,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -905,7 +891,6 @@ namespace TarnishedTool.Memory
             UserInputManager.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x45255C8,
-                
                 GameVersion.Version2_0_1 => 0x45B4D48,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -919,7 +904,6 @@ namespace TarnishedTool.Memory
             CSTrophy.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x4472AD8,
-                
                 GameVersion.Version2_0_1 => 0x45000A8,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -933,7 +917,6 @@ namespace TarnishedTool.Memory
             DrawPathing.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C4C030,
-                
                 GameVersion.Version2_0_1 => 0x3CD8C00,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -947,7 +930,6 @@ namespace TarnishedTool.Memory
             MapDebugFlags.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C56BE0,
-                
                 GameVersion.Version2_0_1 => 0x3CE3D80,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -962,14 +944,13 @@ namespace TarnishedTool.Memory
             Functions.GraceWarp = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x5855B0,
-                
-                GameVersion.Version2_0_1 => 0x595800L,
+                GameVersion.Version2_0_1 => 0x595800,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x599CD0L,
+                GameVersion.Version2_6_1 => 0x599CD0,
                 _ => 0L
             };
 
@@ -977,28 +958,26 @@ namespace TarnishedTool.Memory
             {
 
                 GameVersion.Version1_2_0 => 0x5D9E40,
-                
-                GameVersion.Version2_0_1 => 0x5EE410L,
+                GameVersion.Version2_0_1 => 0x5EE410,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x5F9CD0L,
+                GameVersion.Version2_6_1 => 0x5F9CD0,
                 _ => 0L
             };
 
             Functions.SetSpEffect = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3E17E0,
-                
-                GameVersion.Version2_0_1 => 0x3E6AF0L,
+                GameVersion.Version2_0_1 => 0x3E6AF0,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x3E90F0L,
+                GameVersion.Version2_6_1 => 0x3E90F0,
                 _ => 0L
             };
 
@@ -1006,13 +985,13 @@ namespace TarnishedTool.Memory
             {
                 GameVersion.Version1_2_0 => 0x258270,
                 
-                GameVersion.Version2_0_1 => 0x25C7A0L,
+                GameVersion.Version2_0_1 => 0x25C7A0,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x25E1B0L,
+                GameVersion.Version2_6_1 => 0x25E1B0,
                 _ => 0L
             };
 
@@ -1020,54 +999,52 @@ namespace TarnishedTool.Memory
             {
                 GameVersion.Version1_2_0 => 0x4F7580,
                 
-                GameVersion.Version2_0_1 => 0x504140L,
+                GameVersion.Version2_0_1 => 0x504140,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x507D50L,
+                GameVersion.Version2_6_1 => 0x507D50,
                 _ => 0L
             };
 
             Functions.WarpToBlock = moduleBase.ToInt64() + Version switch
             {
-                GameVersion.Version1_2_0 => 0x5D7DA0L,
-                
-                GameVersion.Version2_0_1 => 0x5EC2F0L,
+                GameVersion.Version1_2_0 => 0x5D7DA0,
+                GameVersion.Version2_0_1 => 0x5EC2F0,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x5F7BB0L,
+                GameVersion.Version2_6_1 => 0x5F7BB0,
                 _ => 0L
             };
 
             Functions.ExternalEventTempCtor = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x0,
-               
-                GameVersion.Version2_0_1 => 0x1FFAE70L,
+                GameVersion.Version2_0_1 => 0x1FFAE70,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x2041020L,
+                GameVersion.Version2_6_1 => 0x2041020,
                 _ => 0L
             };
 
             Functions.ExecuteTalkCommand = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x0,
-                GameVersion.Version2_0_1 => 0xE65800L,
+                GameVersion.Version2_0_1 => 0xE65800,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0xEA52B0L,
+                GameVersion.Version2_6_1 => 0xEA52B0,
                 _ => 0L
             };
 
@@ -1075,167 +1052,156 @@ namespace TarnishedTool.Memory
             {
                 GameVersion.Version1_2_0 => 0x5D9650,
                 
-                GameVersion.Version2_0_1 => 0x5EDC20L,
+                GameVersion.Version2_0_1 => 0x5EDC20,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x5F94E0L,
+                GameVersion.Version2_6_1 => 0x5F94E0,
                 _ => 0L
             };
 
             Functions.GetPlayerItemQuantityById = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x75ACC0,
-                
-                GameVersion.Version2_0_1 => 0x774890L,
+                GameVersion.Version2_0_1 => 0x774890,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x7850C0L,
+                GameVersion.Version2_6_1 => 0x7850C0,
                 _ => 0L
             };
 
             Functions.ItemSpawn = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x54E570,
-                
-                GameVersion.Version2_0_1 => 0x55C760L,
+                GameVersion.Version2_0_1 => 0x55C760,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x560670L,
+                GameVersion.Version2_6_1 => 0x560670,
                 _ => 0L
             };
 
             Functions.MatrixVectorProduct = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0xAB01E0,
-                
-                GameVersion.Version2_0_1 => 0xAE3560L,
+                GameVersion.Version2_0_1 => 0xAE3560,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0xB12310L,
+                GameVersion.Version2_6_1 => 0xB12310,
                 _ => 0L
             };
 
             Functions.ChrInsByHandle = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x4F74A0,
-                
-                GameVersion.Version2_0_1 => 0x504060L,
+                GameVersion.Version2_0_1 => 0x504060,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x507C70L,
+                GameVersion.Version2_6_1 => 0x507C70,
                 _ => 0L
             };
 
             Functions.FindAndRemoveSpEffect = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x4E6970,
-                
-                GameVersion.Version2_0_1 => 0x4F32B0L,
+                GameVersion.Version2_0_1 => 0x4F32B0,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x4F6980L,
+                GameVersion.Version2_6_1 => 0x4F6980,
                 _ => 0L
             };
 
             Functions.EmevdSwitch = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x555D00,
-                
-                GameVersion.Version2_0_1 => 0x563EF0L,
+                GameVersion.Version2_0_1 => 0x563EF0,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x567E00L,
+                GameVersion.Version2_6_1 => 0x567E00,
                 _ => 0L
             };
 
             Functions.EmkEventInsCtor = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x56ECA0,
-                
-                GameVersion.Version2_0_1 => 0x57E380L,
+                GameVersion.Version2_0_1 => 0x57E380,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x582700L,
+                GameVersion.Version2_6_1 => 0x582700,
                 _ => 0L
             };
 
             Functions.GetMovement = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x25B6CD0,
-                
-                GameVersion.Version2_0_1 => 0x261EE70L,
+                GameVersion.Version2_0_1 => 0x261EE70,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x2664270L,
+                GameVersion.Version2_6_1 => 0x2664270,
                 _ => 0L
             };
 
             Functions.GetChrInsByEntityId = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x4F7630,
-                
-                GameVersion.Version2_0_1 => 0x5041F0L,
+                GameVersion.Version2_0_1 => 0x5041F0,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x507E00L,
+                GameVersion.Version2_6_1 => 0x507E00,
                 _ => 0L
             };
 
             Functions.NpcEzStateTalkCtor = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0xE17E70,
-                
-                GameVersion.Version2_0_1 => 0xE5F260L,
+                GameVersion.Version2_0_1 => 0xE5F260,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0xE9ECD0L,
+                GameVersion.Version2_6_1 => 0xE9ECD0,
                 _ => 0L
             };
 
             Functions.EzStateEnvQueryImplCtor = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x1FD0D40,
-                
-                GameVersion.Version2_0_1 => 0x20386D0L,
+                GameVersion.Version2_0_1 => 0x20386D0,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x207E880L,
+                GameVersion.Version2_6_1 => 0x207E880,
                 _ => 0L
             };
 
@@ -1243,42 +1209,39 @@ namespace TarnishedTool.Memory
             Hooks.UpdateCoords = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x45E3C9,
-                
-                GameVersion.Version2_0_1 => 0x464A89L,
+                GameVersion.Version2_0_1 => 0x464A89,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x467999L,
+                GameVersion.Version2_6_1 => 0x467999,
                 _ => 0L
             };
 
             Hooks.InAirTimer = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x444CA8,
-                
-                GameVersion.Version2_0_1 => 0x44B368L,
+                GameVersion.Version2_0_1 => 0x44B368,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x44E278L,
+                GameVersion.Version2_6_1 => 0x44E278,
                 _ => 0L
             };
 
             Hooks.NoClipKb = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x1EBF67F,
-                
-                GameVersion.Version2_0_1 => 0x1F26F3FL,
+                GameVersion.Version2_0_1 => 0x1F26F3F,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x1F6D0FFL,
+                GameVersion.Version2_6_1 => 0x1F6D0FF,
                 _ => 0L
             };
 
@@ -1286,97 +1249,91 @@ namespace TarnishedTool.Memory
             {
                 GameVersion.Version1_2_0 => 0x1EBE79E,
                 
-                GameVersion.Version2_0_1 => 0x1F25FFFL,
+                GameVersion.Version2_0_1 => 0x1F25FFF,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x1F6C17FL,
+                GameVersion.Version2_6_1 => 0x1F6C17F,
                 _ => 0L
             };
 
             Hooks.HasSpEffect = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x4E99C0,
-                
-                GameVersion.Version2_0_1 => 0x4F62E0L,
+                GameVersion.Version2_0_1 => 0x4F62E0,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x4F9A10L,
+                GameVersion.Version2_6_1 => 0x4F9A10,
                 _ => 0L
             };
 
             Hooks.BlueTargetView = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3382C3,
-                
-                GameVersion.Version2_0_1 => 0x33CA43L,
+                GameVersion.Version2_0_1 => 0x33CA43,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x33E263L,
+                GameVersion.Version2_6_1 => 0x33E263,
                 _ => 0L
             };
 
             Hooks.LockedTargetPtr = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x6F0A16,
-                
-                GameVersion.Version2_0_1 => 0x708C56L,
+                GameVersion.Version2_0_1 => 0x708C56,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x717372L,
+                GameVersion.Version2_6_1 => 0x717372,
                 _ => 0L
             };
 
             Hooks.InfinitePoise = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x5E885CB0,
-                
-                GameVersion.Version2_0_1 => 0x442DC0L,
+                GameVersion.Version2_0_1 => 0x442DC0,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x445CB0L,
+                GameVersion.Version2_6_1 => 0x445CB0,
                 _ => 0L
             };
 
             Hooks.ShouldUpdateAi = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C09F0,
-                
-                GameVersion.Version2_0_1 => 0x3C5A30L,
+                GameVersion.Version2_0_1 => 0x3C5A30,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x3C7910L,
+                GameVersion.Version2_6_1 => 0x3C7910,
                 _ => 0L
             };
 
             Hooks.GetForceActIdx = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x6402D8C4,
-                
-                GameVersion.Version2_0_1 => 0x55611FBL,
+                GameVersion.Version2_0_1 => 0x55611FB,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x5BED8C4L,
+                GameVersion.Version2_6_1 => 0x5BED8C4,
                 _ => 0L
             };
 
@@ -1384,55 +1341,52 @@ namespace TarnishedTool.Memory
             {
                 GameVersion.Version1_2_0 => 0x5E8BE3C7,
                 
-                GameVersion.Version2_0_1 => 0x47B3C5L,
+                GameVersion.Version2_0_1 => 0x47B3C5,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x47E3C7L,
+                GameVersion.Version2_6_1 => 0x47E3C7,
                 _ => 0L
             };
 
             Hooks.AttackInfo = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x5E8BE22B,
-                
-                GameVersion.Version2_0_1 => 0x47B23AL,
+                GameVersion.Version2_0_1 => 0x47B23A,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x47E22BL,
+                GameVersion.Version2_6_1 => 0x47E22B,
                 _ => 0L
             };
 
             Hooks.WarpCoordWrite = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x657AFA,
-                
-                GameVersion.Version2_0_1 => 0x66D4DAL,
+                GameVersion.Version2_0_1 => 0x66D4DA,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x67AABAL,
+                GameVersion.Version2_6_1 => 0x67AABA,
                 _ => 0L
             };
 
             Hooks.WarpAngleWrite = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x657ADA,
-                
-                GameVersion.Version2_0_1 => 0x66D4BAL,
+                GameVersion.Version2_0_1 => 0x66D4BA,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x67AA9AL,
+                GameVersion.Version2_6_1 => 0x67AA9A,
                 _ => 0L
             };
 
@@ -1445,59 +1399,59 @@ namespace TarnishedTool.Memory
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x4FF10AL,
+                GameVersion.Version2_6_1 => 0x4FF10A,
                 _ => 0L
             };
 
             Hooks.SetActionRequested = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3FF362,
-                GameVersion.Version2_0_1 => 0x4050C2L,
+                GameVersion.Version2_0_1 => 0x4050C2,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x407BB2L,
+                GameVersion.Version2_6_1 => 0x407BB2,
                 _ => 0L
             };
 
             Hooks.NoMapAcquiredPopup = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x0L,
-                GameVersion.Version2_0_1 => 0x9A5AE1L,
+                GameVersion.Version2_0_1 => 0x9A5AE1,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x9C63D1L,
+                GameVersion.Version2_6_1 => 0x9C63D1,
                 _ => 0L
             };
 
             Hooks.NoGrab = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x4402FB,
-                GameVersion.Version2_0_1 => 0x446A7BL,
+                GameVersion.Version2_0_1 => 0x446A7B,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0x44998BL,
+                GameVersion.Version2_6_1 => 0x44998B,
                 _ => 0L
             };
 
             Hooks.LoadScreenMsgLookup = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x5F15093C,
-                GameVersion.Version2_0_1 => 0x446A7BL,
+                GameVersion.Version2_0_1 => 0x446A7B,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
                 GameVersion.Version2_4_0 => 0x0L,
                 GameVersion.Version2_6_0 => 0x0L,
-                GameVersion.Version2_6_1 => 0xD1093CL,
+                GameVersion.Version2_6_1 => 0xD1093C,
                 _ => 0L
             };
 
@@ -1561,7 +1515,6 @@ namespace TarnishedTool.Memory
             Patches.OpenMap = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x7C4CDA,
-                
                 GameVersion.Version2_0_1 => 0x7DD2AA,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -1575,7 +1528,6 @@ namespace TarnishedTool.Memory
             Patches.CloseMap = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x5EE0392E,
-                
                 GameVersion.Version2_0_1 => 0x9A383A,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -1589,7 +1541,7 @@ namespace TarnishedTool.Memory
             Patches.EnableFreeCam = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0xDC0D60,
-                GameVersion.Version2_0_1 => 0x0,
+                GameVersion.Version2_0_1 => 0xE05A70,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -1602,7 +1554,7 @@ namespace TarnishedTool.Memory
             Patches.CanDrawEvents1 = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0xDD0810,
-                GameVersion.Version2_0_1 => 0x0,
+                GameVersion.Version2_0_1 => 0xE15990,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -1615,7 +1567,7 @@ namespace TarnishedTool.Memory
             Patches.CanDrawEvents2 = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0xDD07F0,
-                GameVersion.Version2_0_1 => 0x0,
+                GameVersion.Version2_0_1 => 0xE15970,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -1628,7 +1580,7 @@ namespace TarnishedTool.Memory
             Patches.GetShopEvent = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x0,
-                GameVersion.Version2_0_1 => 0x0,
+                GameVersion.Version2_0_1 => 0xD157B0,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -1641,7 +1593,7 @@ namespace TarnishedTool.Memory
             Patches.NoLogo = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x0,
-                GameVersion.Version2_0_1 => 0x0,
+                GameVersion.Version2_0_1 => 0xADDF7D,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -1654,7 +1606,7 @@ namespace TarnishedTool.Memory
             Patches.DebugFont = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x0,
-                GameVersion.Version2_0_1 => 0x0,
+                GameVersion.Version2_0_1 => 0x2647F90,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -1667,7 +1619,7 @@ namespace TarnishedTool.Memory
             Patches.PlayerSound = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x0,
-                GameVersion.Version2_0_1 => 0x0,
+                GameVersion.Version2_0_1 => 0x33CD76,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -1680,7 +1632,7 @@ namespace TarnishedTool.Memory
             Patches.IsTorrentDisabledInUnderworld = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x0,
-                GameVersion.Version2_0_1 => 0x0,
+                GameVersion.Version2_0_1 => 0xCBD20A,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -1693,7 +1645,7 @@ namespace TarnishedTool.Memory
             Patches.IsWhistleDisabled = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x0,
-                GameVersion.Version2_0_1 => 0x0,
+                GameVersion.Version2_0_1 => 0x6F7E4F,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -1706,7 +1658,7 @@ namespace TarnishedTool.Memory
             Patches.IsWorldPaused = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x0,
-                GameVersion.Version2_0_1 => 0x0,
+                GameVersion.Version2_0_1 => 0xACA765,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -1719,7 +1671,7 @@ namespace TarnishedTool.Memory
             Patches.GetItemChance = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x0,
-                GameVersion.Version2_0_1 => 0x0,
+                GameVersion.Version2_0_1 => 0xD079DE,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -1728,9 +1680,107 @@ namespace TarnishedTool.Memory
                 GameVersion.Version2_6_1 => 0xD3BF4E,
                 _ => 0
             };
+            
+            Hooks.NoTimePassOnDeath = moduleBase + Version switch
+            {
+                GameVersion.Version1_2_0 => 0x0,
+                GameVersion.Version2_0_1 => 0x5F0AB4,
+                GameVersion.Version2_2_0 => 0x0,
+                GameVersion.Version2_2_3 => 0x0,
+                GameVersion.Version2_3_0 => 0x0,
+                GameVersion.Version2_4_0 => 0x0,
+                GameVersion.Version2_6_0 => 0x0,
+                GameVersion.Version2_6_1 => 0x5FC37A,
+                _ => 0
+            };
+      
+            
+            Console.WriteLine($@"WorldChrMan.Base: 0x{WorldChrMan.Base.ToInt64():X}");
+            Console.WriteLine($@"FieldArea.Base: 0x{FieldArea.Base.ToInt64():X}");
+            Console.WriteLine($@"LuaEventMan.Base: 0x{LuaEventMan.Base.ToInt64():X}");
+            Console.WriteLine($@"VirtualMemFlag.Base: 0x{VirtualMemFlag.Base.ToInt64():X}");
+            Console.WriteLine($@"DamageManager.Base: 0x{DamageManager.Base.ToInt64():X}");
+            Console.WriteLine($@"MenuMan.Base: 0x{MenuMan.Base.ToInt64():X}");
+            Console.WriteLine($@"TargetView.Base: 0x{TargetView.Base.ToInt64():X}");
+            Console.WriteLine($@"GameMan.Base: 0x{GameMan.Base.ToInt64():X}");
+            Console.WriteLine($@"WorldHitMan.Base: 0x{WorldHitMan.Base.ToInt64():X}");
+            Console.WriteLine($@"WorldChrManDbg.Base: 0x{WorldChrManDbg.Base.ToInt64():X}");
+            Console.WriteLine($@"GameDataMan.Base: 0x{GameDataMan.Base.ToInt64():X}");
+            Console.WriteLine($@"CsDlcImp.Base: 0x{CsDlcImp.Base.ToInt64():X}");
+            Console.WriteLine($@"MapItemManImpl.Base: 0x{MapItemManImpl.Base.ToInt64():X}");
+            Console.WriteLine($@"FD4PadManager.Base: 0x{FD4PadManager.Base.ToInt64():X}");
+            Console.WriteLine($@"CSEmkSystem.Base: 0x{CSEmkSystem.Base.ToInt64():X}");
+            Console.WriteLine($@"WorldAreaTimeImpl.Base: 0x{WorldAreaTimeImpl.Base.ToInt64():X}");
+            Console.WriteLine($@"GroupMask.Base: 0x{GroupMask.Base.ToInt64():X}");
+            Console.WriteLine($@"CSFlipperImp.Base: 0x{CSFlipperImp.Base.ToInt64():X}");
+            Console.WriteLine($@"CSDbgEvent.Base: 0x{CSDbgEvent.Base.ToInt64():X}");
+            Console.WriteLine($@"UserInputManager.Base: 0x{UserInputManager.Base.ToInt64():X}");
+            Console.WriteLine($@"CSTrophy.Base: 0x{CSTrophy.Base.ToInt64():X}");
+            Console.WriteLine($@"MapDebugFlags.Base: 0x{MapDebugFlags.Base.ToInt64():X}");
+            Console.WriteLine($@"SoloParamRepositoryImp.Base: 0x{SoloParamRepositoryImp.Base.ToInt64():X}");
+            Console.WriteLine($@"MsgRepository.Base: 0x{MsgRepository.Base.ToInt64():X}");
+            Console.WriteLine($@"DrawPathing.Base: 0x{DrawPathing.Base.ToInt64():X}");
+            Console.WriteLine($@"ChrDbgFlags.Base: 0x{ChrDbgFlags.Base.ToInt64():X}");
 
-            // Don't forget the derived one
-            Hooks.HookedDeathFunction = Patches.NoRuneLossOnDeath - 7;
+            Console.WriteLine($@"Patches.NoLogo: 0x{Patches.NoLogo.ToInt64():X}");
+            Console.WriteLine($@"Patches.NoRunesFromEnemies: 0x{Patches.NoRunesFromEnemies.ToInt64():X}");
+            Console.WriteLine($@"Patches.NoRuneArcLoss: 0x{Patches.NoRuneArcLoss.ToInt64():X}");
+            Console.WriteLine($@"Patches.NoRuneLossOnDeath: 0x{Patches.NoRuneLossOnDeath.ToInt64():X}");
+            Console.WriteLine($@"Patches.CanFastTravel: 0x{Patches.CanFastTravel.ToInt64():X}");
+            Console.WriteLine($@"Patches.OpenMap: 0x{Patches.OpenMap.ToInt64():X}");
+            Console.WriteLine($@"Patches.CloseMap: 0x{Patches.CloseMap.ToInt64():X}");
+            Console.WriteLine($@"Patches.EnableFreeCam: 0x{Patches.EnableFreeCam.ToInt64():X}");
+            Console.WriteLine($@"Patches.CanDrawEvents1: 0x{Patches.CanDrawEvents1.ToInt64():X}");
+            Console.WriteLine($@"Patches.CanDrawEvents2: 0x{Patches.CanDrawEvents2.ToInt64():X}");
+            Console.WriteLine($@"Patches.DebugFont: 0x{Patches.DebugFont.ToInt64():X}");
+            Console.WriteLine($@"Patches.PlayerSound: 0x{Patches.PlayerSound.ToInt64():X}");
+            Console.WriteLine($@"Patches.IsTorrentDisabledInUnderworld: 0x{Patches.IsTorrentDisabledInUnderworld.ToInt64():X}");
+            Console.WriteLine($@"Patches.IsWhistleDisabled: 0x{Patches.IsWhistleDisabled.ToInt64():X}");
+            Console.WriteLine($@"Patches.IsWorldPaused: 0x{Patches.IsWorldPaused.ToInt64():X}");
+            Console.WriteLine($@"Patches.GetItemChance: 0x{Patches.GetItemChance.ToInt64():X}");
+            Console.WriteLine($@"Patches.GetShopEvent: 0x{Patches.GetShopEvent.ToInt64():X}");
+
+            Console.WriteLine($@"Hooks.UpdateCoords: 0x{Hooks.UpdateCoords:X}");
+            Console.WriteLine($@"Hooks.InAirTimer: 0x{Hooks.InAirTimer:X}");
+            Console.WriteLine($@"Hooks.NoClipKb: 0x{Hooks.NoClipKb:X}");
+            Console.WriteLine($@"Hooks.NoClipTriggers: 0x{Hooks.NoClipTriggers:X}");
+            Console.WriteLine($@"Hooks.HasSpEffect: 0x{Hooks.HasSpEffect:X}");
+            Console.WriteLine($@"Hooks.BlueTargetView: 0x{Hooks.BlueTargetView:X}");
+            Console.WriteLine($@"Hooks.LockedTargetPtr: 0x{Hooks.LockedTargetPtr:X}");
+            Console.WriteLine($@"Hooks.InfinitePoise: 0x{Hooks.InfinitePoise:X}");
+            Console.WriteLine($@"Hooks.ShouldUpdateAi: 0x{Hooks.ShouldUpdateAi:X}");
+            Console.WriteLine($@"Hooks.GetForceActIdx: 0x{Hooks.GetForceActIdx:X}");
+            Console.WriteLine($@"Hooks.AttackInfo: 0x{Hooks.AttackInfo:X}");
+            Console.WriteLine($@"Hooks.WarpCoordWrite: 0x{Hooks.WarpCoordWrite:X}");
+            Console.WriteLine($@"Hooks.WarpAngleWrite: 0x{Hooks.WarpAngleWrite:X}");
+            Console.WriteLine($@"Hooks.NoTimePassOnDeath: 0x{Hooks.NoTimePassOnDeath.ToInt64():X}");
+            Console.WriteLine($@"Hooks.LionCooldownHook: 0x{Hooks.LionCooldownHook:X}");
+            Console.WriteLine($@"Hooks.SetActionRequested: 0x{Hooks.SetActionRequested:X}");
+            Console.WriteLine($@"Hooks.NoGrab: 0x{Hooks.NoGrab:X}");
+            Console.WriteLine($@"Hooks.LoadScreenMsgLookup: 0x{Hooks.LoadScreenMsgLookup:X}");
+            Console.WriteLine($@"Hooks.TargetNoStagger: 0x{Hooks.TargetNoStagger:X}");
+            Console.WriteLine($@"Hooks.NoMapAcquiredPopup: 0x{Hooks.NoMapAcquiredPopup:X}");
+
+            Console.WriteLine($@"Funcs.GraceWarp: 0x{Functions.GraceWarp:X}");
+            Console.WriteLine($@"Funcs.SetEvent: 0x{Functions.SetEvent:X}");
+            Console.WriteLine($@"Funcs.SetSpEffect: 0x{Functions.SetSpEffect:X}");
+            Console.WriteLine($@"Funcs.GiveRunes: 0x{Functions.GiveRunes:X}");
+            Console.WriteLine($@"Funcs.LookupByFieldInsHandle: 0x{Functions.LookupByFieldInsHandle:X}");
+            Console.WriteLine($@"Funcs.WarpToBlock: 0x{Functions.WarpToBlock:X}");
+            Console.WriteLine($@"Funcs.GetEvent: 0x{Functions.GetEvent:X}");
+            Console.WriteLine($@"Funcs.GetPlayerItemQuantityById: 0x{Functions.GetPlayerItemQuantityById:X}");
+            Console.WriteLine($@"Funcs.ItemSpawn: 0x{Functions.ItemSpawn:X}");
+            Console.WriteLine($@"Funcs.MatrixVectorProduct: 0x{Functions.MatrixVectorProduct:X}");
+            Console.WriteLine($@"Funcs.ChrInsByHandle: 0x{Functions.ChrInsByHandle:X}");
+            Console.WriteLine($@"Funcs.FindAndRemoveSpEffect: 0x{Functions.FindAndRemoveSpEffect:X}");
+            Console.WriteLine($@"Funcs.EmevdSwitch: 0x{Functions.EmevdSwitch:X}");
+            Console.WriteLine($@"Funcs.EmkEventInsCtor: 0x{Functions.EmkEventInsCtor:X}");
+            Console.WriteLine($@"Funcs.GetMovement: 0x{Functions.GetMovement:X}");
+            Console.WriteLine($@"Funcs.GetChrInsByEntityId: 0x{Functions.GetChrInsByEntityId:X}");
+            Console.WriteLine($@"Funcs.NpcEzStateTalkCtor: 0x{Functions.NpcEzStateTalkCtor:X}");
+            Console.WriteLine($@"Funcs.EzStateEnvQueryImplCtor: 0x{Functions.EzStateEnvQueryImplCtor:X}");
+            Console.WriteLine($@"Funcs.ExternalEventTempCtor: 0x{Functions.ExternalEventTempCtor:X}");
+            Console.WriteLine($@"Funcs.ExecuteTalkCommand: 0x{Functions.ExecuteTalkCommand:X}");
         }
     }
 }

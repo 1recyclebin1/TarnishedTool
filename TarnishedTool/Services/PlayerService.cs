@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using TarnishedTool.Interfaces;
@@ -259,23 +260,39 @@ namespace TarnishedTool.Services
             memoryService.WriteBytes(Patches.NoRunesFromEnemies,
                 isNoRuneGainEnabled
                     ? [0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90]
-                    : [0x41, 0xFF, 0x91, 0xC8, 0x05, 0x00, 0x00]);
+                    : OriginalBytesByPatch.NoRunesFromEnemies.GetOriginal());
 
         public void ToggleNoRuneArcLoss(bool isNoRuneArcLossEnabled) =>
             memoryService.WriteUInt8(Patches.NoRuneArcLoss, isNoRuneArcLossEnabled ? 0xEB : 0x74);
 
-        public void ToggleNoRuneLoss(bool isNoRuneLossEnabled) =>
-            memoryService.WriteBytes(Patches.NoRuneLossOnDeath,
-                isNoRuneLossEnabled
-                    ? [0x90, 0x90, 0x90]
-                    : [0x89, 0x45, 0x6C]);
+
+        private byte[] _originalRuneBytes;
+        public void ToggleNoRuneLoss(bool isNoRuneLossEnabled)
+        {
+            if (isNoRuneLossEnabled)
+            {
+                _originalRuneBytes = memoryService.ReadBytes(Patches.NoRuneLossOnDeath, 6);
+                var bytes = _originalRuneBytes.ToArray();
+                bytes[0] = 0xE9;
+                
+                int offset = BitConverter.ToInt32(bytes, 2) + 1;  
+                Buffer.BlockCopy(BitConverter.GetBytes(offset), 0, bytes, 1, 4);
+
+                bytes[5] = 0x90; 
+                memoryService.WriteBytes(Patches.NoRuneLossOnDeath, bytes);
+            }
+            else if (_originalRuneBytes != null)
+            {
+                memoryService.WriteBytes(Patches.NoRuneLossOnDeath, _originalRuneBytes);
+            }
+        }
 
         public void ToggleNoTimePassOnDeath(bool isNoTimePassOnDeathEnabled)
         {
             var code = CodeCaveOffsets.Base + CodeCaveOffsets.SaveCurrentTime;
             if (isNoTimePassOnDeathEnabled)
             {
-                var hook = Hooks.HookedDeathFunction.ToInt64();
+                var hook = Hooks.NoTimePassOnDeath.ToInt64();
                 var bytes = AsmLoader.GetAsmBytes("NoTimePassOnDeath");
                 AsmHelper.WriteRelativeOffsets(bytes, new[]
                 {
@@ -283,6 +300,14 @@ namespace TarnishedTool.Services
                     (code.ToInt64() + 0xF, GameMan.Base.ToInt64(), 7, 0xF + 3),
                     (code.ToInt64() + 0x28, hook + 5, 5, 0x28 + 1)
                 });
+                
+                
+                //Patch specific offsets within GameMan
+                int savedTimeMovIndex1 = 0x19 + 3;
+                int savedTimeMovIndex2 = 0x21 + 3;
+                bytes[savedTimeMovIndex1] = (byte)GameMan.StoredTime;
+                bytes[savedTimeMovIndex2] = (byte)(GameMan.StoredTime + 8);
+                
                 memoryService.WriteBytes(code, bytes);
                 hookManager.InstallHook(code.ToInt64(), hook, [0x44, 0x89, 0x6C, 0x24, 0x2C]);
             }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TarnishedTool.Interfaces;
 using TarnishedTool.Memory;
 using TarnishedTool.Models;
@@ -9,13 +10,11 @@ namespace TarnishedTool.Services;
 
 public class AttackInfoService(MemoryService memoryService, HookManager hookManager) : IAttackInfoService
 {
-
     private int _lastProcessedId;
-        
+
     public const int StructSize = 0x48;
     public const int StructCount = 16;
-    
-    
+
     public void ToggleAttackInfoHook(bool isEnabled)
     {
         var code = CodeCaveOffsets.Base + CodeCaveOffsets.AttackInfoCode;
@@ -27,7 +26,9 @@ public class AttackInfoService(MemoryService memoryService, HookManager hookMana
             var attackInfoStart = CodeCaveOffsets.Base + CodeCaveOffsets.AttackInfoStart;
             var hookLoc = Hooks.AttackInfo;
             var bytes = AsmLoader.GetAsmBytes("SaveAttackInfo");
-            AsmHelper.WriteRelativeOffsets(bytes, new []
+            Array.Copy(OriginalBytesByPatch.AttackInfo.GetOriginal(), 0, bytes, 0, 5);
+
+            AsmHelper.WriteRelativeOffsets(bytes, new[]
             {
                 (code.ToInt64() + 0x6, lockedTargetLoc.ToInt64(), 7, 0x6 + 3),
                 (code.ToInt64() + 0x1D, id.ToInt64(), 6, 0x1D + 2),
@@ -38,8 +39,7 @@ public class AttackInfoService(MemoryService memoryService, HookManager hookMana
                 (code.ToInt64() + 0xEB, hookLoc + 5, 5, 0xEB + 1),
             });
             memoryService.WriteBytes(code, bytes);
-            hookManager.InstallHook(code.ToInt64(), hookLoc,
-                [0x30, 0xDB, 0x0F, 0x57, 0xFF]);
+            hookManager.InstallHook(code.ToInt64(), hookLoc, OriginalBytesByPatch.AttackInfo.GetOriginal());
         }
         else
         {
@@ -80,10 +80,10 @@ public class AttackInfoService(MemoryService memoryService, HookManager hookMana
             results.Add(info);
             if (id > _lastProcessedId)
                 _lastProcessedId = id;
-            
+
             memoryService.WriteInt32(baseAddr + 0x4, 0);
         }
-        
+
         results.Sort((a, b) => a.MyId.CompareTo(b.MyId));
         return results;
     }

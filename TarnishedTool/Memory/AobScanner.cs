@@ -128,6 +128,8 @@ namespace TarnishedTool.Memory
                     addr => Hooks.TargetNoStagger = addr.ToInt64(), saved),
                 () => TryPatternWithFallback("AttackInfo", Pattern.AttackInfo,
                     addr => Hooks.AttackInfo = addr.ToInt64(), saved),
+                () => TryPatternWithFallback("NoTimePassOnDeath", Pattern.NoTimePassOnDeath,
+                    addr => Hooks.NoTimePassOnDeath = addr, saved),
                 () => TryPatternWithFallback("WarpCoordWrite", Pattern.WarpCoordWrite,
                     addr => Hooks.WarpCoordWrite = addr.ToInt64(), saved),
                 () => TryPatternWithFallback("WarpAngleWrite", Pattern.WarpAngleWrite,
@@ -159,8 +161,7 @@ namespace TarnishedTool.Memory
                 foreach (var pair in saved)
                     writer.WriteLine($"{pair.Key}={pair.Value:X}");
             }
-
-            Hooks.HookedDeathFunction = Patches.NoRuneLossOnDeath - 7;
+            
 
 
 #if DEBUG
@@ -225,7 +226,7 @@ namespace TarnishedTool.Memory
             Console.WriteLine($@"Hooks.AttackInfo: 0x{Hooks.AttackInfo:X} (base+0x{Hooks.AttackInfo - baseAddr:X})");
             Console.WriteLine($@"Hooks.WarpCoordWrite: 0x{Hooks.WarpCoordWrite:X} (base+0x{Hooks.WarpCoordWrite - baseAddr:X})");
             Console.WriteLine($@"Hooks.WarpAngleWrite: 0x{Hooks.WarpAngleWrite:X} (base+0x{Hooks.WarpAngleWrite - baseAddr:X})");
-            Console.WriteLine($@"Hooks.HookedDeathFunction: 0x{Hooks.HookedDeathFunction.ToInt64():X} (base+0x{Hooks.HookedDeathFunction.ToInt64() - baseAddr:X})");
+            Console.WriteLine($@"Hooks.HookedDeathFunction: 0x{Hooks.NoTimePassOnDeath.ToInt64():X} (base+0x{Hooks.NoTimePassOnDeath.ToInt64() - baseAddr:X})");
             Console.WriteLine($@"Hooks.LionCooldownHook: 0x{Hooks.LionCooldownHook:X} (base+0x{Hooks.LionCooldownHook - baseAddr:X})");
             Console.WriteLine($@"Hooks.SetActionRequested: 0x{Hooks.SetActionRequested:X} (base+0x{Hooks.SetActionRequested - baseAddr:X})");
             Console.WriteLine($@"Hooks.NoGrab: 0x{Hooks.NoGrab:X} (base+0x{Hooks.NoGrab - baseAddr:X})");

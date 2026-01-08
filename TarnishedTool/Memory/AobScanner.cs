@@ -124,7 +124,7 @@ namespace TarnishedTool.Memory
                     addr => Hooks.ShouldUpdateAi = addr.ToInt64(), saved),
                 () => TryPatternWithFallback("GetForceActIdx", Pattern.GetForceActIdx,
                     addr => Hooks.GetForceActIdx = addr.ToInt64(), saved),
-                () => TryPatternWithFallback("NoStagger", Pattern.NoStagger,
+                () => TryPatternWithFallback("TargetNoStagger", Pattern.TargetNoStagger,
                     addr => Hooks.TargetNoStagger = addr.ToInt64(), saved),
                 () => TryPatternWithFallback("AttackInfo", Pattern.AttackInfo,
                     addr => Hooks.AttackInfo = addr.ToInt64(), saved),
@@ -222,7 +222,6 @@ namespace TarnishedTool.Memory
             Console.WriteLine($@"Hooks.InfinitePoise: 0x{Hooks.InfinitePoise:X} (base+0x{Hooks.InfinitePoise - baseAddr:X})");
             Console.WriteLine($@"Hooks.ShouldUpdateAi: 0x{Hooks.ShouldUpdateAi:X} (base+0x{Hooks.ShouldUpdateAi - baseAddr:X})");
             Console.WriteLine($@"Hooks.GetForceActIdx: 0x{Hooks.GetForceActIdx:X} (base+0x{Hooks.GetForceActIdx - baseAddr:X})");
-            Console.WriteLine($@"Hooks.NoStagger: 0x{Hooks.TargetNoStagger:X} (base+0x{Hooks.TargetNoStagger - baseAddr:X})");
             Console.WriteLine($@"Hooks.AttackInfo: 0x{Hooks.AttackInfo:X} (base+0x{Hooks.AttackInfo - baseAddr:X})");
             Console.WriteLine($@"Hooks.WarpCoordWrite: 0x{Hooks.WarpCoordWrite:X} (base+0x{Hooks.WarpCoordWrite - baseAddr:X})");
             Console.WriteLine($@"Hooks.WarpAngleWrite: 0x{Hooks.WarpAngleWrite:X} (base+0x{Hooks.WarpAngleWrite - baseAddr:X})");

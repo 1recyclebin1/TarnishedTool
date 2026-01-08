@@ -1,5 +1,4 @@
 using System;
-using H.Hooks;
 using TarnishedTool.Enums;
 
 namespace TarnishedTool.Memory
@@ -9,14 +8,15 @@ namespace TarnishedTool.Memory
         private static GameVersion? _version;
 
         public static GameVersion Version => _version
-                                             ?? throw new InvalidOperationException(
-                                                 "Offsets not initialized. Call PatchManager.Initialize() first.");
+                                             ?? GameVersion.Version2_6_1;
+                                            
 
         public static bool Initialize(string fileVersion, IntPtr moduleBase)
         {
             _version = fileVersion switch
             {
                 var v when v.StartsWith("1.2.0.") => GameVersion.Version1_2_0,
+                var v when v.StartsWith("1.9.1.") => GameVersion.Version1_9_1,
                 var v when v.StartsWith("2.0.1.") => GameVersion.Version2_0_1,
                 var v when v.StartsWith("2.2.0.") => GameVersion.Version2_2_0,
                 var v when v.StartsWith("2.2.3.") => GameVersion.Version2_2_3,
@@ -479,22 +479,6 @@ namespace TarnishedTool.Memory
         public static class WorldChrManDbg
         {
             public static IntPtr Base;
-
-            // public const int PlayerNoDeath = 0x8;
-            // public const int AllChrsSpheres = 0x9;
-            // public const int OneShot = 0xA;
-            // public const int InfiniteGoods = 0xB;
-            // public const int InfiniteStam = 0xC;
-            // public const int InfiniteFp = 0xD;
-            // public const int InfiniteArrows = 0xE;
-            // public const int Hidden = 0x10;
-            // public const int Silent = 0x11;
-            // public const int AllNoDeath = 0x12;
-            // public const int AllNoDamage = 0x13;
-            // public const int AllNoHit = 0x14;
-            // public const int AllNoAttack = 0x15;
-            // public const int AllNoMove = 0x16;
-            // public const int AllDisableAi = 0x17;
             public const int PoiseBarsFlag = 0x69;
         }
 
@@ -603,7 +587,7 @@ namespace TarnishedTool.Memory
             WorldChrMan.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C50268,
-                GameVersion.Version2_0_1 => 0x3CDCDD8,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 => 0x3CDCDD8,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -616,7 +600,7 @@ namespace TarnishedTool.Memory
             FieldArea.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C53470,
-                GameVersion.Version2_0_1 => 0x3CDFFC0,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 =>  0x3CDFFC0,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -629,7 +613,7 @@ namespace TarnishedTool.Memory
             LuaEventMan.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C520F8,
-                GameVersion.Version2_0_1 => 0x3CDEC38,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 =>  0x3CDEC38,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -642,7 +626,7 @@ namespace TarnishedTool.Memory
             VirtualMemFlag.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C526E8,
-                GameVersion.Version2_0_1 => 0x3CDF238,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 =>  0x3CDF238,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -655,7 +639,7 @@ namespace TarnishedTool.Memory
             DamageManager.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C50658,
-                GameVersion.Version2_0_1 => 0x3CDD1A8,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 =>  0x3CDD1A8,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -668,7 +652,7 @@ namespace TarnishedTool.Memory
             MenuMan.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C55B30,
-                GameVersion.Version2_0_1 => 0x3CE2580,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 =>  0x3CE2580,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -681,7 +665,7 @@ namespace TarnishedTool.Memory
             TargetView.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C4C4EA,
-                GameVersion.Version2_0_1 => 0x3CD90BA,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 =>  0x3CD90BA,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -694,7 +678,7 @@ namespace TarnishedTool.Memory
             GameMan.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C53B88,
-                GameVersion.Version2_0_1 => 0x3CE0708,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 =>  0x3CE0708,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -707,7 +691,7 @@ namespace TarnishedTool.Memory
             WorldHitMan.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C54320,
-                GameVersion.Version2_0_1 => 0x3CE0EB0,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 =>  0x3CE0EB0,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -720,7 +704,7 @@ namespace TarnishedTool.Memory
             WorldChrManDbg.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C50478,
-                GameVersion.Version2_0_1 => 0x3CDD010,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 =>  0x3CDD010,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -733,7 +717,7 @@ namespace TarnishedTool.Memory
             GameDataMan.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C481B8,
-                GameVersion.Version2_0_1 => 0x3CD4D88,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 => 0x3CD4D88,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -746,7 +730,7 @@ namespace TarnishedTool.Memory
             CsDlcImp.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C705D8,
-                GameVersion.Version2_0_1 => 0x3CFD838,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 =>  0x3CFD838,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -760,7 +744,7 @@ namespace TarnishedTool.Memory
             {
 
                 GameVersion.Version1_2_0 => 0x3C51CF0,
-                GameVersion.Version2_0_1 => 0x3CDE840,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 =>  0x3CDE840,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -774,7 +758,7 @@ namespace TarnishedTool.Memory
             {
                 
                 GameVersion.Version1_2_0 => 0x0,
-                GameVersion.Version2_0_1 => 0x45B4D50,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 =>  0x45B4D50,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -787,7 +771,7 @@ namespace TarnishedTool.Memory
             CSEmkSystem.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C51E78,
-                GameVersion.Version2_0_1 => 0x3CDE9C0,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 =>  0x3CDE9C0,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -800,7 +784,7 @@ namespace TarnishedTool.Memory
             WorldAreaTimeImpl.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C535A0,
-                GameVersion.Version2_0_1 => 0x3CE00F0,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 =>  0x3CE00F0,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -813,7 +797,7 @@ namespace TarnishedTool.Memory
             GroupMask.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3A367E0,
-                GameVersion.Version2_0_1 => 0x3AC2AE8,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 =>  0x3AC2AE8,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -826,7 +810,7 @@ namespace TarnishedTool.Memory
             SoloParamRepositoryImp.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x4473138,
-                GameVersion.Version2_0_1 => 0x3CF8BC8,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 =>  0x3CF8BC8,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -839,7 +823,7 @@ namespace TarnishedTool.Memory
             MsgRepository.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C66D48,
-                GameVersion.Version2_0_1 => 0x3CF4218,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 =>  0x3CF4218,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -852,7 +836,7 @@ namespace TarnishedTool.Memory
             CSFlipperImp.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x4473138,
-                GameVersion.Version2_0_1 => 0x4500708,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 =>  0x4500708,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -865,7 +849,7 @@ namespace TarnishedTool.Memory
             CSDbgEvent.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C522A0,
-                GameVersion.Version2_0_1 => 0x3CDEDE8,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 =>  0x3CDEDE8,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -878,7 +862,7 @@ namespace TarnishedTool.Memory
             ChrDbgFlags.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C50480,
-                GameVersion.Version2_0_1 => 0x3CDCFE8,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 => 0x3CDCFE8,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -891,7 +875,7 @@ namespace TarnishedTool.Memory
             UserInputManager.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x45255C8,
-                GameVersion.Version2_0_1 => 0x45B4D48,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 =>  0x45B4D48,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -904,7 +888,7 @@ namespace TarnishedTool.Memory
             CSTrophy.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x4472AD8,
-                GameVersion.Version2_0_1 => 0x45000A8,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 =>  0x45000A8,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -917,7 +901,7 @@ namespace TarnishedTool.Memory
             DrawPathing.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C4C030,
-                GameVersion.Version2_0_1 => 0x3CD8C00,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 =>  0x3CD8C00,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -930,7 +914,7 @@ namespace TarnishedTool.Memory
             MapDebugFlags.Base = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C56BE0,
-                GameVersion.Version2_0_1 => 0x3CE3D80,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 =>  0x3CE3D80,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -944,6 +928,7 @@ namespace TarnishedTool.Memory
             Functions.GraceWarp = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x5855B0,
+                GameVersion.Version1_9_1 => 0x5955C0,
                 GameVersion.Version2_0_1 => 0x595800,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -958,6 +943,7 @@ namespace TarnishedTool.Memory
             {
 
                 GameVersion.Version1_2_0 => 0x5D9E40,
+                GameVersion.Version1_9_1 => 0x5EE1D0,
                 GameVersion.Version2_0_1 => 0x5EE410,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -971,7 +957,7 @@ namespace TarnishedTool.Memory
             Functions.SetSpEffect = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3E17E0,
-                GameVersion.Version2_0_1 => 0x3E6AF0,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 => 0x3E6AF0,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
@@ -984,8 +970,7 @@ namespace TarnishedTool.Memory
             Functions.GiveRunes = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x258270,
-                
-                GameVersion.Version2_0_1 => 0x25C7A0,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 => 0x25C7A0,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
@@ -998,7 +983,7 @@ namespace TarnishedTool.Memory
             Functions.LookupByFieldInsHandle = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x4F7580,
-                
+                GameVersion.Version1_9_1 => 0x503F00,
                 GameVersion.Version2_0_1 => 0x504140,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1012,6 +997,7 @@ namespace TarnishedTool.Memory
             Functions.WarpToBlock = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x5D7DA0,
+                GameVersion.Version1_9_1 => 0x5EC0B0,
                 GameVersion.Version2_0_1 => 0x5EC2F0,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1025,7 +1011,7 @@ namespace TarnishedTool.Memory
             Functions.ExternalEventTempCtor = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x0,
-                GameVersion.Version2_0_1 => 0x1FFAE70,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 => 0x1FFAE70,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
@@ -1038,6 +1024,7 @@ namespace TarnishedTool.Memory
             Functions.ExecuteTalkCommand = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x0,
+                GameVersion.Version1_9_1 => 0xE65470,
                 GameVersion.Version2_0_1 => 0xE65800,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1051,7 +1038,7 @@ namespace TarnishedTool.Memory
             Functions.GetEvent = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x5D9650,
-                
+                GameVersion.Version1_9_1 => 0x5ED9E0,
                 GameVersion.Version2_0_1 => 0x5EDC20,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1065,6 +1052,7 @@ namespace TarnishedTool.Memory
             Functions.GetPlayerItemQuantityById = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x75ACC0,
+                GameVersion.Version1_9_1 => 0x774600,
                 GameVersion.Version2_0_1 => 0x774890,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1078,6 +1066,7 @@ namespace TarnishedTool.Memory
             Functions.ItemSpawn = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x54E570,
+                GameVersion.Version1_9_1 => 0x55C520,
                 GameVersion.Version2_0_1 => 0x55C760,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1091,6 +1080,7 @@ namespace TarnishedTool.Memory
             Functions.MatrixVectorProduct = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0xAB01E0,
+                GameVersion.Version1_9_1 => 0xAE32D0,
                 GameVersion.Version2_0_1 => 0xAE3560,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1104,6 +1094,7 @@ namespace TarnishedTool.Memory
             Functions.ChrInsByHandle = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x4F74A0,
+                GameVersion.Version1_9_1 => 0x503E20,
                 GameVersion.Version2_0_1 => 0x504060,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1117,6 +1108,7 @@ namespace TarnishedTool.Memory
             Functions.FindAndRemoveSpEffect = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x4E6970,
+                GameVersion.Version1_9_1 => 0x4F3070,
                 GameVersion.Version2_0_1 => 0x4F32B0,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1130,6 +1122,7 @@ namespace TarnishedTool.Memory
             Functions.EmevdSwitch = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x555D00,
+                GameVersion.Version1_9_1 => 0x563CB0,
                 GameVersion.Version2_0_1 => 0x563EF0,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1143,6 +1136,7 @@ namespace TarnishedTool.Memory
             Functions.EmkEventInsCtor = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x56ECA0,
+                GameVersion.Version1_9_1 => 0x57E140,
                 GameVersion.Version2_0_1 => 0x57E380,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1156,6 +1150,7 @@ namespace TarnishedTool.Memory
             Functions.GetMovement = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x25B6CD0,
+                GameVersion.Version1_9_1 => 0x261EAE0,
                 GameVersion.Version2_0_1 => 0x261EE70,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1169,6 +1164,7 @@ namespace TarnishedTool.Memory
             Functions.GetChrInsByEntityId = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x4F7630,
+                GameVersion.Version1_9_1 => 0x503FB0,
                 GameVersion.Version2_0_1 => 0x5041F0,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1182,6 +1178,7 @@ namespace TarnishedTool.Memory
             Functions.NpcEzStateTalkCtor = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0xE17E70,
+                GameVersion.Version1_9_1 => 0xE5EED0,
                 GameVersion.Version2_0_1 => 0xE5F260,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1195,6 +1192,7 @@ namespace TarnishedTool.Memory
             Functions.EzStateEnvQueryImplCtor = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x1FD0D40,
+                GameVersion.Version1_9_1 => 0x2038340,
                 GameVersion.Version2_0_1 => 0x20386D0,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1209,6 +1207,7 @@ namespace TarnishedTool.Memory
             Hooks.UpdateCoords = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x45E3C9,
+                GameVersion.Version1_9_1 => 0x4648E9,
                 GameVersion.Version2_0_1 => 0x464A89,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1222,6 +1221,7 @@ namespace TarnishedTool.Memory
             Hooks.InAirTimer = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x444CA8,
+                GameVersion.Version1_9_1 => 0x44B1C8,
                 GameVersion.Version2_0_1 => 0x44B368,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1235,6 +1235,7 @@ namespace TarnishedTool.Memory
             Hooks.NoClipKb = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x1EBF67F,
+                GameVersion.Version1_9_1 => 0x1F26BAF,
                 GameVersion.Version2_0_1 => 0x1F26F3F,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1248,7 +1249,7 @@ namespace TarnishedTool.Memory
             Hooks.NoClipTriggers = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x1EBE79E,
-                
+                GameVersion.Version1_9_1 => 0x1F25C6F,
                 GameVersion.Version2_0_1 => 0x1F25FFF,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1262,6 +1263,7 @@ namespace TarnishedTool.Memory
             Hooks.HasSpEffect = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x4E99C0,
+                GameVersion.Version1_9_1 => 0x4F60A0,
                 GameVersion.Version2_0_1 => 0x4F62E0,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1275,7 +1277,7 @@ namespace TarnishedTool.Memory
             Hooks.BlueTargetView = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3382C3,
-                GameVersion.Version2_0_1 => 0x33CA43,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 => 0x33CA43,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
@@ -1288,6 +1290,7 @@ namespace TarnishedTool.Memory
             Hooks.LockedTargetPtr = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x6F0A16,
+                GameVersion.Version1_9_1 => 0x7089C6,
                 GameVersion.Version2_0_1 => 0x708C56,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1301,6 +1304,7 @@ namespace TarnishedTool.Memory
             Hooks.InfinitePoise = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x5E885CB0,
+                GameVersion.Version1_9_1 => 0x442CF0,
                 GameVersion.Version2_0_1 => 0x442DC0,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1314,7 +1318,7 @@ namespace TarnishedTool.Memory
             Hooks.ShouldUpdateAi = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3C09F0,
-                GameVersion.Version2_0_1 => 0x3C5A30,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 => 0x3C5A30,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
                 GameVersion.Version2_3_0 => 0x0L,
@@ -1327,6 +1331,7 @@ namespace TarnishedTool.Memory
             Hooks.GetForceActIdx = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x6402D8C4,
+                GameVersion.Version1_9_1 => 0x17B5923,
                 GameVersion.Version2_0_1 => 0x55611FB,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1340,7 +1345,7 @@ namespace TarnishedTool.Memory
             Hooks.TargetNoStagger = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x5E8BE3C7,
-                
+                GameVersion.Version1_9_1 => 0x47B225,
                 GameVersion.Version2_0_1 => 0x47B3C5,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1354,6 +1359,7 @@ namespace TarnishedTool.Memory
             Hooks.AttackInfo = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x5E8BE22B,
+                GameVersion.Version1_9_1 => 0x47B09A,
                 GameVersion.Version2_0_1 => 0x47B23A,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1367,6 +1373,7 @@ namespace TarnishedTool.Memory
             Hooks.WarpCoordWrite = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x657AFA,
+                GameVersion.Version1_9_1 => 0x66D26A,
                 GameVersion.Version2_0_1 => 0x66D4DA,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1380,6 +1387,7 @@ namespace TarnishedTool.Memory
             Hooks.WarpAngleWrite = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x657ADA,
+                GameVersion.Version1_9_1 => 0x66D24A,
                 GameVersion.Version2_0_1 => 0x66D4BA,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1406,6 +1414,7 @@ namespace TarnishedTool.Memory
             Hooks.SetActionRequested = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x3FF362,
+                GameVersion.Version1_9_1 => 0x4050D2,
                 GameVersion.Version2_0_1 => 0x4050C2,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1419,6 +1428,7 @@ namespace TarnishedTool.Memory
             Hooks.NoMapAcquiredPopup = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x0L,
+                GameVersion.Version1_9_1 => 0x9A5851,
                 GameVersion.Version2_0_1 => 0x9A5AE1,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1432,6 +1442,7 @@ namespace TarnishedTool.Memory
             Hooks.NoGrab = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x4402FB,
+                GameVersion.Version1_9_1 => 0x4468DB,
                 GameVersion.Version2_0_1 => 0x446A7B,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1445,6 +1456,7 @@ namespace TarnishedTool.Memory
             Hooks.LoadScreenMsgLookup = moduleBase.ToInt64() + Version switch
             {
                 GameVersion.Version1_2_0 => 0x5F15093C,
+                GameVersion.Version1_9_1 => 0xCDD97C,
                 GameVersion.Version2_0_1 => 0x446A7B,
                 GameVersion.Version2_2_0 => 0x0L,
                 GameVersion.Version2_2_3 => 0x0L,
@@ -1459,7 +1471,7 @@ namespace TarnishedTool.Memory
             Patches.CanFastTravel = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x798300,
-                
+                GameVersion.Version1_9_1 => 0x7B3210,
                 GameVersion.Version2_0_1 => 0x7B34A0,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -1469,11 +1481,25 @@ namespace TarnishedTool.Memory
                 GameVersion.Version2_6_1 => 0x7C4E60,
                 _ => 0
             };
+            
+            Patches.NoLogo = moduleBase + Version switch
+            {
+                GameVersion.Version1_2_0 => 0x0,
+                GameVersion.Version1_9_1 => 0xADDCED,
+                GameVersion.Version2_0_1 => 0xADDF7D,
+                GameVersion.Version2_2_0 => 0x0,
+                GameVersion.Version2_2_3 => 0x0,
+                GameVersion.Version2_3_0 => 0x0,
+                GameVersion.Version2_4_0 => 0x0,
+                GameVersion.Version2_6_0 => 0x0,
+                GameVersion.Version2_6_1 => 0xB0C44D,
+                _ => 0
+            };
 
             Patches.NoRunesFromEnemies = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x49456E,
-                
+                GameVersion.Version1_9_1 => 0x64541F,
                 GameVersion.Version2_0_1 => 0x64568F,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -1487,8 +1513,7 @@ namespace TarnishedTool.Memory
             Patches.NoRuneArcLoss = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x258347,
-                
-                GameVersion.Version2_0_1 => 0x25C887,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 => 0x25C887,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -1501,7 +1526,7 @@ namespace TarnishedTool.Memory
             Patches.NoRuneLossOnDeath = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x5EA3C215,
-                
+                GameVersion.Version1_9_1 => 0x5F0715,
                 GameVersion.Version2_0_1 => 0x5F0955,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -1515,6 +1540,7 @@ namespace TarnishedTool.Memory
             Patches.OpenMap = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x7C4CDA,
+                GameVersion.Version1_9_1 => 0x7DD01A,
                 GameVersion.Version2_0_1 => 0x7DD2AA,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -1528,6 +1554,7 @@ namespace TarnishedTool.Memory
             Patches.CloseMap = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x5EE0392E,
+                GameVersion.Version1_9_1 => 0x9A35AA,
                 GameVersion.Version2_0_1 => 0x9A383A,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -1541,6 +1568,7 @@ namespace TarnishedTool.Memory
             Patches.EnableFreeCam = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0xDC0D60,
+                GameVersion.Version1_9_1 => 0xE056E0,
                 GameVersion.Version2_0_1 => 0xE05A70,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -1554,6 +1582,7 @@ namespace TarnishedTool.Memory
             Patches.CanDrawEvents1 = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0xDD0810,
+                GameVersion.Version1_9_1 => 0xE15600,
                 GameVersion.Version2_0_1 => 0xE15990,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -1567,6 +1596,7 @@ namespace TarnishedTool.Memory
             Patches.CanDrawEvents2 = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0xDD07F0,
+                GameVersion.Version1_9_1 => 0xE155E0,
                 GameVersion.Version2_0_1 => 0xE15970,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -1576,36 +1606,11 @@ namespace TarnishedTool.Memory
                 GameVersion.Version2_6_1 => 0xE53610,
                 _ => 0
             };
-
-            Patches.GetShopEvent = moduleBase + Version switch
-            {
-                GameVersion.Version1_2_0 => 0x0,
-                GameVersion.Version2_0_1 => 0xD157B0,
-                GameVersion.Version2_2_0 => 0x0,
-                GameVersion.Version2_2_3 => 0x0,
-                GameVersion.Version2_3_0 => 0x0,
-                GameVersion.Version2_4_0 => 0x0,
-                GameVersion.Version2_6_0 => 0x0,
-                GameVersion.Version2_6_1 => 0xD49CF0,
-                _ => 0
-            };
-
-            Patches.NoLogo = moduleBase + Version switch
-            {
-                GameVersion.Version1_2_0 => 0x0,
-                GameVersion.Version2_0_1 => 0xADDF7D,
-                GameVersion.Version2_2_0 => 0x0,
-                GameVersion.Version2_2_3 => 0x0,
-                GameVersion.Version2_3_0 => 0x0,
-                GameVersion.Version2_4_0 => 0x0,
-                GameVersion.Version2_6_0 => 0x0,
-                GameVersion.Version2_6_1 => 0xB0C44D,
-                _ => 0
-            };
-
+            
             Patches.DebugFont = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x0,
+                GameVersion.Version1_9_1 => 0x2647C00,
                 GameVersion.Version2_0_1 => 0x2647F90,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -1615,11 +1620,13 @@ namespace TarnishedTool.Memory
                 GameVersion.Version2_6_1 => 0x268D390,
                 _ => 0
             };
+            
+            
 
             Patches.PlayerSound = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x0,
-                GameVersion.Version2_0_1 => 0x33CD76,
+                GameVersion.Version1_9_1 or GameVersion.Version2_0_1 => 0x33CD76,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
                 GameVersion.Version2_3_0 => 0x0,
@@ -1632,6 +1639,7 @@ namespace TarnishedTool.Memory
             Patches.IsTorrentDisabledInUnderworld = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x0,
+                GameVersion.Version1_9_1 => 0xCBCF7A,
                 GameVersion.Version2_0_1 => 0xCBD20A,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -1645,6 +1653,7 @@ namespace TarnishedTool.Memory
             Patches.IsWhistleDisabled = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x0,
+                GameVersion.Version1_9_1 => 0x6F7BBF,
                 GameVersion.Version2_0_1 => 0x6F7E4F,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -1658,6 +1667,7 @@ namespace TarnishedTool.Memory
             Patches.IsWorldPaused = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x0,
+                GameVersion.Version1_9_1 => 0xACA4D5,
                 GameVersion.Version2_0_1 => 0xACA765,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -1671,6 +1681,7 @@ namespace TarnishedTool.Memory
             Patches.GetItemChance = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x0,
+                GameVersion.Version1_9_1 => 0xD0776E,
                 GameVersion.Version2_0_1 => 0xD079DE,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,
@@ -1681,9 +1692,25 @@ namespace TarnishedTool.Memory
                 _ => 0
             };
             
+            Patches.GetShopEvent = moduleBase + Version switch
+            {
+                GameVersion.Version1_2_0 => 0x0,
+                GameVersion.Version1_9_1 => 0xD15540,
+                GameVersion.Version2_0_1 => 0xD157B0,
+                GameVersion.Version2_2_0 => 0x0,
+                GameVersion.Version2_2_3 => 0x0,
+                GameVersion.Version2_3_0 => 0x0,
+                GameVersion.Version2_4_0 => 0x0,
+                GameVersion.Version2_6_0 => 0x0,
+                GameVersion.Version2_6_1 => 0xD49CF0,
+                _ => 0
+            };
+
+            
             Hooks.NoTimePassOnDeath = moduleBase + Version switch
             {
                 GameVersion.Version1_2_0 => 0x0,
+                GameVersion.Version1_9_1 => 0x5F0874,
                 GameVersion.Version2_0_1 => 0x5F0AB4,
                 GameVersion.Version2_2_0 => 0x0,
                 GameVersion.Version2_2_3 => 0x0,

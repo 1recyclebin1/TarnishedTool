@@ -1,11 +1,11 @@
 ﻿// 
 
 using System;
-using System.Diagnostics;
 using TarnishedTool.Enums;
 using TarnishedTool.Interfaces;
 using TarnishedTool.Memory;
 using TarnishedTool.Utilities;
+using static TarnishedTool.Enums.GameVersion;
 
 namespace TarnishedTool.Services;
 
@@ -83,15 +83,29 @@ public class ReminderService : IReminderService
 
         switch (Offsets.Version)
         {
-            case GameVersion.Version1_2_1:
+            case Version1_2_1 or Version1_2_2 or Version1_2_3 or Version1_3_1 or Version1_3_2:
                 DoEarlyPatchesHook();
+                break;
+            case Version1_7_0:
+                DoMidPatchesHook();
                 break;
             default:
                 DoNormalHook();
                 break;
         }
     }
-    
+
+    private void DoMidPatchesHook()
+    {
+        var code = CodeCaveOffsets.Base + CodeCaveOffsets.LoadScreenForce;
+        var hook = Offsets.Hooks.LoadScreenMsgLookupMidPatches;
+        var bytes = AsmLoader.GetAsmBytes("ForceLoadScreenMidPatches");
+        var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(hook, 6, code + 0x12);
+        Array.Copy(jmpBytes, 0, bytes, 0xD + 1, jmpBytes.Length);
+        _memoryService.WriteBytes(code, bytes);
+        _hookManager.InstallHook(code.ToInt64(), hook, [0x41, 0xB8, 0xCD, 0x00, 0x00, 0x00]);
+    }
+
     private void DoNormalHook()
     {
         var code = CodeCaveOffsets.Base + CodeCaveOffsets.LoadScreenForce;

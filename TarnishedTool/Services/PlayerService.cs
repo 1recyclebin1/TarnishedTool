@@ -209,6 +209,18 @@ namespace TarnishedTool.Services
         {
             var hook = Hooks.InfinitePoise;
             var bytes = AsmLoader.GetAsmBytes("InfinitePoise");
+
+            var originalBytes = OriginalBytesByPatch.InfinitePoise.GetOriginal();
+            Array.Copy(originalBytes, 0, bytes, 0, originalBytes.Length);
+
+            
+            var patchSpecificPlayerIns = WorldChrMan.PlayerIns;
+            AsmHelper.WriteImmediateDwords(bytes, new []
+            {
+                (patchSpecificPlayerIns, 0xF + 3),
+                (patchSpecificPlayerIns, 0x18 + 3)
+            });
+            
             AsmHelper.WriteRelativeOffsets(bytes, new[]
             {
                 (code.ToInt64() + 0x8, WorldChrMan.Base.ToInt64(), 7, 0x8 + 3),
@@ -218,7 +230,8 @@ namespace TarnishedTool.Services
             });
 
             memoryService.WriteBytes(code, bytes);
-            hookManager.InstallHook(code.ToInt64(), hook, [0x49, 0x89, 0xF8, 0x40, 0x0F, 0xB6, 0xD5]);
+            
+            hookManager.InstallHook(code.ToInt64(), hook, originalBytes);
         }
 
         private void HookGrab(IntPtr noGrabCode)

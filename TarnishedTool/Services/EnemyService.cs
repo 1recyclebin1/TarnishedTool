@@ -130,6 +130,11 @@ public class EnemyService(MemoryService memoryService, HookManager hookManager, 
         memoryService.WriteInt32(currentIdx, 0);
 
         var bytes = AsmLoader.GetAsmBytes("ForceActSequence");
+
+        var originalBytes = OriginalBytesByPatch.GetForceActIdx.GetOriginal();
+        //Copy to usage in script
+        Array.Copy(originalBytes, 0, bytes, 0x42, 7);
+        
         AsmHelper.WriteRelativeOffsets(bytes, new[]
         {
             (code.ToInt64(), shouldRunFlag.ToInt64(), 7, 0x0 + 2),
@@ -146,8 +151,7 @@ public class EnemyService(MemoryService memoryService, HookManager hookManager, 
 
         memoryService.WriteUInt8(shouldRunFlag, 1);
 
-        hookManager.InstallHook(code.ToInt64(), hookLoc,
-            [0x0F, 0xBE, 0x80, 0xC1, 0xE9, 0x00, 0x00]);
+        hookManager.InstallHook(code.ToInt64(), hookLoc, originalBytes);
     }
 
     public void UnhookForceAct()

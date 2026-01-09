@@ -98,33 +98,33 @@ namespace TarnishedTool.Services
             memoryService.IsBitSet(GetChrInsFlagsPtr(), (int)ChrIns.ChrInsFlags.NoMove);
 
         public void ForceAct(int act) =>
-            memoryService.WriteUInt8(GetAiThinkPtr() + (int)ChrIns.AiThinkOffsets.ForceAct, act);
+            memoryService.WriteUInt8(GetAiThinkPtr() + ChrIns.AiThinkOffsets.ForceAct, act);
 
         public int GetLastAct() =>
-            memoryService.ReadUInt8(GetAiThinkPtr() + (int)ChrIns.AiThinkOffsets.LastAct);
+            memoryService.ReadUInt8(GetAiThinkPtr() + ChrIns.AiThinkOffsets.LastAct);
 
         public int GetForceAct() =>
-            memoryService.ReadUInt8(GetAiThinkPtr() + (int)ChrIns.AiThinkOffsets.ForceAct);
+            memoryService.ReadUInt8(GetAiThinkPtr() + ChrIns.AiThinkOffsets.ForceAct);
 
         public void ToggleRepeatAct(bool isRepeatActEnabled)
         {
-            var ptr = GetAiThinkPtr() + (int)ChrIns.AiThinkOffsets.ForceAct;
+            var ptr = GetAiThinkPtr() + ChrIns.AiThinkOffsets.ForceAct;
             memoryService.WriteUInt8(ptr, isRepeatActEnabled ? memoryService.ReadUInt8(ptr + 1) : 0);
         }
 
         public bool IsTargetRepeating() =>
-            memoryService.ReadUInt8(GetAiThinkPtr() + (int)ChrIns.AiThinkOffsets.ForceAct) != 0;
+            memoryService.ReadUInt8(GetAiThinkPtr() + ChrIns.AiThinkOffsets.ForceAct) != 0;
 
         public int GetCurrentAnimation() =>
             memoryService.ReadInt32(GetChrTimeActPtr() + (int)ChrIns.ChrTimeActOffsets.AnimationId);
 
         public void SetAnimation(int animationId) =>
-            memoryService.WriteInt32(GetAiThinkPtr() + (int)ChrIns.AiThinkOffsets.AnimationRequest, animationId);
+            memoryService.WriteInt32(GetAiThinkPtr() + ChrIns.AiThinkOffsets.AnimationRequest, animationId);
 
         public void ToggleTargetingView(bool isTargetingViewEnabled)
         {
             var targetingSystem =
-                memoryService.ReadInt64(GetAiThinkPtr() + (int)ChrIns.AiThinkOffsets.TargetingSystem);
+                memoryService.ReadInt64(GetAiThinkPtr() + ChrIns.AiThinkOffsets.TargetingSystem);
             var flags = targetingSystem + (int)ChrIns.TargetingSystemOffsets.DebugDrawFlags;
             memoryService.SetBitValue((IntPtr)flags + ChrIns.BlueTargetView.Offset, ChrIns.BlueTargetView.Bit,
                 isTargetingViewEnabled);
@@ -133,7 +133,7 @@ namespace TarnishedTool.Services
         public bool IsTargetViewEnabled()
         {
             var targetingSystem =
-                memoryService.ReadInt64(GetAiThinkPtr() + (int)ChrIns.AiThinkOffsets.TargetingSystem);
+                memoryService.ReadInt64(GetAiThinkPtr() + ChrIns.AiThinkOffsets.TargetingSystem);
             var flags = targetingSystem + (int)ChrIns.TargetingSystemOffsets.DebugDrawFlags;
             return memoryService.IsBitSet((IntPtr)flags + ChrIns.BlueTargetView.Offset,
                 ChrIns.BlueTargetView.Bit);

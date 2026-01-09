@@ -49,8 +49,13 @@ namespace TarnishedTool.Memory
             {
                 ChrSetEntries = 0x18
             }
-
-            public const int PlayerIns = 0x1E508;
+            
+            public static int PlayerIns => Version switch
+            {
+                Version1_2_0 or Version1_2_1 => 0x18468,
+                _ => 0x1E508,
+            };
+            
 
             public enum PlayerInsOffsets
             {
@@ -181,15 +186,26 @@ namespace TarnishedTool.Memory
 
             public static readonly int[] AiThink = [ChrManipulator, 0xC0];
 
-            public enum AiThinkOffsets
-            {
-                NpcThinkParamId = 0x28,
-                AnimationRequest = 0xC428,
-                TargetingSystem = 0xC480,
-                ForceAct = 0xE9C1,
-                LastAct = 0xE9C2,
-            }
 
+            public static class AiThinkOffsets
+            {
+                public const int NpcThinkParamId = 0x28;
+                public const int AnimationRequest = 0xC428;
+                public const int TargetingSystem = 0xC480;
+                
+                public static int ForceAct => Version switch
+                {
+                    Version1_2_1 => 0xE9B1,
+                    _ => 0xE9C1,
+                };
+                
+                public static int LastAct => Version switch
+                {
+                    Version1_2_1 => 0xE9B2,
+                    _ => 0xE9C2,
+                };
+            }
+            
             public enum TargetingSystemOffsets
             {
                 DebugDrawFlags = 0xC8
@@ -1353,6 +1369,7 @@ namespace TarnishedTool.Memory
             Hooks.InfinitePoise = moduleBase.ToInt64() + Version switch
             {
                 Version1_2_0 => 0x5E885CB0,
+                Version1_2_1 => 0x43CADA,
                 Version1_8_0 or Version1_8_1 => 0x442BB0,
                 Version1_9_0 or Version1_9_1 => 0x442CF0,
                 Version2_0_1 => 0x442DC0,
@@ -1377,6 +1394,7 @@ namespace TarnishedTool.Memory
             Hooks.GetForceActIdx = moduleBase.ToInt64() + Version switch
             {
                 Version1_2_0 => 0x6402D8C4,
+                Version1_2_1 => 0x53F7581,
                 Version1_8_0 => 0x5757732,
                 Version1_8_1 => 0x56BA77E,
                 Version1_9_0 => 0x5679CFE,

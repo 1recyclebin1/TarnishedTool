@@ -82,7 +82,7 @@ public class ReminderService : IReminderService
     {
         switch (Offsets.Version)
         {
-            case Version1_2_1 or Version1_2_2 or Version1_2_3 or Version1_3_1 or Version1_3_2 or Version1_4_0
+            case Version1_2_0 or Version1_2_1 or Version1_2_2 or Version1_2_3 or Version1_3_0 or Version1_3_1 or Version1_3_2 or Version1_4_0
                 or Version1_4_1 or Version1_5_0 or Version1_6_0:
                 DoEarlyPatchesHook();
                 break;

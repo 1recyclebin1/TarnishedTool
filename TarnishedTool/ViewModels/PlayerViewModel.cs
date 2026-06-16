@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using TarnishedTool.Core;
 using TarnishedTool.Enums;
@@ -36,6 +38,7 @@ namespace TarnishedTool.ViewModels
         private readonly IDlcService _dlcService;
         private readonly IEzStateService _ezStateService;
         private readonly IGameTickService _gameTickService;
+        private readonly IReminderService _reminderService;
 
         public static readonly long[] NewGameEventIds = [50, 51, 52, 53, 54, 55, 56, 57];
 
@@ -63,7 +66,7 @@ namespace TarnishedTool.ViewModels
         public PlayerViewModel(IPlayerService playerService, IStateService stateService, HotkeyManager hotkeyManager,
             IEventService eventService, ISpEffectService spEffectService, IEmevdService emevdService,
             IDlcService dlcService, IEzStateService ezStateService, IGameTickService gameTickService,
-            IParamService paramService)
+            IParamService paramService, IReminderService reminderService)
         {
             _playerService = playerService;
             _hotkeyManager = hotkeyManager;
@@ -74,6 +77,7 @@ namespace TarnishedTool.ViewModels
             _ezStateService = ezStateService;
             _gameTickService = gameTickService;
             _paramService = paramService;
+            _reminderService = reminderService;
 
             RegisterHotkeys();
 
@@ -86,6 +90,8 @@ namespace TarnishedTool.ViewModels
             SetRfbsCommand = new DelegateCommand(SetRfbs);
             SetMaxHpCommand = new DelegateCommand(SetMaxHp);
             SetCustomHpCommand = new DelegateCommand(SetCustomHp);
+            SetMaxFpCommand = new DelegateCommand(SetMaxFp);
+            EmptyFpCommand = new DelegateCommand(EmptyFp);
             DieCommand = new DelegateCommand(Die);
 
             SavePositionCommand = new DelegateCommand(SavePosition);
@@ -107,6 +113,8 @@ namespace TarnishedTool.ViewModels
         public ICommand SetMaxHpCommand { get; set; }
         public ICommand SetCustomHpCommand { get; set; }
         public ICommand DieCommand { get; set; }
+        public ICommand SetMaxFpCommand { get; set; }
+        public ICommand EmptyFpCommand { get; set; }
 
         public ICommand SavePositionCommand { get; set; }
         public ICommand RestorePositionCommand { get; set; }
@@ -144,6 +152,22 @@ namespace TarnishedTool.ViewModels
         {
             get => _currentHp;
             set => SetProperty(ref _currentHp, value);
+        }
+        
+        private int _currentFp;
+
+        public int CurrentFp
+        {
+            get => _currentFp;
+            set => SetProperty(ref _currentFp, value);
+        }
+        
+        private int _currentMaxFp;
+
+        public int CurrentMaxFp
+        {
+            get => _currentMaxFp;
+            set => SetProperty(ref _currentMaxFp, value);
         }
 
         private int _currentMaxHp;
@@ -195,6 +219,7 @@ namespace TarnishedTool.ViewModels
                 {
                     _playerService.ToggleLockHp(_isHpLocked);
                     _playerService.ToggleNoDamage(_isHpLocked);
+                    ApplyIconReminder();
                     if (!_isHpLocked && !IsNoDamageEnabled)
                     {
                         _playerService.ToggleNoDamage(false);
@@ -213,6 +238,7 @@ namespace TarnishedTool.ViewModels
                 if (SetProperty(ref _isNoRollEnabled, value))
                 {
                     _playerService.ToggleNoRoll(_isNoRollEnabled);
+                    ApplyIconReminder();
                 }
             }
         }
@@ -298,6 +324,7 @@ namespace TarnishedTool.ViewModels
                 if (SetProperty(ref _isNoDamageEnabled, value))
                 {
                     _playerService.ToggleNoDamage(_isNoDamageEnabled);
+                    ApplyIconReminder();
                 }
             }
         }
@@ -312,6 +339,7 @@ namespace TarnishedTool.ViewModels
                 if (SetProperty(ref _isNoHitEnabled, value))
                 {
                     _playerService.ToggleNoHit(_isNoHitEnabled);
+                    ApplyIconReminder();
                 }
             }
         }
@@ -499,6 +527,13 @@ namespace TarnishedTool.ViewModels
             }
         }
 
+        private void NoChapelDeathCheck()
+        {
+            if (!IsNoTimePassOnDeathEnabled) return;
+            if (_eventService.GetEvent(102)) return;
+            _eventService.SetEvent(102, true);
+        }
+
         private bool _isNoTimePassOnDeathEnabled;
 
         public bool IsNoTimePassOnDeathEnabled
@@ -508,6 +543,8 @@ namespace TarnishedTool.ViewModels
             {
                 if (SetProperty(ref _isNoTimePassOnDeathEnabled, value))
                 {
+                    if (!AreOptionsEnabled) return;
+                    NoChapelDeathCheck();
                     _playerService.ToggleNoTimePassOnDeath(_isNoTimePassOnDeathEnabled);
                 }
             }
@@ -728,6 +765,7 @@ namespace TarnishedTool.ViewModels
         public void PauseUpdates() => _pauseUpdates = true;
         public void ResumeUpdates() => _pauseUpdates = false;
         public void SetHp(int hp) => _playerService.SetHp(hp);
+        public void SetFp(int fp) => _playerService.SetFp(fp);
 
         public void SetStat(string statName, int value)
         {
@@ -753,6 +791,7 @@ namespace TarnishedTool.ViewModels
             _gameTickService.Subscribe(PlayerTick);
             _pauseUpdates = false;
             IsDlcAvailable = _dlcService.IsDlcAvailable;
+            NoChapelDeathCheck();
         }
 
         private void OnFadedIn()
@@ -768,7 +807,7 @@ namespace TarnishedTool.ViewModels
             if (IsNoDamageEnabled) _playerService.ToggleNoDamage(true);
             if (IsNoHitEnabled) _playerService.ToggleNoHit(true);
             if (IsNoRollEnabled) _playerService.ToggleNoRoll(true);
-            
+            ApplyIconReminder();
         }
 
         private void OnGameFirstLoaded()
@@ -799,6 +838,7 @@ namespace TarnishedTool.ViewModels
         {
             AreOptionsEnabled = false;
             _gameTickService.Unsubscribe(PlayerTick);
+            ApplyIconReminder();
         }
 
         private void OnNewGameStart()
@@ -880,11 +920,15 @@ namespace TarnishedTool.ViewModels
             if (_pauseUpdates) return;
 
             if (IsHotEnabled) TryApplyHot();
+            
+            if (IsAutoReviveEnabled) AutoRevive();
 
             if (IsFpRegenEnabled) TryApplyFpRegen();
 
             CurrentHp = _playerService.GetCurrentHp();
+            CurrentFp = _playerService.GetCurrentFp();
             CurrentMaxHp = _playerService.GetMaxHp();
+            CurrentMaxFp = _playerService.GetMaxFp();
             PlayerSpeed = _playerService.GetSpeed();
             int newRuneLevel = _playerService.GetRuneLevel();
             Scadu = _playerService.GetScadu();
@@ -918,6 +962,35 @@ namespace TarnishedTool.ViewModels
             _playerService.SetFp(fpToSet);
         }
 
+        private bool _isAutoReviveEnabled;
+
+        public bool IsAutoReviveEnabled
+        {
+            get => _isAutoReviveEnabled;
+            set => SetProperty(ref _isAutoReviveEnabled, value);
+        }
+
+        private void AutoRevive()
+        {
+            // adding a null check just in case even tho there's probably no need for one
+            var playerIns = _playerService.GetPlayerIns();
+            if (playerIns == IntPtr.Zero) return;
+            
+            var hp = _playerService.GetCurrentHp();
+            var maxHp = _playerService.GetMaxHp();
+
+            if (hp == 0)
+            {
+                _playerService.SetHp(maxHp);
+                _spEffectService.ApplySpEffect(playerIns, 12295);
+                Thread.Sleep(350);
+                _emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(10000, 0, false,
+                false, false, 0, 1f));
+                Thread.Sleep(500);
+                _spEffectService.RemoveSpEffect(playerIns, 12295);
+            }
+        }
+
 
         private void LoadStats()
         {
@@ -936,6 +1009,9 @@ namespace TarnishedTool.ViewModels
 
         private void SetRfbs() => _playerService.SetRfbs();
         private void SetMaxHp() => _playerService.SetFullHp();
+        
+        private void SetMaxFp() => _playerService.SetFullFp();
+        private void EmptyFp() => _playerService.SetFp(0);
         private void Die() => _playerService.SetHp(0);
 
         private void SetCustomHp()
@@ -1131,6 +1207,12 @@ namespace TarnishedTool.ViewModels
             int stateinfo = enabled ? 0 : ForcedDismountStateInfo;
             _paramService.Write(row, ForcedDismountDurationOffset, duration);
             _paramService.Write(row, ForcedDismountStateInfoOffset, stateinfo);
+        }
+
+        private void ApplyIconReminder()
+        {
+            bool anyActive = IsNoHitEnabled || IsNoDamageEnabled || IsNoRollEnabled || IsHpLocked;
+            _reminderService.SetPlayerIconActive(anyActive);
         }
 
         #endregion

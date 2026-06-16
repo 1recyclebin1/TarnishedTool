@@ -2,6 +2,7 @@
 
 using System;
 using TarnishedTool.Enums;
+using TarnishedTool.GameIds;
 using TarnishedTool.Interfaces;
 using TarnishedTool.Memory;
 using TarnishedTool.Utilities;
@@ -16,13 +17,18 @@ public class ReminderService : IReminderService
     private const string ReminderText = "Tarnished Tool Active";
 
     private bool _hasDoneReminder;
+    private bool _playerIconActive;
+    private bool _targetIconActive;
+    private readonly IParamService _paramService;
     private readonly IMemoryService _memoryService;
     private readonly HookManager _hookManager;
 
-    public ReminderService(IMemoryService memoryService, HookManager hookManager, IStateService stateService)
+    public ReminderService(IMemoryService memoryService, HookManager hookManager, IStateService stateService,
+        IParamService paramService)
     {
         _memoryService = memoryService;
         _hookManager = hookManager;
+        _paramService = paramService;
         stateService.Subscribe(State.Detached, OnDetached);
     }
 
@@ -78,11 +84,38 @@ public class ReminderService : IReminderService
         return (fmg, stringTable, totalEntries);
     }
 
+    public void SetPlayerIconActive(bool active)
+    {
+        _playerIconActive = active;
+        ApplyIconReminder();
+    }
+
+    public void SetTargetIconActive(bool active)
+    {
+        _targetIconActive = active;
+        ApplyIconReminder();
+    }
+
+    private void ApplyIconReminder()
+    {
+        var (tableIndex, slotIndex) = ParamIndices.All["SpEffectParam"];
+
+        IntPtr handStyleRight = _paramService.GetParamRow(tableIndex, slotIndex, 100620);
+        IntPtr handStyleLeft = _paramService.GetParamRow(tableIndex, slotIndex, 100621);
+        if (handStyleRight == IntPtr.Zero || handStyleLeft == IntPtr.Zero) return;
+
+        int handStyleVal = _playerIconActive || _targetIconActive ? 20274 : -1;
+
+        _paramService.Write(handStyleRight, 0x0, handStyleVal);
+        _paramService.Write(handStyleLeft, 0x0, handStyleVal);
+    }
+
     private void InstallHook()
     {
         switch (Offsets.Version)
         {
-            case Version1_2_0 or Version1_2_1 or Version1_2_2 or Version1_2_3 or Version1_3_0 or Version1_3_1 or Version1_3_2 or Version1_4_0
+            case Version1_2_0 or Version1_2_1 or Version1_2_2 or Version1_2_3 or Version1_3_0 or Version1_3_1
+                or Version1_3_2 or Version1_4_0
                 or Version1_4_1 or Version1_5_0 or Version1_6_0:
                 DoEarlyPatchesHook();
                 break;

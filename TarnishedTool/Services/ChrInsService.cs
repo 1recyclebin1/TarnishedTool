@@ -127,6 +127,7 @@ public class ChrInsService(IMemoryService memoryService) : IChrInsService
 
     public int GetMaxHp(nint chrIns) =>
         memoryService.Read<int>(GetChrDataPtr(chrIns) + (int)ChrIns.ChrDataOffsets.MaxHealth);
+    
 
     public float GetCurrentPoise(nint chrIns) =>
         memoryService.Read<float>(GetChrSuperArmorPtr(chrIns) + (int)ChrIns.ChrSuperArmorOffsets.CurrentPoise);

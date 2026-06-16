@@ -244,6 +244,12 @@ namespace TarnishedTool.Services
             var full = chrInsService.GetMaxHp(playerIns);
             chrInsService.SetHp(playerIns, full);
         }
+        
+        public void SetFullFp()
+        {
+            var full = GetMaxFp();
+            SetFp(full);
+        }
 
         public void SetRfbs()
         {

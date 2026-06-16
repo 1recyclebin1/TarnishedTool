@@ -27,7 +27,7 @@ internal class ChrInsWindowViewModel : BaseViewModel
 
     private readonly Dictionary<long, ChrInsEntry> _entriesByHandle = new();
 
-    public static readonly int[] DummyChrIds = [100, 1000];
+    // public static readonly int[] DummyChrIds = [100, 1000];
 
     public ChrInsWindowViewModel(IStateService stateService, IGameTickService gameTickService,
         IPlayerService playerService, IChrInsService chrInsService, IAiWindowService aiWindowService)
@@ -157,7 +157,7 @@ internal class ChrInsWindowViewModel : BaseViewModel
             }
 
             entry.ChrId = _chrInsService.GetChrId(entry.ChrIns);
-            if (DummyChrIds.Contains(entry.ChrId)) continue;
+         //   if (DummyChrIds.Contains(entry.ChrId)) continue;
 
             var instanceId = _chrInsService.GetChrInstanceId(entry.ChrIns);
             entry.InternalName = $@"c{entry.ChrId}_{instanceId}";

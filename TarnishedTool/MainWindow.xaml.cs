@@ -52,7 +52,7 @@ namespace TarnishedTool
 
             IActionRequestService actionRequestService = new ActionRequestService(_memoryService, hookManager);
             IParamService paramService = new ParamService(_memoryService);
-            IReminderService reminderService = new ReminderService(_memoryService, hookManager, _stateService);
+            IReminderService reminderService = new ReminderService(_memoryService, hookManager, _stateService, paramService);
             IChrInsService chrInsService = new ChrInsService(_memoryService);
             ITravelService travelService = new TravelService(_memoryService, hookManager);
             IPlayerService playerService =
@@ -80,7 +80,7 @@ namespace TarnishedTool
             PlayerViewModel playerViewModel = new PlayerViewModel(
                 playerService, _stateService, hotkeyManager,
                 eventService, spEffectService, emevdService,
-                _dlcService, ezStateService, gameTickService, paramService
+                _dlcService, ezStateService, gameTickService, paramService, reminderService
             );
 
             TravelViewModel travelViewModel = new TravelViewModel(
@@ -98,7 +98,7 @@ namespace TarnishedTool
             TargetViewModel targetViewModel = new TargetViewModel(
                 targetService, _stateService, enemyService,
                 attackInfoService, hotkeyManager, spEffectService,
-                emevdService, gameTickService, aiWindowService
+                emevdService, gameTickService, aiWindowService, eventService, chrInsService, reminderService
             );
 
             EventViewModel eventViewModel = new EventViewModel(

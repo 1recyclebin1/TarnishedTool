@@ -14,16 +14,18 @@ public class PhaseTransitionViewModel : BaseViewModel
     private readonly IEventService _eventService;
     private readonly IChrInsService _chrInsService;
     private readonly ISpEffectService _spEffectService;
+    private readonly IAiService _aiService;
     private PhaseTransition? _currentTransition;
 
-    public PhaseTransitionViewModel(ITargetService targetService, IEmevdService emevdService, IEventService eventService, IChrInsService chrInsService, ISpEffectService spEffectService)
+    public PhaseTransitionViewModel(ITargetService targetService, IEmevdService emevdService, IEventService eventService, IChrInsService chrInsService, ISpEffectService spEffectService, IAiService aiService)
     {
         _targetService = targetService;
         _emevdService = emevdService;
         _eventService = eventService;
         _chrInsService = chrInsService;
         _spEffectService = spEffectService;
-        PhaseTransitionRegistry.Initialize(chrInsService, eventService, spEffectService);
+        _aiService = aiService;
+        PhaseTransitionRegistry.Initialize(chrInsService, eventService, spEffectService, aiService);
         TriggerPhaseCommand = new DelegateCommand(TriggerPhase);
     }
 

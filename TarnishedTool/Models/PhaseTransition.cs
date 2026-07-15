@@ -607,15 +607,17 @@ public abstract class PhaseTransition
     public class PlacidusaxPhase2 : SimplePhaseTransition
     {
         public override string Label => "Phase 2";
-        protected override float Threshold => 0.65f;
+        protected override float Threshold => 0.649f;
         protected override uint Phase2SpEffect => 16890;
+        protected override uint[] ExtraPhase2SpEffects => [16891, 16892];
 
         public override void Execute(ITargetService targetService, IEmevdService emevdService)
         {
+            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetSpEffect(13000830, 16890));
             base.Execute(targetService, emevdService);
             emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(13000830, 3032, false,
                 false, false, 0, 1f));
-            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetSpEffect(13000830, 16890));
+            
         }
     }
 
@@ -623,15 +625,17 @@ public abstract class PhaseTransition
     public class PlacidusaxPhase3 : SimplePhaseTransition
     {
         public override string Label => "Phase 3";
-        protected override float Threshold => 0.45f;
+        protected override float Threshold => 0.449f;
         protected override uint Phase2SpEffect => 16891;
+         protected override uint[] ExtraPhase2SpEffects => [16892];
 
         public override void Execute(ITargetService targetService, IEmevdService emevdService)
         {
+            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetSpEffect(13000830, 16890));
+            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetSpEffect(13000830, 16891));
             base.Execute(targetService, emevdService);
             emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(13000830, 3034, false,
                 false, false, 0, 1f));
-            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetSpEffect(13000830, 16891));
         }
     }
 
@@ -639,15 +643,40 @@ public abstract class PhaseTransition
     public class PlacidusaxPhase4 : SimplePhaseTransition
     {
         public override string Label => "Phase 4";
-        protected override float Threshold => 0.30f;
-        protected override uint Phase2SpEffect => 16892;
+        protected override float Threshold => 0.299f;
+        protected override uint Phase2SpEffect => 5;
+
+        private readonly IChrInsService _chrInsService;
+        private readonly IAiService _aiService;
+
+        public PlacidusaxPhase4(IChrInsService chrInsService, IAiService aiService)
+        {
+            _chrInsService = chrInsService;
+            _aiService = aiService;
+        }
 
         public override void Execute(ITargetService targetService, IEmevdService emevdService)
         {
+            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetSpEffect(13000830, 5400));
+            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetSpEffect(13000830, 16890));
+            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetSpEffect(13000830, 16891));
+            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetSpEffect(13000830, 16892));
             base.Execute(targetService, emevdService);
-            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(13000830, 3034, false,
-                false, false, 0, 1f));
-            ForceActAndWait(targetService, 33);
+            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(13000830, 20, false,
+                true, false, 0, 1f));
+            
+            var chrIns = _chrInsService.ChrInsByEntityId(13000830);
+            var aiThink = _aiService.GetAiThinkPtr(chrIns);
+            if (aiThink != 0)
+            {
+                _aiService.SetCoolTime(aiThink, attackId: 3034, timeSinceLastAttack: 20f, cooldown: 60f);
+                _aiService.SetCoolTime(aiThink, attackId: 20017, timeSinceLastAttack: 0f, cooldown: 120f);
+                foreach (var entry in _aiService.GetCoolTimeItemList(aiThink))
+                    Console.WriteLine($"CoolTime entry: id={entry.AnimationId} timeSince={entry.TimeSinceLastAttack} cooldown={entry.Cooldown}");
+            }
+            
+
+            
         }
     }
 

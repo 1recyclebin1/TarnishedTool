@@ -41,13 +41,14 @@ namespace TarnishedTool.ViewModels
         private readonly IGameTickService _gameTickService;
         private readonly IAiWindowService _aiWindowService;
         private readonly IReminderService _reminderService;
+        private readonly IAiService _aiService;
 
         private DateTime _forceActSequenceLastExecuted = DateTime.MinValue;
         private static readonly TimeSpan ForceActSequenceCooldown = TimeSpan.FromSeconds(2);
 
         public TargetViewModel(ITargetService targetService, IStateService stateService, IEnemyService enemyService,
             IAttackInfoService attackInfoService, HotkeyManager hotkeyManager, ISpEffectService spEffectService,
-            IEmevdService emevdService, IGameTickService gameTickService, IAiWindowService aiWindowService, IEventService eventService, IChrInsService chrInsService, IReminderService reminderService)
+            IEmevdService emevdService, IGameTickService gameTickService, IAiWindowService aiWindowService, IEventService eventService, IChrInsService chrInsService, IReminderService reminderService, IAiService aiService)
         {
             _targetService = targetService;
             _enemyService = enemyService;
@@ -61,7 +62,8 @@ namespace TarnishedTool.ViewModels
             _gameTickService = gameTickService;
             _aiWindowService = aiWindowService;
             _reminderService = reminderService;
-            _phaseTransitionViewModel = new PhaseTransitionViewModel(targetService, emevdService, eventService, chrInsService, spEffectService);
+            _aiService = aiService;
+            _phaseTransitionViewModel = new PhaseTransitionViewModel(targetService, emevdService, eventService, chrInsService, spEffectService, aiService);
             RegisterHotkeys();
 
             ShowPoise = SettingsManager.Default.ResistancesShowPoise;

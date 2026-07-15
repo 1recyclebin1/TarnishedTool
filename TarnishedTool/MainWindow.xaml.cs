@@ -98,7 +98,7 @@ namespace TarnishedTool
             TargetViewModel targetViewModel = new TargetViewModel(
                 targetService, _stateService, enemyService,
                 attackInfoService, hotkeyManager, spEffectService,
-                emevdService, gameTickService, aiWindowService, eventService, chrInsService, reminderService
+                emevdService, gameTickService, aiWindowService, eventService, chrInsService, reminderService, aiService
             );
 
             EventViewModel eventViewModel = new EventViewModel(

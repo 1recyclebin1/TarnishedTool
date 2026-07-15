@@ -7,7 +7,7 @@ public static class PhaseTransitionRegistry
 {
     private static Dictionary<uint, List<PhaseTransition>>? _transitions;
 
-    public static void Initialize(IChrInsService chrInsService, IEventService eventService, ISpEffectService spEffectService)
+    public static void Initialize(IChrInsService chrInsService, IEventService eventService, ISpEffectService spEffectService, IAiService aiService)
     {
         _transitions = new Dictionary<uint, List<PhaseTransition>>
         {
@@ -240,7 +240,7 @@ public static class PhaseTransitionRegistry
                 {
                     new PhaseTransition.PlacidusaxPhase2(),
                     new PhaseTransition.PlacidusaxPhase3(),
-                    new PhaseTransition.PlacidusaxPhase4() 
+                    new PhaseTransition.PlacidusaxPhase4(chrInsService, aiService) 
                     
                 }
             },

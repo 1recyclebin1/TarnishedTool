@@ -157,35 +157,7 @@ public class AiService : IAiService
 
         return coolTimeList;
     }
-
-    public bool SetCoolTime(nint aiThink, int attackId, float? timeSinceLastAttack = null, float? cooldown = null)
-    {
-        var attackComp = aiThink + ChrIns.AiThinkOffsets.AiAttackComp;
-        var coolTimeCount = _memoryService.Read<int>(attackComp + ChrIns.AiThinkOffsets.AttackComp.CoolTimeCount);
-        if (coolTimeCount == 0) return false;
-
-        var listStart = attackComp + ChrIns.AiThinkOffsets.AttackComp.CoolTimeList;
-
-        for (var i = 0; i < coolTimeCount; i++)
-        {
-            var entryPtr = listStart + i * CoolTimeListStride;
-            var id = _memoryService.Read<int>(entryPtr);
-            if (id != attackId) continue;
-
-            if (timeSinceLastAttack.HasValue)
-                _memoryService.Write(entryPtr + ChrIns.AiThinkOffsets.CoolTimeItem.TimeSinceLastAttack,
-                    timeSinceLastAttack.Value);
-
-            if (cooldown.HasValue)
-                _memoryService.Write(entryPtr + ChrIns.AiThinkOffsets.CoolTimeItem.Cooldown, cooldown.Value);
-
-            Console.WriteLine($"SetCoolTime: matched attackId {attackId} at index {i}, wrote TimeSinceLastAttack={timeSinceLastAttack}, Cooldown={cooldown}");
-            return true;
-        }
-
-        Console.WriteLine($"SetCoolTime: attackId {attackId} NOT FOUND in list of {coolTimeCount} entries");
-        return false; // no entry for this attackId — see note below
-    }
+    
 
     public int GetMainScriptGoalId(nint aiThink)
     {
@@ -209,6 +181,24 @@ public class AiService : IAiService
         ]);
         _memoryService.AllocateAndExecute(bytes);
         _memoryService.FreeMem(scriptPtr);
+    }
+
+    public void RequestAttackCooldown(nint aiThink, uint attackId)
+    {
+        var funcAddr = Functions.AiRequestAttackCooldown;
+        if (funcAddr == 0) return;
+
+        var bytes = AsmLoader.GetAsmBytes(AsmScript.RequestAttackCooldown);
+
+        AsmHelper.WriteAbsoluteAddresses(bytes, [
+            ((long)aiThink, 2),
+            (funcAddr, 21)
+        ]);
+        AsmHelper.WriteImmediateDwords(bytes, [
+            ((int)attackId, 11)
+        ]);
+
+        _memoryService.AllocateAndExecute(bytes);
     }
 
     #endregion

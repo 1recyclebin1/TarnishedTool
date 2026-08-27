@@ -3016,6 +3016,21 @@ namespace TarnishedTool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 48 b9 00 00 00 00 00 00 00 00   movabs rcx,0x0
+        ///ba 00 00 00 00                  mov    edx,0x0
+        ///48 83 ec 28                     sub    rsp,0x28
+        ///48 b8 00 00 00 00 00 00 00 00   movabs rax,0x0
+        ///ff d0                           call   rax
+        ///48 83 c4 28                     add    rsp,0x28
+        ///c3                               ret.
+        /// </summary>
+        internal static string RequestAttackCooldown {
+            get {
+                return ResourceManager.GetString("RequestAttackCooldown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 8b 49 08             mov    rcx,QWORD PTR [rcx+0x8]
         ///81 fa a5 2e 00 00       cmp    edx,0x2ea5
         ///75 03                   jne    f &lt;normal&gt;

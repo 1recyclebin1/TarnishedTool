@@ -49,7 +49,7 @@ public static class PhaseTransitionRegistry
                 47300040, new List<PhaseTransition>
                 {
                     new PhaseTransition.StarscourgeRadahnPhase1Point5(),
-                    new PhaseTransition.StarscourgeRadahnPhase2()
+                    new PhaseTransition.StarscourgeRadahnPhase2(chrInsService, aiService)
                 }
             },
             
@@ -57,7 +57,7 @@ public static class PhaseTransitionRegistry
             {
                 35700038, new List<PhaseTransition>
                 {
-                    new PhaseTransition.NoblePhase2() 
+                    new PhaseTransition.NoblePhase2(chrInsService, aiService) 
                     
                 }
             },
@@ -239,7 +239,7 @@ public static class PhaseTransitionRegistry
                 45200072, new List<PhaseTransition>
                 {
                     new PhaseTransition.PlacidusaxPhase2(),
-                    new PhaseTransition.PlacidusaxPhase3(),
+                    new PhaseTransition.PlacidusaxPhase3(chrInsService, aiService),
                     new PhaseTransition.PlacidusaxPhase4(chrInsService, aiService) 
                     
                 }
@@ -273,7 +273,8 @@ public static class PhaseTransitionRegistry
                 // 2048440800
                 53000082, new List<PhaseTransition>
                 {
-                    new PhaseTransition.RellanaPhase2() 
+                    new PhaseTransition.RellanaPhase1Point5(chrInsService, aiService),
+                    new PhaseTransition.RellanaPhase2(chrInsService, aiService) 
                     
                 }
             },
@@ -331,7 +332,7 @@ public static class PhaseTransitionRegistry
                 // 22000800
                 50200087, new List<PhaseTransition>
                 {
-                    new PhaseTransition.PutresecentKnightPhase2() 
+                    new PhaseTransition.PutresecentKnightPhase2(chrInsService, aiService) 
                     
                 }
             },
@@ -351,7 +352,7 @@ public static class PhaseTransitionRegistry
                 // 28000800
                 50510086, new List<PhaseTransition>
                 {
-                    new PhaseTransition.MidraPhase2() 
+                    new PhaseTransition.MidraPhase2(chrInsService, aiService) 
                     
                 }
             },
@@ -361,7 +362,7 @@ public static class PhaseTransitionRegistry
               //  2044450800
                 50300094, new List<PhaseTransition>
                 {
-                    new PhaseTransition.RominaPhase2() 
+                    new PhaseTransition.RominaPhase2(chrInsService, aiService) 
                     
                 }
             },

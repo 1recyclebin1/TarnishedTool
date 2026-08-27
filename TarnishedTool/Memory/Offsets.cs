@@ -903,6 +903,7 @@ namespace TarnishedTool.Memory
             public static long LocalToMapCoords;
             public static long LuaDoString;
             public static long RefreshFromStorage;
+            public static long AiRequestAttackCooldown;
         }
 
         public static class Patches
@@ -2019,6 +2020,12 @@ namespace TarnishedTool.Memory
                     or Version2_4_0 or Version2_5_0 or Version2_6_0
                     or Version2_6_1 => 0x24E0A0,
                 Version2_6_2 => 0x24DFF0,
+                _ => 0
+            };
+
+            Functions.AiRequestAttackCooldown = moduleBase.ToInt64() + Version switch
+            {
+                Version2_6_2 => 0x2C6280,
                 _ => 0
             };
 

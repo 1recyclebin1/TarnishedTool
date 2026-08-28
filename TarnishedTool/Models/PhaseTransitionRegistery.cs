@@ -120,7 +120,7 @@ public static class PhaseTransitionRegistry
             {
                 35700172, new List<PhaseTransition>
                 {
-                    new PhaseTransition.NobleGduoPhase2(chrInsService)  
+                    new PhaseTransition.NobleGduoPhase2(chrInsService, aiService)  
                     
                 }
             },
@@ -128,7 +128,7 @@ public static class PhaseTransitionRegistry
             {
                 35600172, new List<PhaseTransition>
                 {
-                    new PhaseTransition.ApostleGduoPhase2(chrInsService) 
+                    new PhaseTransition.ApostleGduoPhase2(chrInsService, aiService) 
                     
                 }
             },

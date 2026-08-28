@@ -126,6 +126,19 @@ public abstract class PhaseTransition
         }
     }
 
+    private static void PlayAnimation(IEmevdService emevdService, uint entityId, uint animationId)
+    {
+        emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(entityId, (int)animationId, false,
+                false, false, 0, 1f));
+    }
+
+    private static void PlayAnimationAndSetCooldown(IEmevdService emevdService, IChrInsService chrInsService,
+        IAiService aiService, uint entityId, uint animationId)
+    {
+        SetAttackCooldown(chrInsService, aiService, entityId, animationId);
+        PlayAnimation(emevdService, entityId, animationId);
+    }
+
     #endregion
 
 
@@ -135,14 +148,13 @@ public abstract class PhaseTransition
     public class MargitPhase2 : SimplePhaseTransition
     {
         public override string Label => "Phase 2";
-        protected override float Threshold => 0.65f;
+        protected override float Threshold => 0.6501f;
         protected override uint Phase2SpEffect => 16200;
 
         public override void Execute(ITargetService targetService, IEmevdService emevdService)
         {
             base.Execute(targetService, emevdService);
-            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(10000850, 3026, false,
-                false, false, 0, 1f));
+            PlayAnimation(emevdService, 10000850, 3026);
         }
     }
 
@@ -156,8 +168,7 @@ public abstract class PhaseTransition
         public override void Execute(ITargetService targetService, IEmevdService emevdService)
         {
             base.Execute(targetService, emevdService);
-            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(10000800, 20010, false,
-                false, false, 0, 1f));
+            PlayAnimation(emevdService, 10000800, 20010);
         }
     }
 
@@ -195,9 +206,7 @@ public abstract class PhaseTransition
         {
             base.Execute(targetService, emevdService);
             emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetSpEffect(1052380800, 13902));
-            SetAttackCooldown(_chrInsService, _aiService, 1052380800, 3035);
-            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(1052380800, 3035, false,
-                false, false, 0, 1f));
+            PlayAnimationAndSetCooldown(emevdService, _chrInsService, _aiService, 1052380800, 3035);
         }
     }
 
@@ -221,21 +230,16 @@ public abstract class PhaseTransition
         {
             base.Execute(targetService, emevdService);
             emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetSpEffect(16000850, 15501));
-            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(16000850, 3029, false,
-                false, false, 0, 1f));
+            PlayAnimation(emevdService, 16000850, 3029);
             Thread.Sleep(4167); // duration of the phase transition animation before he can queue a move
             var distanceFromPlayer = targetService.GetDist();
             if (distanceFromPlayer <= 3.5)
             {
-                SetAttackCooldown(_chrInsService, _aiService, 16000850, 3016); // Balloon
-                emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(16000850, 3016, false,
-                true, false, 0, 1f));
+                PlayAnimationAndSetCooldown(emevdService, _chrInsService, _aiService, 16000850, 3016);// Balloon
             }
             else
             {
-                SetAttackCooldown(_chrInsService, _aiService, 16000850, 3020); // Roll
-                emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(16000850, 3020, false,
-                true, false, 0, 1f));
+                PlayAnimationAndSetCooldown(emevdService, _chrInsService, _aiService, 16000850, 3020); // Roll
             }
         }
     }
@@ -282,8 +286,7 @@ public abstract class PhaseTransition
             emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ClearSpEffect(1045520800, 13707));
             emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetSpEffect(1045520800, 13708));
             emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetSpEffect(1045520800, 13700));
-            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(1045520800, 3027, false,
-                false, false, 0, 1f));
+            PlayAnimation(emevdService, 1045520800, 3027);
         }
     }
 
@@ -297,8 +300,7 @@ public abstract class PhaseTransition
         public override void Execute(ITargetService targetService, IEmevdService emevdService)
         {
             base.Execute(targetService, emevdService);
-            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(11000800, 3024, false,
-                false, false, 0, 1f));
+            PlayAnimation(emevdService, 11000800, 3024);
         }
     }
 
@@ -337,9 +339,7 @@ public abstract class PhaseTransition
             int fireGiantP2Hp = (fireGiantP2MaxHp - (int)(fireGiantP1MaxHp * 0.097f));
 
             emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetSpEffect(FireGiantP1EntityId, 12752));
-            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(FireGiantP1EntityId, 20010,
-                false,
-                false, false, 0, 1f));
+            PlayAnimation(emevdService, FireGiantP1EntityId, 20010);
             _chrInsService.SetHp(fireGiantP1ChrIns, (int)(fireGiantP1MaxHp * 0.903f));
             _chrInsService.SetHp(fireGiantP2ChrIns, fireGiantP2Hp);
         }
@@ -385,10 +385,12 @@ public abstract class PhaseTransition
         private const uint UndergroundApostleEntityId = 13000850;
 
         private readonly IChrInsService _chrInsService;
+        private readonly IAiService _aiService;
 
-        public NobleGduoPhase2(IChrInsService chrInsService)
+        public NobleGduoPhase2(IChrInsService chrInsService, IAiService aiService)
         {
             _chrInsService = chrInsService;
+            _aiService = aiService;
         }
 
         public override bool IsPhase2(ISpEffectService spEffectService, ITargetService targetService)
@@ -414,7 +416,17 @@ public abstract class PhaseTransition
             _chrInsService.SetHp(nobleChrIns, (int)(nobleMaxHp * 0.599f));
             _chrInsService.SetHp(undergroundApostleChrIns, undergroundCurrentApostleHp);
             emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetSpEffect(NobleEntityId, 15501));
-            ForceActAndWait(targetService, 15);
+            PlayAnimation(emevdService, NobleEntityId, 3029);
+            Thread.Sleep(4167); // duration of the phase transition animation before he can queue a move
+            var distanceFromPlayer = targetService.GetDist();
+            if (distanceFromPlayer <= 3.5)
+            {
+                PlayAnimationAndSetCooldown(emevdService, _chrInsService, _aiService, NobleEntityId, 3016);// Balloon
+            }
+            else
+            {
+                PlayAnimationAndSetCooldown(emevdService, _chrInsService, _aiService, NobleEntityId, 3020); // Roll
+            }
         }
     }
 
@@ -426,10 +438,12 @@ public abstract class PhaseTransition
         private const uint UndergroundApostleEntityId = 13000850;
 
         private readonly IChrInsService _chrInsService;
+        private readonly IAiService _aiService;
 
-        public ApostleGduoPhase2(IChrInsService chrInsService)
+        public ApostleGduoPhase2(IChrInsService chrInsService, IAiService aiService)
         {
             _chrInsService = chrInsService;
+            _aiService = aiService;
         }
 
         public override bool IsPhase2(ISpEffectService spEffectService, ITargetService targetService)
@@ -441,6 +455,8 @@ public abstract class PhaseTransition
 
         public override bool CanActivate(ITargetService targetService)
             => targetService.GetCurrentHp() > 0.60f;
+        
+        private static readonly Random _random = new Random();
 
         public override void Execute(ITargetService targetService, IEmevdService emevdService)
         {
@@ -455,7 +471,41 @@ public abstract class PhaseTransition
             _chrInsService.SetHp(apostleChrIns, (int)(apostleMaxHp * 0.599f));
             _chrInsService.SetHp(undergroundApostleChrIns, undergroundCurrentApostleHp);
             emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetSpEffect(ApostleEntityId, 15451));
-            ForceActAndWait(targetService, 11);
+        //    ForceActAndWait(targetService, 11);
+            PlayAnimationAndSetCooldown(emevdService, _chrInsService, _aiService, ApostleEntityId, 3029);
+            Thread.Sleep(4066);
+            var distanceFromPlayer = targetService.GetDist();
+            var random = _random.Next(1, 101); // 1 to 100 RNG 
+            if (distanceFromPlayer <= 5)
+            {
+                PlayAnimationAndSetCooldown(emevdService, _chrInsService, _aiService, ApostleEntityId, 3025);
+            }
+            else if (distanceFromPlayer <= 10)
+            {
+                if (random <= 20)
+                {
+                    PlayAnimationAndSetCooldown(emevdService, _chrInsService, _aiService, ApostleEntityId, 3021);
+                }
+                else if (random <= 40)
+                {
+                    PlayAnimationAndSetCooldown(emevdService, _chrInsService, _aiService, ApostleEntityId, 3022);
+                }
+                else
+                {
+                    PlayAnimationAndSetCooldown(emevdService, _chrInsService, _aiService, ApostleEntityId, 3025);
+                }
+            }
+            else if (distanceFromPlayer <= 15)
+            {
+                if (random <= 50)
+                {
+                    PlayAnimationAndSetCooldown(emevdService, _chrInsService, _aiService, ApostleEntityId, 3021);
+                }
+                else
+                {
+                    PlayAnimationAndSetCooldown(emevdService, _chrInsService, _aiService, ApostleEntityId, 3022);
+                }
+            }
         }
     }
 
@@ -494,8 +544,7 @@ public abstract class PhaseTransition
             emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetSpEffect(Entity1Id, 12290));
             SetHp(godfreyChrIns, (int)(GetMaxHp(godfreyChrIns) * 0.50f));
             SetHp(hoarahLouxChrIns, (int)(GetMaxHp(hoarahLouxChrIns) * 0.73f));
-            emevdService.ExecuteEmevdCommand(
-                Emevd.EmevdCommands.ForceAnimationPlayback(Entity1Id, 3019, false, false, false, 0, 1f));
+            PlayAnimation(emevdService, Entity1Id, 3019);
         }
     }
 
@@ -536,8 +585,7 @@ public abstract class PhaseTransition
         {
             emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetSpEffect(11050800, 12290));
             targetService.SetHp((int)(targetService.GetMaxHp() * 0.30f));
-            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(11050800, 3022, false,
-                false, false, 0, 1f));
+            PlayAnimation(emevdService, 11050800, 3022);
         }
     }
 
@@ -593,8 +641,7 @@ public abstract class PhaseTransition
         public override void Execute(ITargetService targetService, IEmevdService emevdService)
         {
             base.Execute(targetService, emevdService);
-            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(1051570800, 3021, false,
-                false, false, 0, 1f));
+            PlayAnimation(emevdService, 1051570800, 3021);
             emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetSpEffect(1051570800, 11136));
         }
     }
@@ -661,8 +708,7 @@ public abstract class PhaseTransition
         {
             emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetSpEffect(13000830, 16890));
             base.Execute(targetService, emevdService);
-            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(13000830, 3032, false,
-                false, false, 0, 1f));
+            PlayAnimation(emevdService, 13000830, 3032);
         }
     }
 
@@ -687,10 +733,11 @@ public abstract class PhaseTransition
         {
             emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetSpEffect(13000830, 16890));
             emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetSpEffect(13000830, 16891));
-            SetAttackCooldown(_chrInsService, _aiService, 13000830, 3034);
-            Thread.Sleep(100);
-            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(13000830, 3034, false,
-                false, false, 0, 1f));
+  //         SetAttackCooldown(_chrInsService, _aiService, 13000830, 3034);
+  //         Thread.Sleep(100);
+  //         PlayAnimation(emevdService, 13000830, 3034)
+  //          emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(13000830, 3034, false, false, false, 0, 1f));
+            PlayAnimationAndSetCooldown(emevdService, _chrInsService, _aiService, 13000830, 3034);
         }
     }
 
@@ -718,10 +765,11 @@ public abstract class PhaseTransition
             emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.SetSpEffect(13000830, 16892));
             base.Execute(targetService, emevdService);
             SetAttackCooldown(_chrInsService, _aiService, 13000830, 3034);
-            SetAttackCooldown(_chrInsService, _aiService, 13000830, 20015);
-            Thread.Sleep(100);
-            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(13000830, 20015, false,
-                false, false, 0, 1f));
+   //        SetAttackCooldown(_chrInsService, _aiService, 13000830, 20015);
+   //         Thread.Sleep(100);
+   //         PlayAnimation(emevdService, 13000830, 20015)
+   //        emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(13000830, 20015, false, false, false, 0, 1f));
+            PlayAnimationAndSetCooldown(emevdService, _chrInsService, _aiService, 13000830, 20015);
         }
     }
 
@@ -753,9 +801,7 @@ public abstract class PhaseTransition
         public override void Execute(ITargetService targetService, IEmevdService emevdService)
         {
             base.Execute(targetService, emevdService);
-            emevdService.ExecuteEmevdCommand(
-                Emevd.EmevdCommands.ForceAnimationPlayback(20000800, 20002, false, false,
-                    false, 0, 1f));
+            PlayAnimation(emevdService, 20000800, 20002);
         }
     }
 
@@ -779,11 +825,8 @@ public abstract class PhaseTransition
 
         public override void Execute(ITargetService targetService, IEmevdService emevdService)
         {
-            base.Execute(targetService, emevdService);
-            SetAttackCooldown(_chrInsService, _aiService, 2048440800, 3030);
-            emevdService.ExecuteEmevdCommand(
-                Emevd.EmevdCommands.ForceAnimationPlayback(2048440800, 3030, false, false,
-                    false, 0, 1f));
+            base.Execute(targetService, emevdService); 
+            PlayAnimationAndSetCooldown(emevdService,_chrInsService,_aiService,2048440800, 3030);
         }
     }
 
@@ -807,10 +850,7 @@ public abstract class PhaseTransition
         public override void Execute(ITargetService targetService, IEmevdService emevdService)
         {
             base.Execute(targetService, emevdService);
-            SetAttackCooldown(_chrInsService, _aiService, 2048440800, 3024);
-            emevdService.ExecuteEmevdCommand(
-                Emevd.EmevdCommands.ForceAnimationPlayback(2048440800, 3024, false, false,
-                    false, 0, 1f));
+            PlayAnimationAndSetCooldown(emevdService,_chrInsService,_aiService,2048440800, 3024);
         }
     }
 
@@ -898,10 +938,7 @@ public abstract class PhaseTransition
             // don't keep at max to avoid delay issues when setting health
             SetHp(scaduBodyChrIns, 1);
             SetHp(scaduHealthChrIns, 1);
-            emevdService.ExecuteEmevdCommand(
-                Emevd.EmevdCommands.ForceAnimationPlayback(Entity1Id, 20004,
-                    false, false, false,
-                    0, 1f));
+            PlayAnimation(emevdService, Entity1Id,20004);
 
             Task.Run(async () =>
                 {
@@ -941,10 +978,7 @@ public abstract class PhaseTransition
                         SetHp(scaduBodyP2ChrIns, 1);
                         SetHp(scaduHealthP2ChrIns, 1);
                         // forcing an animation with a death shorter than the default one lol 
-                        emevdService.ExecuteEmevdCommand(
-                            Emevd.EmevdCommands.ForceAnimationPlayback(2050480801, 20003,
-                                false, true, false,
-                                0, 1f));
+                        PlayAnimation(emevdService, 2050480801, 20003);
                     }
                 }
             );
@@ -1017,19 +1051,13 @@ public abstract class PhaseTransition
             var distanceFromPlayer = targetService.GetDist();
             if (distanceFromPlayer >= 10)
             {
-                SetAttackCooldown(_chrInsService, _aiService, 22000800, 3028);
-                emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(22000800, 3028, false,
-                true, false, 0, 1f));
+                PlayAnimationAndSetCooldown(emevdService,_chrInsService, _aiService, 22000800, 3028);
             }
             else
             {
-                SetAttackCooldown(_chrInsService, _aiService, 22000800, 3012);
-                emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(22000800, 3012, false,
-                true, false, 0, 1f));
+                PlayAnimationAndSetCooldown(emevdService,_chrInsService, _aiService, 22000800, 3012);
                 Thread.Sleep(3666); // duration of the previous animation
-                SetAttackCooldown(_chrInsService, _aiService, 22000800, 3028);
-                emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(22000800, 3028, false,
-                true, false, 0, 1f));
+                PlayAnimationAndSetCooldown(emevdService,_chrInsService, _aiService, 22000800, 3028);
             }
         }
     }
@@ -1060,9 +1088,7 @@ public abstract class PhaseTransition
         public override void Execute(ITargetService targetService, IEmevdService emevdService)
         {
             base.Execute(targetService, emevdService);
-            SetAttackCooldown(_chrInsService, _aiService, 28000800, 3020);
-            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(28000800, 3020, false,
-                true, false, 0, 1f));
+            PlayAnimationAndSetCooldown(emevdService,_chrInsService, _aiService, 28000800, 3020);
         }
     }
 
@@ -1085,9 +1111,7 @@ public abstract class PhaseTransition
         public override void Execute(ITargetService targetService, IEmevdService emevdService)
         {
             base.Execute(targetService, emevdService);
-            SetAttackCooldown(_chrInsService, _aiService, 2044450800, 3018);
-            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(2044450800, 3018, false,
-                true, false, 0, 1f));
+            PlayAnimationAndSetCooldown(emevdService,_chrInsService, _aiService, 2044450800, 3018);
         }
     }
 
@@ -1102,8 +1126,7 @@ public abstract class PhaseTransition
         public override void Execute(ITargetService targetService, IEmevdService emevdService)
         {
             base.Execute(targetService, emevdService);
-            emevdService.ExecuteEmevdCommand(Emevd.EmevdCommands.ForceAnimationPlayback(25000800, 3031, false,
-                true, false, 0, 1f));
+            PlayAnimation(emevdService, 25000800, 3031);
         }
     }
 

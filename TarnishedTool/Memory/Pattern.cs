@@ -801,6 +801,15 @@ namespace TarnishedTool.Memory
             5,
             anchorOffset: 1
         );
+        
+        public static readonly Pattern AiRequestAttackCooldown = new Pattern(
+            [
+                0x48, 0x89, 0x5C, 0x24, 0x08, 0x57, 0x48, 0x83, 0xEC, 0x20, 0x48, 0x8B, 0xD9, 0x33, 0xC0, 0x48
+            ],
+            "xxxxxxxxxxxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
 
         //Patches
 
@@ -940,6 +949,16 @@ namespace TarnishedTool.Memory
             0x18,
             AddressingMode.Absolute,
             anchorOffset: 4
+        );
+        
+        public static readonly Pattern MenuDelay = new Pattern(
+            [0xF3, 0x0F, 0x10, 0x05, 0x00, 0x00, 0x00, 0x03, 0x48, 0x8B, 0x4C, 0x24, 0x60],
+            "xxxx???xxxxxx",
+            0,
+            AddressingMode.Relative,
+            4,
+            8,
+            anchorOffset: 0
         );
 
         public static readonly Pattern FpsCap = new Pattern(

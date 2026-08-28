@@ -161,6 +161,21 @@ namespace TarnishedTool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 48 b9 00 00 00 00 00 00 00 00   movabs rcx,0x0
+        ///ba 00 00 00 00                  mov    edx,0x0
+        ///48 83 ec 28                     sub    rsp,0x28
+        ///48 b8 00 00 00 00 00 00 00 00   movabs rax,0x0
+        ///ff d0                           call   rax
+        ///48 83 c4 28                     add    rsp,0x28
+        ///c3                               ret.
+        /// </summary>
+        internal static string AiRequestAttackCooldown {
+            get {
+                return ResourceManager.GetString("AiRequestAttackCooldown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Value,Name
         ///-2,TARGET_NONE
         ///-1,TARGET_SELF
@@ -3061,13 +3076,13 @@ namespace TarnishedTool.Properties {
         /// <summary>
         ///   Looks up a localized string similar to ID,Name
         ///0,
-        ///1,
+        ///1,No Skill
         ///10,No Skill
         ///100,Lion&apos;s Claw
         ///101,Impaling Thrust
         ///102,Piercing Fang
         ///103,Spinning Slash
-        ///104,%null%
+        ///104,
         ///105,Charge Forth
         ///106,Stamp (Upward Cut)
         ///107,Stamp (Sweep)
@@ -3084,11 +3099,12 @@ namespace TarnishedTool.Properties {
         ///118,Loretta&apos;s Slash
         ///119,Poison Moth Flight
         ///120,Spinning Weapon
-        ///121,%null%
+        ///121,
         ///122,Storm Assault
         ///123,Stormcaller
         ///124,Sword Dance
-        ///125,Spinning Chain        /// [rest of string was truncated]&quot;;.
+        ///125,Spinning Chain
+        ///200 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ParamEntries_SwordArtsParam {
             get {

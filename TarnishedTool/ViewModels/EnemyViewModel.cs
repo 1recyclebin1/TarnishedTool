@@ -507,7 +507,7 @@ public class EnemyViewModel : BaseViewModel
         _hotkeyManager.RegisterAction(HotkeyActions.LionMainFrost, () => SafeExecute(ForceLionMainBossFrostPhase));
         _hotkeyManager.RegisterAction(HotkeyActions.LionMainWind, () => SafeExecute(ForceLionMainBossWindPhase));
         _hotkeyManager.RegisterAction(HotkeyActions.LionMainLockPhase,
-            () => { IsLionMainBossPhaseLockEnabled = IsLionMainBossPhaseLockEnabled; });
+            () => { IsLionMainBossPhaseLockEnabled = !IsLionMainBossPhaseLockEnabled; });
         _hotkeyManager.RegisterAction(HotkeyActions.LionMiniDeathblight,
             () => SafeExecute(ForceLionMiniBossDeathblightPhase));
         _hotkeyManager.RegisterAction(HotkeyActions.LionMiniLightning,

@@ -3870,7 +3870,7 @@ c3                      ret</value>
 0,40001FDA,Lord of Blood's Favor (White),1,1,1,400031
 0,40002756,Lost Ashes of War,99,600,0,-1
 0,400000C4,Malenia's Great Rune (Activated),1,0,1,196
-0,40001FD9,Malenia's Great Rune (Dectivated),1,1,1,176
+0,40001FD9,Malenia's Great Rune (Deactivated),1,1,1,176
 0,4000085C,Margit's Shackle,1,600,1,110000
 0,40002006,Meeting Place Map,1,1,0,-1
 0,4000272E,Memory Stone,8,0,0,-1
@@ -3886,11 +3886,11 @@ c3                      ret</value>
 0,4000088E,Miquella's Needle,1,600,1,400324
 0,400021D4,Mirage Riddle,1,1,0,-1
 0,400000C3,Mohg's Great Rune (Activated),1,0,1,195
-0,40001FD8,Mohg's Great Rune (Dectivated),1,1,1,175
+0,40001FD8,Mohg's Great Rune (Deactivated),1,1,1,175
 0,40000866,Mohg's Shackle,1,600,1,35007310
 1,401EA3DD,Monk's Missive,1,1,1,2048457510
 0,400000C1,Morgott's Great Rune (Activated),1,0,1,193
-0,40001FD6,Morgott's Great Rune (Dectivated),1,1,1,173
+0,40001FD6,Morgott's Great Rune (Deactivated),1,1,1,173
 1,401EA3CC,New Cross Map,1,1,0,-1
 0,40000BC2,Omen Bairn,1,600,1,35007990
 0,40002526,Perfume Bottle,10,0,0,-1
@@ -3901,7 +3901,7 @@ c3                      ret</value>
 0,4000200C,Prophecy Painting,1,1,1,580040
 0,40000870,Pureblood Knight's Medal,1,600,1,400032
 0,400000C0,Radahn's Great Rune (Activated),1,0,1,192
-0,40001FD5,Radahn's Great Rune (Dectivated),1,1,1,172
+0,40001FD5,Radahn's Great Rune (Deactivated),1,1,1,172
 0,40000070,Recusant Finger,1,0,1,60260
 0,40001FC5,Red Letter,1,1,1,400075
 0,4000230B,Red-Hot Whetblade,1,1,1,65640
@@ -3944,7 +3944,7 @@ c3                      ret</value>
 0,40001F4A,Rusty Key,1,1,0,-1
 0,40001FC8,Rya's Necklace,1,1,0,-1
 0,400000C2,Rykard's Great Rune (Activated),1,0,1,194
-0,40001FD7,Rykard's Great Rune (Dectivated),1,1,1,174
+0,40001FD7,Rykard's Great Rune (Deactivated),1,1,1,174
 0,40002724,Sacred Tear,99,600,0,-1
 0,4000230C,Sanctified Whetblade,1,1,1,65660
 1,401EAB90,Scadutree Fragment,99,600,0,-1
